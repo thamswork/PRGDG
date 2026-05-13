@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GDG — PR & KOLS SEEDING</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#1a1f2e;
+      --canvas:#f7f5f0; --surface:#fff; --border:#e4e1db; --border-soft:#f0eee9;
+      --text:#1a1f2e; --text-2:#5a5750; --text-3:#9a9690;
+      --green:#166534; --green-bg:#dcfce7;
+      --amber:#92570a; --amber-bg:#fef3c7;
+      --blue:#1e40af; --blue-bg:#dbeafe;
+      --red:#b91c1c;
+      --r-md:12px; --r-lg:16px;
+      --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);padding-bottom:60px}
+
+    /* NAV */
+    .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+    .nav-l{display:flex;align-items:center;gap:10px}
+    .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
+    .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+    .btn-cycle{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);color:rgba(0,230,118,.9);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer}
+
+    /* TABS */
+    .tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:52px;z-index:190}
+    .tab{flex:1;height:42px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:.2s;border-bottom:2.5px solid transparent}
+    .tab.on{color:var(--navy);border-bottom-color:var(--navy)}
+
+    /* LAYOUT */
+    .wrap{padding:14px;max-width:480px;margin:0 auto}
+
+    /* CARD */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+
+    /* SECTION */
+    .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
+    .sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+
+    /* KPI */
+    .hero{font-size:34px;font-weight:800;color:var(--navy);line-height:1}
+    .prog-track{background:var(--border-soft);border-radius:6px;height:6px;overflow:hidden;margin-bottom:14px}
+    .prog-bar{background:var(--navy);height:100%;width:0;border-radius:6px;transition:width .8s ease}
+    .alert{background:var(--amber-bg);border:1px solid rgba(146,87,10,.15);border-left:3px solid var(--amber);padding:10px 12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .alert-lbl{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px}
+    .alert-val{font-size:20px;font-weight:800;color:var(--amber)}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;margin-bottom:14px}
+    .metric{padding:12px 0;border-top:1px solid var(--border-soft)}
+    .metric:nth-child(2){padding-left:16px;border-left:1px solid var(--border-soft)}
+    .metric-lbl{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+    .metric-val{font-size:18px;font-weight:800}
+
+    /* SUMMARY inside pacing card */
+    .sum-divider{height:1px;background:var(--border-soft);margin:2px 0 14px}
+    .sum-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .sum-hdr-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)}
+    .sum-hdr-mo{font-size:10px;font-weight:700;color:var(--text-3)}
+    .sum-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+    .sum-stat{text-align:center;padding:9px 6px;background:var(--canvas);border-radius:9px;border:1px solid var(--border-soft)}
+    .sum-stat-v{font-size:18px;font-weight:800;color:var(--navy)}
+    .sum-stat-l{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+    .sum-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+    /* MONTH DROPDOWN */
+    .mo-dd{background:var(--canvas);border:1px solid var(--border);font-family:inherit;font-size:10px;font-weight:700;color:var(--text-2);text-transform:uppercase;cursor:pointer;outline:none;padding:5px 10px;border-radius:8px}
+
+    /* ── SUBTLE BUTTON ──
+       Used for Copy, Done, Send Summary.
+       Identical height/padding so all buttons in a row are uniform. */
+    .btn{
+      height:30px; padding:0 12px;
+      border-radius:7px; border:1.5px solid var(--border);
+      background:var(--canvas); color:var(--text-3);
+      font-family:inherit; font-size:9px; font-weight:700;
+      letter-spacing:.5px; text-transform:uppercase;
+      cursor:pointer; transition:.15s; white-space:nowrap;
+      display:inline-flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+    .btn:hover{border-color:var(--text-2);color:var(--text-2)}
+    .btn:disabled{opacity:.35;cursor:not-allowed}
+    .btn.ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+    .btn.full{width:100%;height:34px;font-size:10px}
+    /* past-due done button — only the border/text turns red, same size */
+    .btn.due{border-color:var(--red);color:var(--red)}
+
+    /* SYNC */
+    .sync-btn{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--canvas);border:1px solid var(--border);padding:5px 10px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.15s;font-family:inherit}
+    .sync-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+    /* ── LEDGER ROW ──
+       3 columns: [kol info] | [date+type] | [badge + buttons]
+       All cells middle-aligned so nothing shifts.              */
+    .ledger-row{
+      display:grid;
+      grid-template-columns: minmax(0,1fr) 90px auto;
+      align-items:center;
+      gap:10px;
+      padding:10px 4px;
+      border-bottom:1px solid var(--border-soft);
+    }
+    .ledger-row:last-child{border-bottom:none}
+
+    /* col 1 — kol name + handle */
+    .kol-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .kol-name{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kol-handle{font-size:9px;font-weight:600;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kol-name.due{color:var(--red)}
+
+    /* col 2 — date + type tag */
+    .date-col{display:flex;flex-direction:column;gap:2px}
+    .date-val{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}
+    .type-tag{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
+
+    /* col 3 — badge + copy + done, all in one flex row */
+    .row-actions{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+
+    .badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+    .badge-p{background:var(--amber-bg);color:var(--amber)}
+    .badge-a{background:var(--blue-bg);color:var(--blue)}
+    .badge-d{background:var(--green-bg);color:var(--green)}
+
+    .archive-btn{width:100%;text-align:center;background:transparent;border:1px dashed var(--border);color:var(--text-3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
+
+    /* FORM */
+    .f-stack{display:flex;flex-direction:column;gap:12px}
+    .f-group{display:flex;flex-direction:column;gap:5px}
+    .f-row{display:grid;gap:10px}
+    .f-row.c2{grid-template-columns:1fr 1fr}
+    .f-lbl{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;display:block}
+    .ibox{width:100%;height:42px;padding:0 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--canvas);color:var(--text);font-family:inherit;font-size:13px;font-weight:500;outline:none;transition:.2s;-webkit-appearance:none;appearance:none}
+    .ibox:focus{border-color:var(--navy);background:var(--surface);box-shadow:0 0 0 3px rgba(26,31,46,.08)}
+    .ibox::placeholder{color:var(--text-3);font-weight:400}
+    textarea.ibox{height:72px;padding:10px 12px;resize:none;line-height:1.5}
+    select.ibox{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9690' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+    .pill-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pill{position:relative;cursor:pointer}
+    .pill input{position:absolute;opacity:0;width:0;height:0}
+    .pill-inner{display:flex;flex-direction:column;align-items:center;padding:10px 8px;border-radius:10px;border:2px solid var(--border);background:var(--canvas);transition:.2s;gap:3px;text-align:center}
+    .pill input:checked ~ .pill-inner{border-color:var(--navy);background:var(--surface);box-shadow:0 0 0 3px rgba(26,31,46,.08)}
+    .pill-lbl{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
+    .pill-sub{font-size:9px;color:var(--text-3);font-weight:500}
+    .subsec{padding:12px;border-radius:10px;background:var(--canvas);border:1px solid var(--border-soft)}
+    .subsec-lbl{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+    .btn-primary{background:var(--navy);color:#fff;height:46px;width:100%;padding:0 16px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:.2s;text-transform:uppercase}
+    .btn-primary:active{transform:scale(.98)}
+    .btn-primary.ok{background:var(--green)}
+    .btn-sec{background:var(--canvas);color:var(--navy);border:1.5px solid var(--border)}
+    .btn-row{display:grid;grid-template-columns:1fr auto;gap:10px}
+    .map-wrap{position:relative}
+    .map-wrap .ibox{padding-right:42px}
+    .map-pin{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--canvas);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+
+    /* MODALS */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(26,31,46,.72);z-index:1100;padding:20px;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .mbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+
+    /* summary confirm rows */
+    .sc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-soft);font-size:12px}
+    .sc-row:last-child{border-bottom:none}
+    .sc-lbl{font-weight:600;color:var(--text-2)}
+    .sc-val{font-weight:700;color:var(--navy)}
+
+    .empty{padding:24px 20px;text-align:center;color:var(--text-3);font-size:12px}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-mark">GDG</div>
+    <div class="nav-tag">Seeding Control</div>
+  </div>
+  <button class="btn-cycle" onclick="openCycleModal()">New Cycle</button>
+</nav>
+
+<div class="tabs">
+  <div class="tab on" id="tabReport" onclick="switchView('report')">Reporting</div>
+  <div class="tab"    id="tabEntry"  onclick="switchView('entry')">Entry</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══ REPORTING ═══ -->
+  <div id="viewReport">
+
+    <div class="card">
+      <div class="sec-row">
+        <span class="sec-title">Campaign Pacing</span>
+        <select id="monthFilter" class="mo-dd" onchange="fetchData(this.value)">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Total Seeded</div>
+          <div style="font-size:10px;color:var(--text-3)">Target: 15 – 20 KOLs</div>
+        </div>
+        <div class="hero" id="vTotal">--</div>
+      </div>
+      <div class="prog-track"><div class="prog-bar" id="progBar"></div></div>
+
+      <div class="alert">
+        <div>
+          <div class="alert-lbl">Pending Deliveries</div>
+          <div style="font-size:10px;color:var(--amber);margin-top:2px;font-weight:500">Awaiting acknowledgement</div>
+        </div>
+        <div class="alert-val" id="vPending">--</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-lbl">To Reach Min (15)</div>
+          <div class="metric-val" id="vToMin" style="color:var(--amber)">--</div>
+        </div>
+        <div class="metric">
+          <div class="metric-lbl">Remaining Slots</div>
+          <div class="metric-val" id="vToMax" style="color:var(--green)">--</div>
+        </div>
+      </div>
+
+      <!-- Campaign Summary — computed from loaded entries, not a second GAS call -->
+      <div class="sum-divider"></div>
+      <div class="sum-hdr">
+        <span class="sum-hdr-lbl">Campaign Summary</span>
+        <span class="sum-hdr-mo" id="sumMonth">--</span>
+      </div>
+      <div class="sum-stats">
+        <div class="sum-stat">
+          <div class="sum-stat-v" id="sumTotal">--</div>
+          <div class="sum-stat-l">Total</div>
+        </div>
+        <div class="sum-stat">
+          <div class="sum-stat-v" id="sumAcked" style="color:var(--green)">--</div>
+          <div class="sum-stat-l">Ack'd</div>
+        </div>
+        <div class="sum-stat">
+          <div class="sum-stat-v" id="sumPend" style="color:var(--amber)">--</div>
+          <div class="sum-stat-l">Pending</div>
+        </div>
+      </div>
+      <div class="sum-btns">
+        <button class="btn full" onclick="openSendModal('PR_WORK')">Send to PR Work</button>
+        <button class="btn full" onclick="openSendModal('OPS_GROUP')">Send to Ops</button>
+      </div>
+    </div><!-- /pacing card -->
+
+    <!-- Master Ledger -->
+    <div class="card" style="padding:14px">
+      <div class="sec-row" style="margin-bottom:0">
+        <span class="sec-title">Master Ledger</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="syncTime" style="font-size:9px;color:var(--text-3);font-weight:600">--</span>
+          <button class="sync-btn" onclick="fetchData()">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Sync
+          </button>
+        </div>
+      </div>
+      <div id="ledgerBody" style="margin-top:12px"><div class="empty">Loading...</div></div>
+      <button class="archive-btn" id="btnArchive" onclick="toggleArchive(this)" style="display:none">Show Completed History</button>
+      <div id="archiveBody" style="display:none;margin-top:8px"></div>
+    </div>
+
+  </div><!-- /viewReport -->
+
+  <!-- ═══ ENTRY ═══ -->
+  <div id="viewEntry" style="display:none">
+
+    <div class="card">
+      <div class="sec-lbl">KOL Information</div>
+      <div class="f-stack">
+        <div class="f-group">
+          <label class="f-lbl" for="kolName">KOL Name</label>
+          <input type="text" id="kolName" class="ibox" placeholder="e.g. Thyme" autocomplete="off">
+        </div>
+        <div class="f-group">
+          <label class="f-lbl" for="handleUrl">Profile URL</label>
+          <input type="url" id="handleUrl" class="ibox" placeholder="instagram.com/username" autocomplete="off" inputmode="url">
+        </div>
+        <div class="f-group">
+          <label class="f-lbl">Seeding Type</label>
+          <div class="pill-row">
+            <label class="pill">
+              <input type="radio" name="st" id="typeDel" value="Delivery" checked onchange="onTypeChange()">
+              <div class="pill-inner"><div class="pill-lbl">Delivery</div><div class="pill-sub">Ship to address</div></div>
+            </label>
+            <label class="pill">
+              <input type="radio" name="st" id="typeVis" value="Store Invite" onchange="onTypeChange()">
+              <div class="pill-inner"><div class="pill-lbl">Store Invite</div><div class="pill-sub">In-store visit</div></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-lbl">Logistics Details</div>
+      <div class="f-stack">
+        <div class="f-row c2">
+          <div class="f-group"><label class="f-lbl" for="logDate">Date</label><input type="date" id="logDate" class="ibox"></div>
+          <div class="f-group"><label class="f-lbl" for="logTime">Time</label><input type="time" id="logTime" class="ibox"></div>
+        </div>
+
+        <div id="deliveryFields">
+          <div class="subsec">
+            <div class="subsec-lbl">Delivery Info</div>
+            <div class="f-stack">
+              <div class="f-group">
+                <label class="f-lbl" for="pkgSel">Product Package</label>
+                <select id="pkgSel" class="ibox" onchange="toggleOtherPkg()">
+                  <option value="">Select package...</option>
+                </select>
+                <input type="text" id="pkgOther" class="ibox" placeholder="Describe the package..." style="display:none;margin-top:8px">
+              </div>
+              <div class="f-row c2">
+                <div class="f-group"><label class="f-lbl" for="logPhone">Phone</label><input type="tel" id="logPhone" class="ibox" placeholder="08X-XXX-XXXX" inputmode="tel"></div>
+                <div class="f-group"><label class="f-lbl" for="backupPhone">Backup</label><input type="tel" id="backupPhone" class="ibox" placeholder="Optional" inputmode="tel"></div>
+              </div>
+              <div class="f-group">
+                <label class="f-lbl" for="logAddr">Delivery Address</label>
+                <textarea id="logAddr" class="ibox" placeholder="Full delivery address"></textarea>
+              </div>
+              <div class="f-group">
+                <label class="f-lbl" for="googleMap">Google Maps Link</label>
+                <div class="map-wrap">
+                  <input type="url" id="googleMap" class="ibox" placeholder="goo.gl/maps/..." inputmode="url">
+                  <div class="map-pin" onclick="openMap()">&#x1F4CD;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="venueFields" style="display:none">
+          <div class="subsec">
+            <div class="subsec-lbl">Store Visit Info</div>
+            <div class="f-group"><label class="f-lbl" for="storeVenue">Venue / Branch</label><input type="text" id="storeVenue" class="ibox" placeholder="e.g. BIANCA EMSPHERE"></div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" id="btnSubmit" onclick="submitEntry()">Log Entry</button>
+          <button class="btn-primary btn-sec" id="btnCopy" onclick="copyText()" style="width:auto;padding:0 16px;white-space:nowrap">Copy</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /viewEntry -->
+
+</div><!-- /wrap -->
+
+<!-- ═══ SEND SUMMARY CONFIRM MODAL ═══ -->
+<div class="overlay" id="sendModal">
+  <div class="mbox">
+    <div style="margin-bottom:18px">
+      <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px">Send Campaign Summary</div>
+      <div style="font-size:11px;color:var(--text-3)" id="sendModalTarget">—</div>
+    </div>
+    <div style="background:var(--canvas);border-radius:12px;padding:14px;margin-bottom:18px">
+      <div class="sc-row"><span class="sc-lbl">Month</span><span class="sc-val" id="scMonth">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Total Seeded</span><span class="sc-val" id="scTotal">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Deliveries</span><span class="sc-val" id="scDel">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Store Visits</span><span class="sc-val" id="scVis">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Acknowledged</span><span class="sc-val" id="scAck">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Still Pending</span><span class="sc-val" id="scPnd">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">To Min (15)</span><span class="sc-val" id="scMin">—</span></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeSendModal()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Cancel</button>
+      <button id="btnDoSend" onclick="doSendSummary(this)" style="flex:2;height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEW CYCLE MODAL ═══ -->
+<div class="overlay" id="cycleModal">
+  <div class="mbox">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:rgba(0,230,118,.8);flex-shrink:0">&#8635;</div>
+      <div>
+        <div style="font-size:15px;font-weight:800;color:var(--navy)">New Month Cycle</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:3px" id="cycleSubtitle">Starting fresh campaign cycle</div>
+      </div>
+    </div>
+    <div style="background:var(--canvas);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="text-align:center;flex:1">
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Closing</div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy)" id="cyclePrev">—</div>
+        </div>
+        <div style="font-size:18px;color:var(--text-3);padding:0 12px">&#8594;</div>
+        <div style="text-align:center;flex:1">
+          <div style="font-size:9px;font-weight:700;color:#00b248;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Starting</div>
+          <div style="font-size:13px;font-weight:700;color:#00b248" id="cycleNext">—</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--canvas);border-radius:12px;padding:12px;margin-bottom:12px">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Closing Month Stats</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+        <div><div style="font-size:20px;font-weight:800;color:var(--navy)" id="cTotal">—</div><div style="font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;margin-top:2px">Total</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:#166534" id="cDone">—</div><div style="font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;margin-top:2px">Done</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:#92570a" id="cPend">—</div><div style="font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;margin-top:2px">Pending</div></div>
+      </div>
+    </div>
+    <label style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--canvas);border-radius:10px;margin-bottom:18px;cursor:pointer">
+      <input type="checkbox" id="cycleSendSum" checked style="width:18px;height:18px;accent-color:#00e676;flex-shrink:0;margin-top:1px">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--navy)">Send closing summary to PR Work</div>
+        <div style="font-size:10px;color:var(--text-3);margin-top:2px;line-height:1.4">Pushes the monthly summary card before switching</div>
+      </div>
+    </label>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeCycleModal()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Cancel</button>
+      <button onclick="confirmCycle(this)" style="flex:2;height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Start New Cycle</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────────────────
+const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
+
+// ─────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────
+let entries  = [];
+let sumCache = {}; // computed from entries after each fetch
+let pendingGroup = null;
+
+// ─────────────────────────────────────────────────────────
+// GAS FETCH HELPER
+// Two-step: fire with mode:'no-cors' (opaque, always resolves),
+// then wait 1.4 s and refresh data to confirm.
+// For read operations (data fetch) we still use normal fetch.
+// ─────────────────────────────────────────────────────────
+function gasGet(url){
+  // Standard fetch with redirect follow — works when served from a domain.
+  // If CORS blocks, falls back to no-cors ping.
+  return fetch(url, {redirect:'follow'})
+    .then(r => r.text())
+    .then(t => JSON.parse(t))
+    .catch(() => {
+      // Fallback: fire-and-forget ping; caller treats as success
+      fetch(url, {mode:'no-cors'}).catch(()=>{});
+      return {status:'success', _noCors:true};
+    });
+}
+
+// ─────────────────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────────────────
+function fmtDate(d){
+  if(!d) return '';
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const m=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? parseInt(m[3],10)+' '+mo[parseInt(m[2],10)-1]+' '+m[1] : String(d);
+}
+function isPast(ds){
+  if(!ds) return false;
+  const m=String(ds).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return false;
+  const d=new Date(+m[1],+m[2]-1,+m[3]), t=new Date();
+  t.setHours(0,0,0,0); return d<t;
+}
+
+// ─────────────────────────────────────────────────────────
+// COMPUTE SUMMARY from loaded entries (no extra GAS call)
+// ─────────────────────────────────────────────────────────
+function computeSummary(month){
+  const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
+  let total=0, deliveries=0, visits=0, acked=0, pending=0, fulfilled=0;
+  entries.forEach(e=>{
+    if(!e.kol) return;
+    total++;
+    if(String(e.type).trim()==='Delivery') deliveries++; else visits++;
+    if(e.acknowledged && e.acknowledged.trim()!=='' && e.acknowledged!=='FALSE') acked++;
+    else pending++;
+    if(DONE.includes(e.handoff)) fulfilled++;
+  });
+  sumCache={month,total,deliveries,visits,acked,pending,fulfilled,toMin:Math.max(0,15-total)};
+  // Update UI
+  document.getElementById('sumMonth').textContent = month||'';
+  document.getElementById('sumTotal').textContent = total;
+  document.getElementById('sumAcked').textContent = acked;
+  document.getElementById('sumPend').textContent  = pending;
+}
+
+// ─────────────────────────────────────────────────────────
+// SEND SUMMARY MODAL
+// ─────────────────────────────────────────────────────────
+function openSendModal(group){
+  pendingGroup = group;
+  const lbl = group==='PR_WORK' ? 'PR Work Group' : 'Ops / Warehouse Group';
+  document.getElementById('sendModalTarget').textContent = 'Sending to: '+lbl;
+  const s = sumCache;
+  document.getElementById('scMonth').textContent = s.month||'—';
+  document.getElementById('scTotal').textContent = (s.total||0)+' / 20';
+  document.getElementById('scDel').textContent   = s.deliveries||0;
+  document.getElementById('scVis').textContent   = s.visits||0;
+  document.getElementById('scAck').textContent   = (s.acked||0)+' / '+(s.total||0);
+  document.getElementById('scPnd').textContent   = s.pending||0;
+  document.getElementById('scMin').textContent   = (s.toMin>0) ? s.toMin+' more needed' : 'Target reached';
+  document.getElementById('sendModal').style.display='flex';
+}
+function closeSendModal(){
+  document.getElementById('sendModal').style.display='none';
+  pendingGroup=null;
+}
+async function doSendSummary(btnEl){
+  if(!pendingGroup) return;
+  const orig=btnEl.textContent;
+  btnEl.disabled=true; btnEl.textContent='Sending...';
+  try {
+    const url=GAS+'?action=summary&group='+encodeURIComponent(pendingGroup)+'&t='+Date.now();
+    const data=await gasGet(url);
+    if(data.status==='success'){
+      closeSendModal();
+    } else { throw new Error(data.message||'GAS error'); }
+  } catch(err){
+    alert('Send failed: '+err.message);
+  } finally {
+    btnEl.disabled=false; btnEl.textContent=orig;
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// MARK COMPLETE — no-cors fallback so it never shows "fetch failed"
+// ─────────────────────────────────────────────────────────
+async function markDone(id, btnEl){
+  const entry=entries.find(e=>e.id===id);
+  if(!entry) return;
+  const orig=btnEl?btnEl.textContent:'Done';
+  if(btnEl){ btnEl.disabled=true; btnEl.textContent='...'; }
+  const isDel=String(entry.type||'').trim()==='Delivery';
+  const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
+  const idSafe=(id||'').replace(/[^A-Za-z0-9-]/g,'');
+  const url=GAS
+    +'?action=complete'
+    +'&id='+idSafe
+    +'&kol='+kolSafe
+    +'&type='+(isDel?'D':'V')
+    +'&sc='+(isDel?'LC':'V')
+    +'&t='+Date.now();
+  try {
+    const data=await gasGet(url);
+    // gasGet never throws — it returns {status:'success'} even on no-cors
+    entry.handoff = isDel ? 'Logistics Completed' : 'Visited';
+    if(btnEl){ btnEl.textContent='Done'; btnEl.classList.add('ok'); btnEl.disabled=true; }
+    // Refresh after short delay to pull confirmed state from sheet
+    setTimeout(()=>fetchData(document.getElementById('monthFilter').value), 1800);
+  } catch(err){
+    // Should never reach here due to no-cors fallback, but just in case
+    if(btnEl){ btnEl.disabled=false; btnEl.textContent=orig; }
+    alert('Error: '+err.message);
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// FORM HELPERS
+// ─────────────────────────────────────────────────────────
+function onTypeChange(){
+  const v=document.getElementById('typeVis').checked;
+  document.getElementById('deliveryFields').style.display=v?'none':'block';
+  document.getElementById('venueFields').style.display=v?'block':'none';
+}
+function getType(){ return document.getElementById('typeVis').checked?'Store Invite':'Delivery'; }
+function openMap(){ const u=document.getElementById('googleMap').value; if(u) window.open(u,'_blank'); }
+function toggleOtherPkg(){
+  const s=document.getElementById('pkgSel');
+  document.getElementById('pkgOther').style.display=s.value==='Others'?'block':'none';
+}
+function getPkg(){
+  const s=document.getElementById('pkgSel');
+  return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value;
+}
+function copyText(){
+  const name=document.getElementById('kolName').value||'TBD';
+  const type=getType(), date=document.getElementById('logDate').value||'TBD', time=document.getElementById('logTime').value||'TBD';
+  const text=type==='Store Invite'
+    ?('Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
+    :('Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
+  navigator.clipboard.writeText(text).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); });
+}
+function copyRow(id){
+  const e=entries.find(x=>x.id===id); if(!e) return;
+  navigator.clipboard.writeText(e.dispatchText||('Name: '+e.kol)).then(()=>{
+    const b=document.getElementById('cp_'+id); if(b){ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); }
+  });
+}
+
+// ─────────────────────────────────────────────────────────
+// SUBMIT ENTRY
+// ─────────────────────────────────────────────────────────
+async function submitEntry(){
+  const btn=document.getElementById('btnSubmit'), type=getType();
+  const payload={
+    action:'add', kolName:document.getElementById('kolName').value,
+    handleUrl:document.getElementById('handleUrl').value,
+    seedingType:type, deliverable:'',
+    date:document.getElementById('logDate').value, time:document.getElementById('logTime').value,
+    packageStr:  type==='Store Invite'?'N/A':getPkg(),
+    phone:       type==='Store Invite'?'N/A':document.getElementById('logPhone').value,
+    backupPhone: type==='Store Invite'?'':document.getElementById('backupPhone').value,
+    address:     type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value,
+    googleMap:   type==='Store Invite'?'':document.getElementById('googleMap').value,
+    notes:''
+  };
+  btn.textContent='Saving...'; btn.disabled=true;
+  try {
+    const res=await fetch(GAS,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow'});
+    const r=JSON.parse(await res.text());
+    if(r.status==='success'){
+      btn.textContent='Saved!'; btn.classList.add('ok');
+      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.value='';});
+      document.getElementById('typeDel').checked=true; onTypeChange();
+      const rm=new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear();
+      const s=document.getElementById('monthFilter');
+      if(s){let f=false;for(let i=0;i<s.options.length;i++){if(s.options[i].value===rm){s.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;s.insertBefore(o,s.firstChild);}}
+      fetchData(rm);
+      setTimeout(()=>{ btn.textContent='Log Entry'; btn.classList.remove('ok'); btn.disabled=false; },3000);
+    } else { throw new Error(r.message||'GAS error'); }
+  } catch(err){ btn.textContent='Error — retry'; btn.disabled=false; setTimeout(()=>btn.textContent='Log Entry',3000); }
+}
+
+// ─────────────────────────────────────────────────────────
+// FETCH DATA
+// ─────────────────────────────────────────────────────────
+async function fetchData(month){
+  try {
+    let url=GAS+'?t='+Date.now();
+    if(month) url+='&month='+encodeURIComponent(month);
+    const res=await fetch(url,{redirect:'follow'});
+    const r=JSON.parse(await res.text());
+    if(r.status!=='success') throw new Error(r.message||'GAS error');
+    const d=r.data;
+    entries=d.entries;
+
+    // Month selector
+    const sel=document.getElementById('monthFilter');
+    if(sel){
+      sel.innerHTML='';
+      (d.availableMonths||[]).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===d.month)o.selected=true;sel.appendChild(o);});
+    }
+
+    // Pacing
+    document.getElementById('vTotal').textContent  = d.totalSeeded;
+    document.getElementById('vPending').textContent= d.pendingDeliveries;
+    document.getElementById('vToMin').textContent  = d.remainingToMin;
+    document.getElementById('vToMax').textContent  = d.remainingToMax;
+    document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
+    document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+    // Summary — computed locally from entries, never duplicates pacing numbers
+    computeSummary(d.month);
+
+    // Packages
+    if(d.packages&&d.packages.length){
+      const ps=document.getElementById('pkgSel');
+      if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
+    }
+
+    buildLedger(d.entries);
+  } catch(err){ console.error('fetchData failed:',err.message); }
+}
+
+// ─────────────────────────────────────────────────────────
+// BUILD LEDGER
+// ─────────────────────────────────────────────────────────
+function buildLedger(data){
+  const body  =document.getElementById('ledgerBody');
+  const arch  =document.getElementById('archiveBody');
+  const arcBtn=document.getElementById('btnArchive');
+  if(!body) return;
+  if(!data||!data.length){ body.innerHTML='<div class="empty">No entries this month</div>'; if(arcBtn) arcBtn.style.display='none'; return; }
+
+  const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
+  let aHtml='', dHtml='', dCount=0;
+
+  data.forEach(e=>{
+    if(!e.kol||!e.kol.trim()) return;
+    const done = DONE.includes(e.handoff);
+    const past = !done && isPast(e.date);
+    const bc   = e.handoff==='Pending'?'badge-p':(e.handoff==='Acknowledged'?'badge-a':'badge-d');
+    const hand = (e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
+    const isD  = String(e.type).trim()==='Delivery';
+
+    // Done button — same size as Copy; red only when past due; hidden for completed rows
+    const doneBtn = !done
+      ? `<button class="btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
+      : '';
+
+    const row=`<div class="ledger-row">
+      <div class="kol-info">
+        <span class="kol-name${past?' due':''}">${e.kol}</span>
+        <span class="kol-handle">${hand}</span>
+      </div>
+      <div class="date-col">
+        <span class="date-val">${fmtDate(e.date)}</span>
+        <span class="type-tag">${isD?'Delivery':'Visit'}</span>
+      </div>
+      <div class="row-actions">
+        <span class="badge ${bc}">${e.handoff}</span>
+        <button class="btn" id="cp_${e.id}" onclick="copyRow('${e.id}')">Copy</button>
+        ${doneBtn}
+      </div>
+    </div>`;
+
+    if(done){ dHtml+=row; dCount++; } else { aHtml+=row; }
+  });
+
+  body.innerHTML = aHtml||'<div class="empty">All entries completed</div>';
+  if(arch) arch.innerHTML=dHtml;
+  if(arcBtn){
+    arcBtn.style.display=dCount>0?'block':'none';
+    if(dCount>0) arcBtn.textContent='Show Completed History ('+dCount+')';
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// ARCHIVE TOGGLE
+// ─────────────────────────────────────────────────────────
+function toggleArchive(btn){
+  const d=document.getElementById('archiveBody'); if(!d) return;
+  const open=d.style.display==='none'||!d.style.display;
+  d.style.display=open?'block':'none';
+  btn.textContent=btn.textContent.replace(open?'Show':'Hide',open?'Hide':'Show');
+}
+
+// ─────────────────────────────────────────────────────────
+// VIEW SWITCH
+// ─────────────────────────────────────────────────────────
+function switchView(v){
+  ['Report','Entry'].forEach(n=>{
+    document.getElementById('view'+n).style.display='none';
+    const t=document.getElementById('tab'+n); if(t) t.classList.remove('on');
+  });
+  const N=v.charAt(0).toUpperCase()+v.slice(1);
+  document.getElementById('view'+N).style.display='block';
+  const t=document.getElementById('tab'+N); if(t) t.classList.add('on');
+  fetchData(document.getElementById('monthFilter').value);
+}
+
+// ─────────────────────────────────────────────────────────
+// CYCLE MODAL
+// ─────────────────────────────────────────────────────────
+function openCycleModal(){
+  const DONE=['Logistics Completed','Completed','Visited','No-Show / Cancelled'];
+  const total=entries.length, done=entries.filter(e=>DONE.includes(e.handoff)).length;
+  const sel=document.getElementById('monthFilter');
+  const prev=sel&&sel.value?sel.value:'Current Month';
+  const now=new Date(), next=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
+  document.getElementById('cyclePrev').textContent=prev;
+  document.getElementById('cycleNext').textContent=next;
+  document.getElementById('cycleSubtitle').textContent='Closing '+prev+' · Opening '+next;
+  document.getElementById('cTotal').textContent=total;
+  document.getElementById('cDone').textContent=done;
+  document.getElementById('cPend').textContent=total-done;
+  document.getElementById('cycleModal').style.display='flex';
+}
+function closeCycleModal(){ document.getElementById('cycleModal').style.display='none'; }
+async function confirmCycle(btnEl){
+  const orig=btnEl.textContent; btnEl.disabled=true; btnEl.textContent='Starting...';
+  if(document.getElementById('cycleSendSum').checked){
+    try { await gasGet(GAS+'?action=summary&group=PR_WORK&t='+Date.now()); } catch(e){}
+  }
+  const now=new Date(), rm=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
+  const sel=document.getElementById('monthFilter');
+  if(sel){let f=false;for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===rm){sel.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;sel.insertBefore(o,sel.firstChild);}}
+  closeCycleModal();
+  await fetchData(rm);
+  switchView('report');
+  btnEl.disabled=false; btnEl.textContent=orig;
+}
+
+// ─────────────────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────────────────
+window.onload=function(){
+  fetchData(new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
+};
+</script>
+</body>
+</html>
