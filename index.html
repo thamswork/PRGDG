@@ -8,11 +8,12 @@
   <style>
     :root{
       --navy:#1a1f2e;
-      --canvas:#f7f5f0; --surface:#fff; --border:#e4e1db; --border-soft:#f0eee9;
+      --canvas:#f7f5f0; --surface:#fff;
+      --border:#e4e1db; --border-soft:#f0eee9;
       --text:#1a1f2e; --text-2:#5a5750; --text-3:#9a9690;
       --green:#166534; --green-bg:#dcfce7;
       --amber:#92570a; --amber-bg:#fef3c7;
-      --blue:#1e40af; --blue-bg:#dbeafe;
+      --blue:#1e40af;  --blue-bg:#dbeafe;
       --red:#b91c1c;
       --r-md:12px; --r-lg:16px;
       --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
@@ -21,31 +22,25 @@
     html,body{height:100%;-webkit-font-smoothing:antialiased}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);padding-bottom:60px}
 
-    /* NAV */
+    /* ── NAV ── */
     .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
     .nav-l{display:flex;align-items:center;gap:10px}
     .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
     .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
     .btn-cycle{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);color:rgba(0,230,118,.9);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer}
 
-    /* TABS */
+    /* ── TABS ── */
     .tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:52px;z-index:190}
     .tab{flex:1;height:42px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:.2s;border-bottom:2.5px solid transparent}
     .tab.on{color:var(--navy);border-bottom-color:var(--navy)}
 
-    /* LAYOUT */
+    /* ── LAYOUT ── */
     .wrap{padding:14px;max-width:480px;margin:0 auto}
-
-    /* CARD */
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
 
-    /* SECTION */
-    .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
+    /* ── KPI ── */
     .sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
     .sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-
-    /* KPI */
     .hero{font-size:34px;font-weight:800;color:var(--navy);line-height:1}
     .prog-track{background:var(--border-soft);border-radius:6px;height:6px;overflow:hidden;margin-bottom:14px}
     .prog-bar{background:var(--navy);height:100%;width:0;border-radius:6px;transition:width .8s ease}
@@ -58,23 +53,19 @@
     .metric-lbl{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
     .metric-val{font-size:18px;font-weight:800}
 
-    /* SUMMARY inside pacing card */
-    .sum-divider{height:1px;background:var(--border-soft);margin:2px 0 14px}
-    .sum-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .sum-hdr-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)}
-    .sum-hdr-mo{font-size:10px;font-weight:700;color:var(--text-3)}
-    .sum-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-    .sum-stat{text-align:center;padding:9px 6px;background:var(--canvas);border-radius:9px;border:1px solid var(--border-soft)}
-    .sum-stat-v{font-size:18px;font-weight:800;color:var(--navy)}
-    .sum-stat-l{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+    /* ── SUMMARY STRIP ── (no stat boxes, just send buttons) */
+    .sum-strip{border-top:1px solid var(--border-soft);padding-top:14px;margin-top:2px}
+    .sum-strip-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .sum-strip-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)}
+    .sum-strip-mo{font-size:10px;font-weight:700;color:var(--text-3)}
     .sum-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
-    /* MONTH DROPDOWN */
+    /* ── MONTH DROPDOWN ── */
     .mo-dd{background:var(--canvas);border:1px solid var(--border);font-family:inherit;font-size:10px;font-weight:700;color:var(--text-2);text-transform:uppercase;cursor:pointer;outline:none;padding:5px 10px;border-radius:8px}
 
-    /* ── SUBTLE BUTTON ──
-       Used for Copy, Done, Send Summary.
-       Identical height/padding so all buttons in a row are uniform. */
+    /* ── BUTTONS ──
+       .btn      = small subtle (30px)  used inline in rows
+       .btn.full = full-width (34px)    used in summary strip        */
     .btn{
       height:30px; padding:0 12px;
       border-radius:7px; border:1.5px solid var(--border);
@@ -82,55 +73,62 @@
       font-family:inherit; font-size:9px; font-weight:700;
       letter-spacing:.5px; text-transform:uppercase;
       cursor:pointer; transition:.15s; white-space:nowrap;
-      display:inline-flex; align-items:center; justify-content:center;
-      flex-shrink:0;
+      display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
     }
     .btn:hover{border-color:var(--text-2);color:var(--text-2)}
     .btn:disabled{opacity:.35;cursor:not-allowed}
     .btn.ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-    .btn.full{width:100%;height:34px;font-size:10px}
-    /* past-due done button — only the border/text turns red, same size */
     .btn.due{border-color:var(--red);color:var(--red)}
+    .btn.full{width:100%;height:34px;font-size:10px}
 
-    /* SYNC */
+    /* ── SYNC ── */
     .sync-btn{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--canvas);border:1px solid var(--border);padding:5px 10px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.15s;font-family:inherit}
     .sync-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-    /* ── LEDGER ROW ──
-       3 columns: [kol info] | [date+type] | [badge + buttons]
-       All cells middle-aligned so nothing shifts.              */
+    /* ─────────────────────────────────────
+       MASTER LEDGER — strict 4-col grid
+       Col 1: KOL name + handle  (flex, min 0)
+       Col 2: Date + type tag    (fixed 100px)
+       Col 3: Status badge       (fixed 74px)
+       Col 4: Action button      (fixed 52px)
+       All rows share identical template → perfect alignment
+    ───────────────────────────────────────*/
+    .ledger-hdr,
     .ledger-row{
       display:grid;
-      grid-template-columns: minmax(0,1fr) 90px auto;
+      grid-template-columns: minmax(0,1fr) 100px 74px 52px;
       align-items:center;
-      gap:10px;
+      gap:8px;
       padding:10px 4px;
       border-bottom:1px solid var(--border-soft);
     }
     .ledger-row:last-child{border-bottom:none}
 
-    /* col 1 — kol name + handle */
+    /* col 1 */
     .kol-info{display:flex;flex-direction:column;gap:2px;min-width:0}
     .kol-name{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .kol-handle{font-size:9px;font-weight:600;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .kol-name.due{color:var(--red)}
+    .kol-handle{font-size:9px;font-weight:600;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    /* col 2 — date + type tag */
+    /* col 2 */
     .date-col{display:flex;flex-direction:column;gap:2px}
     .date-val{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}
     .type-tag{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
 
-    /* col 3 — badge + copy + done, all in one flex row */
-    .row-actions{display:flex;align-items:center;gap:5px;justify-content:flex-end}
-
-    .badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+    /* col 3 */
+    .badge{display:flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;width:100%}
     .badge-p{background:var(--amber-bg);color:var(--amber)}
     .badge-a{background:var(--blue-bg);color:var(--blue)}
     .badge-d{background:var(--green-bg);color:var(--green)}
 
+    /* col 4 — button fills the fixed cell */
+    .row-btn{width:100%}
+
     .archive-btn{width:100%;text-align:center;background:transparent;border:1px dashed var(--border);color:var(--text-3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
 
-    /* FORM */
+    /* ── FORM ── */
+    .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
     .f-stack{display:flex;flex-direction:column;gap:12px}
     .f-group{display:flex;flex-direction:column;gap:5px}
     .f-row{display:grid;gap:10px}
@@ -159,11 +157,9 @@
     .map-wrap .ibox{padding-right:42px}
     .map-pin{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--canvas);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
 
-    /* MODALS */
+    /* ── MODALS ── */
     .overlay{display:none;position:fixed;inset:0;background:rgba(26,31,46,.72);z-index:1100;padding:20px;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .mbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
-
-    /* summary confirm rows */
     .sc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-soft);font-size:12px}
     .sc-row:last-child{border-bottom:none}
     .sc-lbl{font-weight:600;color:var(--text-2)}
@@ -228,31 +224,18 @@
         </div>
       </div>
 
-      <!-- Campaign Summary — computed from loaded entries, not a second GAS call -->
-      <div class="sum-divider"></div>
-      <div class="sum-hdr">
-        <span class="sum-hdr-lbl">Campaign Summary</span>
-        <span class="sum-hdr-mo" id="sumMonth">--</span>
-      </div>
-      <div class="sum-stats">
-        <div class="sum-stat">
-          <div class="sum-stat-v" id="sumTotal">--</div>
-          <div class="sum-stat-l">Total</div>
+      <!-- Summary strip — send buttons only, no stat boxes -->
+      <div class="sum-strip">
+        <div class="sum-strip-hdr">
+          <span class="sum-strip-lbl">Campaign Summary</span>
+          <span class="sum-strip-mo" id="sumMonth">--</span>
         </div>
-        <div class="sum-stat">
-          <div class="sum-stat-v" id="sumAcked" style="color:var(--green)">--</div>
-          <div class="sum-stat-l">Ack'd</div>
-        </div>
-        <div class="sum-stat">
-          <div class="sum-stat-v" id="sumPend" style="color:var(--amber)">--</div>
-          <div class="sum-stat-l">Pending</div>
+        <div class="sum-btns">
+          <button class="btn full" onclick="openSendModal('PR_WORK')">Send to PR Work</button>
+          <button class="btn full" onclick="openSendModal('OPS_GROUP')">Send to Ops</button>
         </div>
       </div>
-      <div class="sum-btns">
-        <button class="btn full" onclick="openSendModal('PR_WORK')">Send to PR Work</button>
-        <button class="btn full" onclick="openSendModal('OPS_GROUP')">Send to Ops</button>
-      </div>
-    </div><!-- /pacing card -->
+    </div>
 
     <!-- Master Ledger -->
     <div class="card" style="padding:14px">
@@ -286,6 +269,16 @@
         <div class="f-group">
           <label class="f-lbl" for="handleUrl">Profile URL</label>
           <input type="url" id="handleUrl" class="ibox" placeholder="instagram.com/username" autocomplete="off" inputmode="url">
+        </div>
+        <!-- Brand -->
+        <div class="f-group">
+          <label class="f-lbl" for="brandSel">Brand</label>
+          <select id="brandSel" class="ibox">
+            <option value="">Select brand...</option>
+            <option value="Guss Damn Good">Guss Damn Good</option>
+            <option value="Adam and Eve">Adam and Eve</option>
+            <option value="Charuss">Charuss</option>
+          </select>
         </div>
         <div class="f-group">
           <label class="f-lbl">Seeding Type</label>
@@ -366,15 +359,15 @@
       <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px">Send Campaign Summary</div>
       <div style="font-size:11px;color:var(--text-3)" id="sendModalTarget">—</div>
     </div>
-    <div style="background:var(--canvas);border-radius:12px;padding:14px;margin-bottom:18px">
+    <div style="background:var(--canvas);border-radius:12px;padding:14px;margin-bottom:14px">
       <div class="sc-row"><span class="sc-lbl">Month</span><span class="sc-val" id="scMonth">—</span></div>
       <div class="sc-row"><span class="sc-lbl">Total Seeded</span><span class="sc-val" id="scTotal">—</span></div>
       <div class="sc-row"><span class="sc-lbl">Deliveries</span><span class="sc-val" id="scDel">—</span></div>
       <div class="sc-row"><span class="sc-lbl">Store Visits</span><span class="sc-val" id="scVis">—</span></div>
-      <div class="sc-row"><span class="sc-lbl">Acknowledged</span><span class="sc-val" id="scAck">—</span></div>
-      <div class="sc-row"><span class="sc-lbl">Still Pending</span><span class="sc-val" id="scPnd">—</span></div>
       <div class="sc-row"><span class="sc-lbl">To Min (15)</span><span class="sc-val" id="scMin">—</span></div>
     </div>
+    <!-- Copy summary as text -->
+    <button id="btnCopySummary" onclick="copySummaryText()" class="btn full" style="margin-bottom:12px">Copy Summary Text</button>
     <div style="display:flex;gap:10px">
       <button onclick="closeSendModal()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Cancel</button>
       <button id="btnDoSend" onclick="doSendSummary(this)" style="flex:2;height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Send</button>
@@ -428,40 +421,33 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // CONFIG
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // STATE
-// ─────────────────────────────────────────────────────────
-let entries  = [];
-let sumCache = {}; // computed from entries after each fetch
-let pendingGroup = null;
+// ─────────────────────────────────────────────────
+let entries     = [];
+let sumCache    = {};
+let pendingGrp  = null;
 
-// ─────────────────────────────────────────────────────────
-// GAS FETCH HELPER
-// Two-step: fire with mode:'no-cors' (opaque, always resolves),
-// then wait 1.4 s and refresh data to confirm.
-// For read operations (data fetch) we still use normal fetch.
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+// GAS HELPER — tries normal fetch; falls back to no-cors ping
+// ─────────────────────────────────────────────────
 function gasGet(url){
-  // Standard fetch with redirect follow — works when served from a domain.
-  // If CORS blocks, falls back to no-cors ping.
   return fetch(url, {redirect:'follow'})
-    .then(r => r.text())
-    .then(t => JSON.parse(t))
+    .then(r => r.text()).then(t => JSON.parse(t))
     .catch(() => {
-      // Fallback: fire-and-forget ping; caller treats as success
       fetch(url, {mode:'no-cors'}).catch(()=>{});
       return {status:'success', _noCors:true};
     });
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // UTILS
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function fmtDate(d){
   if(!d) return '';
   const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -476,107 +462,106 @@ function isPast(ds){
   t.setHours(0,0,0,0); return d<t;
 }
 
-// ─────────────────────────────────────────────────────────
-// COMPUTE SUMMARY from loaded entries (no extra GAS call)
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+// COMPUTE SUMMARY from loaded entries
+// ─────────────────────────────────────────────────
 function computeSummary(month){
-  const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
-  let total=0, deliveries=0, visits=0, acked=0, pending=0, fulfilled=0;
+  let total=0, del=0, vis=0, fulfilled=0;
   entries.forEach(e=>{
     if(!e.kol) return;
     total++;
-    if(String(e.type).trim()==='Delivery') deliveries++; else visits++;
-    if(e.acknowledged && e.acknowledged.trim()!=='' && e.acknowledged!=='FALSE') acked++;
-    else pending++;
+    if(String(e.type).trim()==='Delivery') del++; else vis++;
+    const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
     if(DONE.includes(e.handoff)) fulfilled++;
   });
-  sumCache={month,total,deliveries,visits,acked,pending,fulfilled,toMin:Math.max(0,15-total)};
-  // Update UI
+  sumCache = {month, total, del, vis, fulfilled, toMin:Math.max(0,15-total)};
   document.getElementById('sumMonth').textContent = month||'';
-  document.getElementById('sumTotal').textContent = total;
-  document.getElementById('sumAcked').textContent = acked;
-  document.getElementById('sumPend').textContent  = pending;
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // SEND SUMMARY MODAL
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function openSendModal(group){
-  pendingGroup = group;
+  pendingGrp = group;
   const lbl = group==='PR_WORK' ? 'PR Work Group' : 'Ops / Warehouse Group';
   document.getElementById('sendModalTarget').textContent = 'Sending to: '+lbl;
   const s = sumCache;
   document.getElementById('scMonth').textContent = s.month||'—';
-  document.getElementById('scTotal').textContent = (s.total||0)+' / 20';
-  document.getElementById('scDel').textContent   = s.deliveries||0;
-  document.getElementById('scVis').textContent   = s.visits||0;
-  document.getElementById('scAck').textContent   = (s.acked||0)+' / '+(s.total||0);
-  document.getElementById('scPnd').textContent   = s.pending||0;
+  document.getElementById('scTotal').textContent = (s.total||0)+' / 15';
+  document.getElementById('scDel').textContent   = s.del||0;
+  document.getElementById('scVis').textContent   = s.vis||0;
   document.getElementById('scMin').textContent   = (s.toMin>0) ? s.toMin+' more needed' : 'Target reached';
+  // Reset copy button
+  const cb=document.getElementById('btnCopySummary');
+  if(cb){ cb.textContent='Copy Summary Text'; cb.classList.remove('ok'); }
   document.getElementById('sendModal').style.display='flex';
 }
 function closeSendModal(){
   document.getElementById('sendModal').style.display='none';
-  pendingGroup=null;
+  pendingGrp=null;
+}
+function copySummaryText(){
+  const s=sumCache;
+  const line='—'.repeat(26);
+  const text=[
+    'GDG SEEDING — CAMPAIGN SUMMARY',
+    line,
+    'Month:        '+( s.month||'—'),
+    'Total Seeded: '+(s.total||0)+' / 15',
+    'Deliveries:   '+(s.del||0),
+    'Store Visits: '+(s.vis||0),
+    'To Min (15):  '+(s.toMin>0 ? s.toMin+' more needed' : 'Target reached'),
+    line
+  ].join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const cb=document.getElementById('btnCopySummary');
+    if(cb){ cb.textContent='Copied!'; cb.classList.add('ok');
+      setTimeout(()=>{ cb.textContent='Copy Summary Text'; cb.classList.remove('ok'); },2500); }
+  });
 }
 async function doSendSummary(btnEl){
-  if(!pendingGroup) return;
+  if(!pendingGrp) return;
   const orig=btnEl.textContent;
   btnEl.disabled=true; btnEl.textContent='Sending...';
   try {
-    const url=GAS+'?action=summary&group='+encodeURIComponent(pendingGroup)+'&t='+Date.now();
-    const data=await gasGet(url);
-    if(data.status==='success'){
-      closeSendModal();
-    } else { throw new Error(data.message||'GAS error'); }
-  } catch(err){
-    alert('Send failed: '+err.message);
-  } finally {
-    btnEl.disabled=false; btnEl.textContent=orig;
-  }
+    const data=await gasGet(GAS+'?action=summary&group='+encodeURIComponent(pendingGrp)+'&t='+Date.now());
+    if(data.status==='success'){ closeSendModal(); }
+    else { throw new Error(data.message||'GAS error'); }
+  } catch(err){ alert('Send failed: '+err.message); }
+  finally { btnEl.disabled=false; btnEl.textContent=orig; }
 }
 
-// ─────────────────────────────────────────────────────────
-// MARK COMPLETE — no-cors fallback so it never shows "fetch failed"
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+// MARK DONE
+// ─────────────────────────────────────────────────
 async function markDone(id, btnEl){
-  const entry=entries.find(e=>e.id===id);
-  if(!entry) return;
+  const entry=entries.find(e=>e.id===id); if(!entry) return;
   const orig=btnEl?btnEl.textContent:'Done';
   if(btnEl){ btnEl.disabled=true; btnEl.textContent='...'; }
   const isDel=String(entry.type||'').trim()==='Delivery';
   const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const idSafe=(id||'').replace(/[^A-Za-z0-9-]/g,'');
-  const url=GAS
-    +'?action=complete'
-    +'&id='+idSafe
-    +'&kol='+kolSafe
-    +'&type='+(isDel?'D':'V')
-    +'&sc='+(isDel?'LC':'V')
-    +'&t='+Date.now();
+  const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&sc='+(isDel?'LC':'V')+'&t='+Date.now();
   try {
-    const data=await gasGet(url);
-    // gasGet never throws — it returns {status:'success'} even on no-cors
+    await gasGet(url); // no-cors fallback means this never throws
     entry.handoff = isDel ? 'Logistics Completed' : 'Visited';
     if(btnEl){ btnEl.textContent='Done'; btnEl.classList.add('ok'); btnEl.disabled=true; }
-    // Refresh after short delay to pull confirmed state from sheet
     setTimeout(()=>fetchData(document.getElementById('monthFilter').value), 1800);
   } catch(err){
-    // Should never reach here due to no-cors fallback, but just in case
     if(btnEl){ btnEl.disabled=false; btnEl.textContent=orig; }
-    alert('Error: '+err.message);
   }
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // FORM HELPERS
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function onTypeChange(){
   const v=document.getElementById('typeVis').checked;
   document.getElementById('deliveryFields').style.display=v?'none':'block';
   document.getElementById('venueFields').style.display=v?'block':'none';
 }
 function getType(){ return document.getElementById('typeVis').checked?'Store Invite':'Delivery'; }
+function getBrand(){ return document.getElementById('brandSel').value||''; }
 function openMap(){ const u=document.getElementById('googleMap').value; if(u) window.open(u,'_blank'); }
 function toggleOtherPkg(){
   const s=document.getElementById('pkgSel');
@@ -586,31 +571,44 @@ function getPkg(){
   const s=document.getElementById('pkgSel');
   return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value;
 }
+
+// Copy dispatch text — includes brand
 function copyText(){
   const name=document.getElementById('kolName').value||'TBD';
+  const brand=getBrand();
   const type=getType(), date=document.getElementById('logDate').value||'TBD', time=document.getElementById('logTime').value||'TBD';
-  const text=type==='Store Invite'
-    ?('Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
-    :('Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
+  const brandLine = brand ? 'Brand: '+brand+'\n' : '';
+  const text = type==='Store Invite'
+    ? (brandLine+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
+    : (brandLine+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
   navigator.clipboard.writeText(text).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); });
 }
+
+// Copy row dispatch text — includes brand from entry
 function copyRow(id){
   const e=entries.find(x=>x.id===id); if(!e) return;
-  navigator.clipboard.writeText(e.dispatchText||('Name: '+e.kol)).then(()=>{
-    const b=document.getElementById('cp_'+id); if(b){ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); }
+  // Build text from entry data, prepend brand if available
+  const brandLine = e.brand ? 'Brand: '+e.brand+'\n' : '';
+  const text = brandLine + (e.dispatchText||('Name: '+e.kol));
+  navigator.clipboard.writeText(text).then(()=>{
+    const b=document.getElementById('cp_'+id);
+    if(b){ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); }
   });
 }
 
-// ─────────────────────────────────────────────────────────
-// SUBMIT ENTRY
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+// SUBMIT ENTRY — posts brand to GAS
+// ─────────────────────────────────────────────────
 async function submitEntry(){
   const btn=document.getElementById('btnSubmit'), type=getType();
   const payload={
-    action:'add', kolName:document.getElementById('kolName').value,
-    handleUrl:document.getElementById('handleUrl').value,
-    seedingType:type, deliverable:'',
-    date:document.getElementById('logDate').value, time:document.getElementById('logTime').value,
+    action:'add',
+    kolName:     document.getElementById('kolName').value,
+    handleUrl:   document.getElementById('handleUrl').value,
+    brand:       getBrand(),
+    seedingType: type, deliverable:'',
+    date:        document.getElementById('logDate').value,
+    time:        document.getElementById('logTime').value,
     packageStr:  type==='Store Invite'?'N/A':getPkg(),
     phone:       type==='Store Invite'?'N/A':document.getElementById('logPhone').value,
     backupPhone: type==='Store Invite'?'':document.getElementById('backupPhone').value,
@@ -635,9 +633,9 @@ async function submitEntry(){
   } catch(err){ btn.textContent='Error — retry'; btn.disabled=false; setTimeout(()=>btn.textContent='Log Entry',3000); }
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // FETCH DATA
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 async function fetchData(month){
   try {
     let url=GAS+'?t='+Date.now();
@@ -663,7 +661,7 @@ async function fetchData(month){
     document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
     document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
-    // Summary — computed locally from entries, never duplicates pacing numbers
+    // Summary computed locally
     computeSummary(d.month);
 
     // Packages
@@ -673,12 +671,14 @@ async function fetchData(month){
     }
 
     buildLedger(d.entries);
-  } catch(err){ console.error('fetchData failed:',err.message); }
+  } catch(err){ console.error('fetchData:',err.message); }
 }
 
-// ─────────────────────────────────────────────────────────
-// BUILD LEDGER
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
+// BUILD LEDGER — strict 4-col grid
+// Active rows:    KOL | Date | Badge | Done-btn
+// Completed rows: KOL | Date | Badge | (empty)
+// ─────────────────────────────────────────────────
 function buildLedger(data){
   const body  =document.getElementById('ledgerBody');
   const arch  =document.getElementById('archiveBody');
@@ -697,10 +697,10 @@ function buildLedger(data){
     const hand = (e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
     const isD  = String(e.type).trim()==='Delivery';
 
-    // Done button — same size as Copy; red only when past due; hidden for completed rows
-    const doneBtn = !done
-      ? `<button class="btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
-      : '';
+    // Col 4: Done button for active, empty span for completed (keeps grid intact)
+    const col4 = !done
+      ? `<button class="btn row-btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
+      : `<span></span>`;
 
     const row=`<div class="ledger-row">
       <div class="kol-info">
@@ -711,11 +711,8 @@ function buildLedger(data){
         <span class="date-val">${fmtDate(e.date)}</span>
         <span class="type-tag">${isD?'Delivery':'Visit'}</span>
       </div>
-      <div class="row-actions">
-        <span class="badge ${bc}">${e.handoff}</span>
-        <button class="btn" id="cp_${e.id}" onclick="copyRow('${e.id}')">Copy</button>
-        ${doneBtn}
-      </div>
+      <span class="badge ${bc}">${e.handoff}</span>
+      ${col4}
     </div>`;
 
     if(done){ dHtml+=row; dCount++; } else { aHtml+=row; }
@@ -729,9 +726,9 @@ function buildLedger(data){
   }
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // ARCHIVE TOGGLE
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function toggleArchive(btn){
   const d=document.getElementById('archiveBody'); if(!d) return;
   const open=d.style.display==='none'||!d.style.display;
@@ -739,9 +736,9 @@ function toggleArchive(btn){
   btn.textContent=btn.textContent.replace(open?'Show':'Hide',open?'Hide':'Show');
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // VIEW SWITCH
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function switchView(v){
   ['Report','Entry'].forEach(n=>{
     document.getElementById('view'+n).style.display='none';
@@ -753,9 +750,9 @@ function switchView(v){
   fetchData(document.getElementById('monthFilter').value);
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // CYCLE MODAL
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 function openCycleModal(){
   const DONE=['Logistics Completed','Completed','Visited','No-Show / Cancelled'];
   const total=entries.length, done=entries.filter(e=>DONE.includes(e.handoff)).length;
@@ -785,9 +782,9 @@ async function confirmCycle(btnEl){
   btnEl.disabled=false; btnEl.textContent=orig;
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 // BOOT
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────
 window.onload=function(){
   fetchData(new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
 };
