@@ -13,7 +13,7 @@
       --text:#1a1f2e; --text-2:#5a5750; --text-3:#9a9690;
       --green:#166534; --green-bg:#dcfce7;
       --amber:#92570a; --amber-bg:#fef3c7;
-      --blue:#1e40af;  --blue-bg:#dbeafe;
+      --blue:#1e40af; --blue-bg:#dbeafe;
       --red:#b91c1c;
       --r-md:12px; --r-lg:16px;
       --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
@@ -22,29 +22,25 @@
     html,body{height:100%;-webkit-font-smoothing:antialiased}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);padding-bottom:60px}
 
-    /* ── NAV ── */
     .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
     .nav-l{display:flex;align-items:center;gap:10px}
     .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
     .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
     .btn-cycle{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);color:rgba(0,230,118,.9);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer}
 
-    /* ── TABS ── */
     .tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:52px;z-index:190}
     .tab{flex:1;height:42px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:.2s;border-bottom:2.5px solid transparent}
     .tab.on{color:var(--navy);border-bottom-color:var(--navy)}
 
-    /* ── LAYOUT ── */
     .wrap{padding:14px;max-width:480px;margin:0 auto}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
 
-    /* ── KPI ── */
     .sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
     .sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
     .hero{font-size:34px;font-weight:800;color:var(--navy);line-height:1}
     .prog-track{background:var(--border-soft);border-radius:6px;height:6px;overflow:hidden;margin-bottom:14px}
     .prog-bar{background:var(--navy);height:100%;width:0;border-radius:6px;transition:width .8s ease}
-    .alert{background:var(--amber-bg);border:1px solid rgba(146,87,10,.15);border-left:3px solid var(--amber);padding:10px 12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .alert-box{background:var(--amber-bg);border:1px solid rgba(146,87,10,.15);border-left:3px solid var(--amber);padding:10px 12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .alert-lbl{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px}
     .alert-val{font-size:20px;font-weight:800;color:var(--amber)}
     .metrics{display:grid;grid-template-columns:1fr 1fr;margin-bottom:14px}
@@ -52,81 +48,53 @@
     .metric:nth-child(2){padding-left:16px;border-left:1px solid var(--border-soft)}
     .metric-lbl{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
     .metric-val{font-size:18px;font-weight:800}
+    .mo-dd{background:var(--canvas);border:1px solid var(--border);font-family:inherit;font-size:10px;font-weight:700;color:var(--text-2);text-transform:uppercase;cursor:pointer;outline:none;padding:5px 10px;border-radius:8px}
 
-    /* ── SUMMARY STRIP ── (no stat boxes, just send buttons) */
+    /* Summary strip */
     .sum-strip{border-top:1px solid var(--border-soft);padding-top:14px;margin-top:2px}
     .sum-strip-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .sum-strip-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)}
     .sum-strip-mo{font-size:10px;font-weight:700;color:var(--text-3)}
     .sum-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
-    /* ── MONTH DROPDOWN ── */
-    .mo-dd{background:var(--canvas);border:1px solid var(--border);font-family:inherit;font-size:10px;font-weight:700;color:var(--text-2);text-transform:uppercase;cursor:pointer;outline:none;padding:5px 10px;border-radius:8px}
-
-    /* ── BUTTONS ──
-       .btn      = small subtle (30px)  used inline in rows
-       .btn.full = full-width (34px)    used in summary strip        */
-    .btn{
-      height:30px; padding:0 12px;
-      border-radius:7px; border:1.5px solid var(--border);
-      background:var(--canvas); color:var(--text-3);
-      font-family:inherit; font-size:9px; font-weight:700;
-      letter-spacing:.5px; text-transform:uppercase;
-      cursor:pointer; transition:.15s; white-space:nowrap;
-      display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
-    }
+    /* Buttons */
+    .btn{height:30px;padding:0 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--canvas);color:var(--text-3);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
     .btn:hover{border-color:var(--text-2);color:var(--text-2)}
     .btn:disabled{opacity:.35;cursor:not-allowed}
     .btn.ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
     .btn.due{border-color:var(--red);color:var(--red)}
     .btn.full{width:100%;height:34px;font-size:10px}
 
-    /* ── SYNC ── */
     .sync-btn{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--canvas);border:1px solid var(--border);padding:5px 10px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.15s;font-family:inherit}
     .sync-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-    /* ─────────────────────────────────────
-       MASTER LEDGER — strict 4-col grid
-       Col 1: KOL name + handle  (flex, min 0)
-       Col 2: Date + type tag    (fixed 100px)
-       Col 3: Status badge       (fixed 74px)
-       Col 4: Action button      (fixed 52px)
-       All rows share identical template → perfect alignment
-    ───────────────────────────────────────*/
-    .ledger-hdr,
+    /* ── LEDGER — strict 4-col grid ──
+       [KOL name+handle | Date+type 100px | Badge 74px | Button 52px]  */
     .ledger-row{
       display:grid;
-      grid-template-columns: minmax(0,1fr) 100px 74px 52px;
+      grid-template-columns:minmax(0,1fr) 100px 74px 52px;
       align-items:center;
       gap:8px;
       padding:10px 4px;
       border-bottom:1px solid var(--border-soft);
     }
     .ledger-row:last-child{border-bottom:none}
-
-    /* col 1 */
     .kol-info{display:flex;flex-direction:column;gap:2px;min-width:0}
     .kol-name{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .kol-name.due{color:var(--red)}
     .kol-handle{font-size:9px;font-weight:600;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-    /* col 2 */
     .date-col{display:flex;flex-direction:column;gap:2px}
     .date-val{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}
     .type-tag{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
-
-    /* col 3 */
     .badge{display:flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;width:100%}
     .badge-p{background:var(--amber-bg);color:var(--amber)}
     .badge-a{background:var(--blue-bg);color:var(--blue)}
     .badge-d{background:var(--green-bg);color:var(--green)}
-
-    /* col 4 — button fills the fixed cell */
     .row-btn{width:100%}
 
     .archive-btn{width:100%;text-align:center;background:transparent;border:1px dashed var(--border);color:var(--text-3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
 
-    /* ── FORM ── */
+    /* Form */
     .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
     .f-stack{display:flex;flex-direction:column;gap:12px}
@@ -157,14 +125,13 @@
     .map-wrap .ibox{padding-right:42px}
     .map-pin{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--canvas);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
 
-    /* ── MODALS ── */
+    /* Modals */
     .overlay{display:none;position:fixed;inset:0;background:rgba(26,31,46,.72);z-index:1100;padding:20px;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .mbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
     .sc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-soft);font-size:12px}
     .sc-row:last-child{border-bottom:none}
     .sc-lbl{font-weight:600;color:var(--text-2)}
     .sc-val{font-weight:700;color:var(--navy)}
-
     .empty{padding:24px 20px;text-align:center;color:var(--text-3);font-size:12px}
   </style>
 </head>
@@ -185,9 +152,8 @@
 
 <div class="wrap">
 
-  <!-- ═══ REPORTING ═══ -->
+  <!-- REPORTING -->
   <div id="viewReport">
-
     <div class="card">
       <div class="sec-row">
         <span class="sec-title">Campaign Pacing</span>
@@ -195,7 +161,6 @@
           <option value="">Loading...</option>
         </select>
       </div>
-
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
         <div>
           <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Total Seeded</div>
@@ -204,15 +169,13 @@
         <div class="hero" id="vTotal">--</div>
       </div>
       <div class="prog-track"><div class="prog-bar" id="progBar"></div></div>
-
-      <div class="alert">
+      <div class="alert-box">
         <div>
           <div class="alert-lbl">Pending Deliveries</div>
           <div style="font-size:10px;color:var(--amber);margin-top:2px;font-weight:500">Awaiting acknowledgement</div>
         </div>
         <div class="alert-val" id="vPending">--</div>
       </div>
-
       <div class="metrics">
         <div class="metric">
           <div class="metric-lbl">To Reach Min (15)</div>
@@ -223,8 +186,7 @@
           <div class="metric-val" id="vToMax" style="color:var(--green)">--</div>
         </div>
       </div>
-
-      <!-- Summary strip — send buttons only, no stat boxes -->
+      <!-- Summary send strip -->
       <div class="sum-strip">
         <div class="sum-strip-hdr">
           <span class="sum-strip-lbl">Campaign Summary</span>
@@ -253,12 +215,10 @@
       <button class="archive-btn" id="btnArchive" onclick="toggleArchive(this)" style="display:none">Show Completed History</button>
       <div id="archiveBody" style="display:none;margin-top:8px"></div>
     </div>
+  </div>
 
-  </div><!-- /viewReport -->
-
-  <!-- ═══ ENTRY ═══ -->
+  <!-- ENTRY -->
   <div id="viewEntry" style="display:none">
-
     <div class="card">
       <div class="sec-lbl">KOL Information</div>
       <div class="f-stack">
@@ -270,10 +230,10 @@
           <label class="f-lbl" for="handleUrl">Profile URL</label>
           <input type="url" id="handleUrl" class="ibox" placeholder="instagram.com/username" autocomplete="off" inputmode="url">
         </div>
-        <!-- Brand -->
+        <!-- Brand — remembered across sessions -->
         <div class="f-group">
           <label class="f-lbl" for="brandSel">Brand</label>
-          <select id="brandSel" class="ibox">
+          <select id="brandSel" class="ibox" onchange="saveBrand()">
             <option value="">Select brand...</option>
             <option value="Guss Damn Good">Guss Damn Good</option>
             <option value="Adam and Eve">Adam and Eve</option>
@@ -303,7 +263,6 @@
           <div class="f-group"><label class="f-lbl" for="logDate">Date</label><input type="date" id="logDate" class="ibox"></div>
           <div class="f-group"><label class="f-lbl" for="logTime">Time</label><input type="time" id="logTime" class="ibox"></div>
         </div>
-
         <div id="deliveryFields">
           <div class="subsec">
             <div class="subsec-lbl">Delivery Info</div>
@@ -333,26 +292,23 @@
             </div>
           </div>
         </div>
-
         <div id="venueFields" style="display:none">
           <div class="subsec">
             <div class="subsec-lbl">Store Visit Info</div>
             <div class="f-group"><label class="f-lbl" for="storeVenue">Venue / Branch</label><input type="text" id="storeVenue" class="ibox" placeholder="e.g. BIANCA EMSPHERE"></div>
           </div>
         </div>
-
         <div class="btn-row">
           <button class="btn-primary" id="btnSubmit" onclick="submitEntry()">Log Entry</button>
           <button class="btn-primary btn-sec" id="btnCopy" onclick="copyText()" style="width:auto;padding:0 16px;white-space:nowrap">Copy</button>
         </div>
       </div>
     </div>
+  </div>
 
-  </div><!-- /viewEntry -->
+</div>
 
-</div><!-- /wrap -->
-
-<!-- ═══ SEND SUMMARY CONFIRM MODAL ═══ -->
+<!-- SEND SUMMARY MODAL -->
 <div class="overlay" id="sendModal">
   <div class="mbox">
     <div style="margin-bottom:18px">
@@ -364,9 +320,9 @@
       <div class="sc-row"><span class="sc-lbl">Total Seeded</span><span class="sc-val" id="scTotal">—</span></div>
       <div class="sc-row"><span class="sc-lbl">Deliveries</span><span class="sc-val" id="scDel">—</span></div>
       <div class="sc-row"><span class="sc-lbl">Store Visits</span><span class="sc-val" id="scVis">—</span></div>
+      <div class="sc-row"><span class="sc-lbl">Completed</span><span class="sc-val" id="scComp">—</span></div>
       <div class="sc-row"><span class="sc-lbl">To Min (15)</span><span class="sc-val" id="scMin">—</span></div>
     </div>
-    <!-- Copy summary as text -->
     <button id="btnCopySummary" onclick="copySummaryText()" class="btn full" style="margin-bottom:12px">Copy Summary Text</button>
     <div style="display:flex;gap:10px">
       <button onclick="closeSendModal()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Cancel</button>
@@ -375,7 +331,7 @@
   </div>
 </div>
 
-<!-- ═══ NEW CYCLE MODAL ═══ -->
+<!-- NEW CYCLE MODAL -->
 <div class="overlay" id="cycleModal">
   <div class="mbox">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
@@ -421,33 +377,34 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────────────
-// CONFIG
-// ─────────────────────────────────────────────────
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
 
-// ─────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────
-let entries     = [];
-let sumCache    = {};
-let pendingGrp  = null;
+let entries    = [];
+let sumCache   = {};
+let pendingGrp = null;
 
-// ─────────────────────────────────────────────────
-// GAS HELPER — tries normal fetch; falls back to no-cors ping
-// ─────────────────────────────────────────────────
+// ── Only "Completed" is the done state — matches sheet dropdown exactly ──
+const DONE_STATES = ['Completed', 'No-Show / Cancelled'];
+
+// ── GAS fetch helper — no-cors fallback so Done never shows "fetch failed" ──
 function gasGet(url){
   return fetch(url, {redirect:'follow'})
     .then(r => r.text()).then(t => JSON.parse(t))
-    .catch(() => {
-      fetch(url, {mode:'no-cors'}).catch(()=>{});
-      return {status:'success', _noCors:true};
-    });
+    .catch(() => { fetch(url, {mode:'no-cors'}).catch(()=>{}); return {status:'success', _noCors:true}; });
 }
 
-// ─────────────────────────────────────────────────
-// UTILS
-// ─────────────────────────────────────────────────
+// ── BRAND MEMORY (localStorage) ──────────────────────────────────────────
+function saveBrand(){
+  try { localStorage.setItem('gdg_brand', document.getElementById('brandSel').value); } catch(e){}
+}
+function loadBrand(){
+  try {
+    const b = localStorage.getItem('gdg_brand');
+    if(b){ const s=document.getElementById('brandSel'); for(let i=0;i<s.options.length;i++){if(s.options[i].value===b){s.selectedIndex=i;break;}} }
+  } catch(e){}
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
 function fmtDate(d){
   if(!d) return '';
   const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -458,71 +415,49 @@ function isPast(ds){
   if(!ds) return false;
   const m=String(ds).match(/^(\d{4})-(\d{2})-(\d{2})/);
   if(!m) return false;
-  const d=new Date(+m[1],+m[2]-1,+m[3]), t=new Date();
-  t.setHours(0,0,0,0); return d<t;
+  const d=new Date(+m[1],+m[2]-1,+m[3]), t=new Date(); t.setHours(0,0,0,0); return d<t;
 }
 
-// ─────────────────────────────────────────────────
-// COMPUTE SUMMARY from loaded entries
-// ─────────────────────────────────────────────────
+// ── COMPUTE SUMMARY from entries ──────────────────────────────────────────
 function computeSummary(month){
-  let total=0, del=0, vis=0, fulfilled=0;
+  let total=0, del=0, vis=0, completed=0;
   entries.forEach(e=>{
     if(!e.kol) return;
     total++;
     if(String(e.type).trim()==='Delivery') del++; else vis++;
-    const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
-    if(DONE.includes(e.handoff)) fulfilled++;
+    if(e.handoff==='Completed') completed++;
   });
-  sumCache = {month, total, del, vis, fulfilled, toMin:Math.max(0,15-total)};
+  sumCache = {month, total, del, vis, completed, toMin:Math.max(0,15-total)};
   document.getElementById('sumMonth').textContent = month||'';
 }
 
-// ─────────────────────────────────────────────────
-// SEND SUMMARY MODAL
-// ─────────────────────────────────────────────────
+// ── SEND SUMMARY MODAL ────────────────────────────────────────────────────
 function openSendModal(group){
-  pendingGrp = group;
-  const lbl = group==='PR_WORK' ? 'PR Work Group' : 'Ops / Warehouse Group';
-  document.getElementById('sendModalTarget').textContent = 'Sending to: '+lbl;
-  const s = sumCache;
+  pendingGrp=group;
+  document.getElementById('sendModalTarget').textContent='Sending to: '+(group==='PR_WORK'?'PR Work Group':'Ops / Warehouse Group');
+  const s=sumCache;
   document.getElementById('scMonth').textContent = s.month||'—';
   document.getElementById('scTotal').textContent = (s.total||0)+' / 15';
   document.getElementById('scDel').textContent   = s.del||0;
   document.getElementById('scVis').textContent   = s.vis||0;
+  document.getElementById('scComp').textContent  = s.completed||0;
   document.getElementById('scMin').textContent   = (s.toMin>0) ? s.toMin+' more needed' : 'Target reached';
-  // Reset copy button
   const cb=document.getElementById('btnCopySummary');
   if(cb){ cb.textContent='Copy Summary Text'; cb.classList.remove('ok'); }
   document.getElementById('sendModal').style.display='flex';
 }
-function closeSendModal(){
-  document.getElementById('sendModal').style.display='none';
-  pendingGrp=null;
-}
+function closeSendModal(){ document.getElementById('sendModal').style.display='none'; pendingGrp=null; }
 function copySummaryText(){
-  const s=sumCache;
-  const line='—'.repeat(26);
-  const text=[
-    'GDG SEEDING — CAMPAIGN SUMMARY',
-    line,
-    'Month:        '+( s.month||'—'),
-    'Total Seeded: '+(s.total||0)+' / 15',
-    'Deliveries:   '+(s.del||0),
-    'Store Visits: '+(s.vis||0),
-    'To Min (15):  '+(s.toMin>0 ? s.toMin+' more needed' : 'Target reached'),
-    line
-  ].join('\n');
+  const s=sumCache, line='—'.repeat(26);
+  const text=['GDG SEEDING — CAMPAIGN SUMMARY',line,'Month:        '+(s.month||'—'),'Total Seeded: '+(s.total||0)+' / 15','Deliveries:   '+(s.del||0),'Store Visits: '+(s.vis||0),'Completed:    '+(s.completed||0),'To Min (15):  '+(s.toMin>0?s.toMin+' more needed':'Target reached'),line].join('\n');
   navigator.clipboard.writeText(text).then(()=>{
     const cb=document.getElementById('btnCopySummary');
-    if(cb){ cb.textContent='Copied!'; cb.classList.add('ok');
-      setTimeout(()=>{ cb.textContent='Copy Summary Text'; cb.classList.remove('ok'); },2500); }
+    if(cb){ cb.textContent='Copied!'; cb.classList.add('ok'); setTimeout(()=>{ cb.textContent='Copy Summary Text'; cb.classList.remove('ok'); },2500); }
   });
 }
 async function doSendSummary(btnEl){
   if(!pendingGrp) return;
-  const orig=btnEl.textContent;
-  btnEl.disabled=true; btnEl.textContent='Sending...';
+  const orig=btnEl.textContent; btnEl.disabled=true; btnEl.textContent='Sending...';
   try {
     const data=await gasGet(GAS+'?action=summary&group='+encodeURIComponent(pendingGrp)+'&t='+Date.now());
     if(data.status==='success'){ closeSendModal(); }
@@ -531,9 +466,7 @@ async function doSendSummary(btnEl){
   finally { btnEl.disabled=false; btnEl.textContent=orig; }
 }
 
-// ─────────────────────────────────────────────────
-// MARK DONE
-// ─────────────────────────────────────────────────
+// ── MARK DONE — writes "Completed" which matches sheet dropdown exactly ───
 async function markDone(id, btnEl){
   const entry=entries.find(e=>e.id===id); if(!entry) return;
   const orig=btnEl?btnEl.textContent:'Done';
@@ -541,10 +474,11 @@ async function markDone(id, btnEl){
   const isDel=String(entry.type||'').trim()==='Delivery';
   const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const idSafe=(id||'').replace(/[^A-Za-z0-9-]/g,'');
-  const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&sc='+(isDel?'LC':'V')+'&t='+Date.now();
+  // type param still sent so GAS can tick logistics sheet for deliveries
+  const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
   try {
-    await gasGet(url); // no-cors fallback means this never throws
-    entry.handoff = isDel ? 'Logistics Completed' : 'Visited';
+    await gasGet(url); // no-cors fallback — never throws
+    entry.handoff='Completed';
     if(btnEl){ btnEl.textContent='Done'; btnEl.classList.add('ok'); btnEl.disabled=true; }
     setTimeout(()=>fetchData(document.getElementById('monthFilter').value), 1800);
   } catch(err){
@@ -552,9 +486,7 @@ async function markDone(id, btnEl){
   }
 }
 
-// ─────────────────────────────────────────────────
-// FORM HELPERS
-// ─────────────────────────────────────────────────
+// ── FORM HELPERS ──────────────────────────────────────────────────────────
 function onTypeChange(){
   const v=document.getElementById('typeVis').checked;
   document.getElementById('deliveryFields').style.display=v?'none':'block';
@@ -563,66 +495,33 @@ function onTypeChange(){
 function getType(){ return document.getElementById('typeVis').checked?'Store Invite':'Delivery'; }
 function getBrand(){ return document.getElementById('brandSel').value||''; }
 function openMap(){ const u=document.getElementById('googleMap').value; if(u) window.open(u,'_blank'); }
-function toggleOtherPkg(){
-  const s=document.getElementById('pkgSel');
-  document.getElementById('pkgOther').style.display=s.value==='Others'?'block':'none';
-}
-function getPkg(){
-  const s=document.getElementById('pkgSel');
-  return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value;
-}
+function toggleOtherPkg(){ document.getElementById('pkgOther').style.display=document.getElementById('pkgSel').value==='Others'?'block':'none'; }
+function getPkg(){ const s=document.getElementById('pkgSel'); return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value; }
 
-// Copy dispatch text — includes brand
 function copyText(){
   const name=document.getElementById('kolName').value||'TBD';
-  const brand=getBrand();
-  const type=getType(), date=document.getElementById('logDate').value||'TBD', time=document.getElementById('logTime').value||'TBD';
-  const brandLine = brand ? 'Brand: '+brand+'\n' : '';
-  const text = type==='Store Invite'
-    ? (brandLine+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
-    : (brandLine+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
+  const brand=getBrand(), type=getType();
+  const date=document.getElementById('logDate').value||'TBD';
+  const time=document.getElementById('logTime').value||'TBD';
+  const bl=brand?'Brand: '+brand+'\n':'';
+  const text=type==='Store Invite'
+    ?(bl+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
+    :(bl+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
   navigator.clipboard.writeText(text).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); });
 }
 
-// Copy row dispatch text — includes brand from entry
-function copyRow(id){
-  const e=entries.find(x=>x.id===id); if(!e) return;
-  // Build text from entry data, prepend brand if available
-  const brandLine = e.brand ? 'Brand: '+e.brand+'\n' : '';
-  const text = brandLine + (e.dispatchText||('Name: '+e.kol));
-  navigator.clipboard.writeText(text).then(()=>{
-    const b=document.getElementById('cp_'+id);
-    if(b){ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); }
-  });
-}
-
-// ─────────────────────────────────────────────────
-// SUBMIT ENTRY — posts brand to GAS
-// ─────────────────────────────────────────────────
+// ── SUBMIT ENTRY ──────────────────────────────────────────────────────────
 async function submitEntry(){
   const btn=document.getElementById('btnSubmit'), type=getType();
-  const payload={
-    action:'add',
-    kolName:     document.getElementById('kolName').value,
-    handleUrl:   document.getElementById('handleUrl').value,
-    brand:       getBrand(),
-    seedingType: type, deliverable:'',
-    date:        document.getElementById('logDate').value,
-    time:        document.getElementById('logTime').value,
-    packageStr:  type==='Store Invite'?'N/A':getPkg(),
-    phone:       type==='Store Invite'?'N/A':document.getElementById('logPhone').value,
-    backupPhone: type==='Store Invite'?'':document.getElementById('backupPhone').value,
-    address:     type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value,
-    googleMap:   type==='Store Invite'?'':document.getElementById('googleMap').value,
-    notes:''
-  };
+  const payload={ action:'add', kolName:document.getElementById('kolName').value, handleUrl:document.getElementById('handleUrl').value, brand:getBrand(), seedingType:type, deliverable:'', date:document.getElementById('logDate').value, time:document.getElementById('logTime').value, packageStr:type==='Store Invite'?'N/A':getPkg(), phone:type==='Store Invite'?'N/A':document.getElementById('logPhone').value, backupPhone:type==='Store Invite'?'':document.getElementById('backupPhone').value, address:type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value, googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value, notes:'' };
   btn.textContent='Saving...'; btn.disabled=true;
   try {
     const res=await fetch(GAS,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow'});
     const r=JSON.parse(await res.text());
     if(r.status==='success'){
       btn.textContent='Saved!'; btn.classList.add('ok');
-      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.value='';});
+      // Clear fields but keep brand selection
+      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.id!=='brandSel'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA')) el.value='';});
       document.getElementById('typeDel').checked=true; onTypeChange();
       const rm=new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear();
       const s=document.getElementById('monthFilter');
@@ -633,9 +532,7 @@ async function submitEntry(){
   } catch(err){ btn.textContent='Error — retry'; btn.disabled=false; setTimeout(()=>btn.textContent='Log Entry',3000); }
 }
 
-// ─────────────────────────────────────────────────
-// FETCH DATA
-// ─────────────────────────────────────────────────
+// ── FETCH DATA ────────────────────────────────────────────────────────────
 async function fetchData(month){
   try {
     let url=GAS+'?t='+Date.now();
@@ -643,61 +540,42 @@ async function fetchData(month){
     const res=await fetch(url,{redirect:'follow'});
     const r=JSON.parse(await res.text());
     if(r.status!=='success') throw new Error(r.message||'GAS error');
-    const d=r.data;
-    entries=d.entries;
-
-    // Month selector
+    const d=r.data; entries=d.entries;
     const sel=document.getElementById('monthFilter');
-    if(sel){
-      sel.innerHTML='';
-      (d.availableMonths||[]).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===d.month)o.selected=true;sel.appendChild(o);});
-    }
-
-    // Pacing
+    if(sel){ sel.innerHTML=''; (d.availableMonths||[]).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===d.month)o.selected=true;sel.appendChild(o);}); }
     document.getElementById('vTotal').textContent  = d.totalSeeded;
     document.getElementById('vPending').textContent= d.pendingDeliveries;
     document.getElementById('vToMin').textContent  = d.remainingToMin;
     document.getElementById('vToMax').textContent  = d.remainingToMax;
     document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
     document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-
-    // Summary computed locally
     computeSummary(d.month);
-
-    // Packages
     if(d.packages&&d.packages.length){
       const ps=document.getElementById('pkgSel');
       if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
     }
-
     buildLedger(d.entries);
   } catch(err){ console.error('fetchData:',err.message); }
 }
 
-// ─────────────────────────────────────────────────
-// BUILD LEDGER — strict 4-col grid
-// Active rows:    KOL | Date | Badge | Done-btn
-// Completed rows: KOL | Date | Badge | (empty)
-// ─────────────────────────────────────────────────
+// ── BUILD LEDGER ──────────────────────────────────────────────────────────
 function buildLedger(data){
-  const body  =document.getElementById('ledgerBody');
-  const arch  =document.getElementById('archiveBody');
+  const body=document.getElementById('ledgerBody');
+  const arch=document.getElementById('archiveBody');
   const arcBtn=document.getElementById('btnArchive');
   if(!body) return;
   if(!data||!data.length){ body.innerHTML='<div class="empty">No entries this month</div>'; if(arcBtn) arcBtn.style.display='none'; return; }
 
-  const DONE=['Logistics Completed','Completed','No-Show / Cancelled','Visited'];
   let aHtml='', dHtml='', dCount=0;
-
   data.forEach(e=>{
     if(!e.kol||!e.kol.trim()) return;
-    const done = DONE.includes(e.handoff);
+    const done = DONE_STATES.includes(e.handoff);
     const past = !done && isPast(e.date);
-    const bc   = e.handoff==='Pending'?'badge-p':(e.handoff==='Acknowledged'?'badge-a':'badge-d');
+    const bc   = done ? 'badge-d' : (e.handoff==='Acknowledged'?'badge-a':'badge-p');
     const hand = (e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
     const isD  = String(e.type).trim()==='Delivery';
 
-    // Col 4: Done button for active, empty span for completed (keeps grid intact)
+    // Col 4: Done button for active rows; empty span for completed (keeps grid)
     const col4 = !done
       ? `<button class="btn row-btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
       : `<span></span>`;
@@ -718,17 +596,12 @@ function buildLedger(data){
     if(done){ dHtml+=row; dCount++; } else { aHtml+=row; }
   });
 
-  body.innerHTML = aHtml||'<div class="empty">All entries completed</div>';
+  body.innerHTML=aHtml||'<div class="empty">All entries completed</div>';
   if(arch) arch.innerHTML=dHtml;
-  if(arcBtn){
-    arcBtn.style.display=dCount>0?'block':'none';
-    if(dCount>0) arcBtn.textContent='Show Completed History ('+dCount+')';
-  }
+  if(arcBtn){ arcBtn.style.display=dCount>0?'block':'none'; if(dCount>0) arcBtn.textContent='Show Completed History ('+dCount+')'; }
 }
 
-// ─────────────────────────────────────────────────
-// ARCHIVE TOGGLE
-// ─────────────────────────────────────────────────
+// ── ARCHIVE TOGGLE ────────────────────────────────────────────────────────
 function toggleArchive(btn){
   const d=document.getElementById('archiveBody'); if(!d) return;
   const open=d.style.display==='none'||!d.style.display;
@@ -736,26 +609,19 @@ function toggleArchive(btn){
   btn.textContent=btn.textContent.replace(open?'Show':'Hide',open?'Hide':'Show');
 }
 
-// ─────────────────────────────────────────────────
-// VIEW SWITCH
-// ─────────────────────────────────────────────────
+// ── VIEW SWITCH ───────────────────────────────────────────────────────────
 function switchView(v){
-  ['Report','Entry'].forEach(n=>{
-    document.getElementById('view'+n).style.display='none';
-    const t=document.getElementById('tab'+n); if(t) t.classList.remove('on');
-  });
+  ['Report','Entry'].forEach(n=>{ document.getElementById('view'+n).style.display='none'; const t=document.getElementById('tab'+n); if(t) t.classList.remove('on'); });
   const N=v.charAt(0).toUpperCase()+v.slice(1);
   document.getElementById('view'+N).style.display='block';
   const t=document.getElementById('tab'+N); if(t) t.classList.add('on');
   fetchData(document.getElementById('monthFilter').value);
 }
 
-// ─────────────────────────────────────────────────
-// CYCLE MODAL
-// ─────────────────────────────────────────────────
+// ── CYCLE MODAL ───────────────────────────────────────────────────────────
 function openCycleModal(){
-  const DONE=['Logistics Completed','Completed','Visited','No-Show / Cancelled'];
-  const total=entries.length, done=entries.filter(e=>DONE.includes(e.handoff)).length;
+  const done=entries.filter(e=>DONE_STATES.includes(e.handoff)).length;
+  const total=entries.length;
   const sel=document.getElementById('monthFilter');
   const prev=sel&&sel.value?sel.value:'Current Month';
   const now=new Date(), next=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
@@ -770,9 +636,7 @@ function openCycleModal(){
 function closeCycleModal(){ document.getElementById('cycleModal').style.display='none'; }
 async function confirmCycle(btnEl){
   const orig=btnEl.textContent; btnEl.disabled=true; btnEl.textContent='Starting...';
-  if(document.getElementById('cycleSendSum').checked){
-    try { await gasGet(GAS+'?action=summary&group=PR_WORK&t='+Date.now()); } catch(e){}
-  }
+  if(document.getElementById('cycleSendSum').checked){ try { await gasGet(GAS+'?action=summary&group=PR_WORK&t='+Date.now()); } catch(e){} }
   const now=new Date(), rm=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
   const sel=document.getElementById('monthFilter');
   if(sel){let f=false;for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===rm){sel.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;sel.insertBefore(o,sel.firstChild);}}
@@ -782,10 +646,9 @@ async function confirmCycle(btnEl){
   btnEl.disabled=false; btnEl.textContent=orig;
 }
 
-// ─────────────────────────────────────────────────
-// BOOT
-// ─────────────────────────────────────────────────
+// ── BOOT ──────────────────────────────────────────────────────────────────
 window.onload=function(){
+  loadBrand(); // restore last selected brand
   fetchData(new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
 };
 </script>
