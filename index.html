@@ -189,7 +189,7 @@
           <span class="sum-strip-mo" id="sumMonth">--</span>
         </div>
         <div class="sum-btns">
-          <button class="btn full" id="btnCopySumInline" onclick="copySummaryText(this)">Copy Summary Text</button>
+          <button class="btn full" onclick="openSumPreview()">Copy Summary Text</button>
         </div>
       </div>
     </div>
@@ -301,6 +301,22 @@
     </div>
   </div>
 
+</div>
+
+<!-- SUMMARY PREVIEW MODAL -->
+<div class="overlay" id="sumPreviewModal">
+  <div class="mbox">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:800;color:var(--navy)">Campaign Summary</div>
+      <span id="sumPreviewMonth" style="font-size:10px;font-weight:700;color:var(--text-3)">--</span>
+    </div>
+    <!-- Preview text rendered as rows -->
+    <div id="sumPreviewBody" style="background:var(--canvas);border-radius:10px;padding:14px;margin-bottom:16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;line-height:1.8;color:var(--text)"></div>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeSumPreview()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Close</button>
+      <button id="btnDoSumCopy" onclick="doSumCopy(this)" style="flex:2;height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Copy</button>
+    </div>
+  </div>
 </div>
 
 <!-- NEW CYCLE MODAL -->
@@ -423,42 +439,94 @@ function computeSummary(month){
   document.getElementById('sumMonth').textContent = month||'';
 }
 
-// ── COPY SUMMARY TEXT — inline button, no modal ───────────────────────────
-function copySummaryText(btnEl){
-  const s = sumCache;
-  const line = '─'.repeat(28);
-  const pad  = (str, w) => { const t=String(str); return t+' '.repeat(Math.max(0,w-t.length)); };
+// ── BUILD SUMMARY TEXT — clean format, no separator lines ─────────────────
+function buildSummaryText(){
+  const s   = sumCache;
+  const col = 14; // label column width
+  const pad = (str, w) => { const t=String(str); return t+' '.repeat(Math.max(0,w-t.length)); };
 
   const rows = [
-    'GDG SEEDING — CAMPAIGN SUMMARY',
-    line,
-    pad('Month:',14)        + (s.month||'—'),
-    pad('Cycle Start:',14)  + (s.cycleStart ? fmtDate(s.cycleStart) : '—'),
-    pad('Hit 15 on:',14)    + (s.hit15Date  ? fmtDate(s.hit15Date)  : 'Not yet reached'),
-    line,
-    pad('Total Seeded:',14) + (s.total||0) + ' / 15',
-    pad('Deliveries:',14)   + (s.del||0),
-    pad('Store Visits:',14) + (s.vis||0),
-    pad('Completed:',14)    + (s.completed||0),
-    pad('To Min (15):',14)  + (s.toMin>0 ? s.toMin+' more needed' : 'Target reached'),
+    'GDG SEEDING \u00B7 ' + (s.month||'—'),
+    '',
+    pad('Cycle Start',col)  + (s.cycleStart ? fmtDate(s.cycleStart) : '—'),
+    pad('Hit 15 on',col)    + (s.hit15Date  ? fmtDate(s.hit15Date)  : 'Not yet reached'),
+    '',
+    pad('Total',col)        + (s.total||0) + ' / 15',
+    pad('Deliveries',col)   + (s.del||0),
+    pad('Store Visits',col) + (s.vis||0),
+    pad('Completed',col)    + (s.completed||0),
+    pad('To Min (15)',col)   + (s.toMin>0 ? s.toMin+' more needed' : 'Target reached'),
   ];
 
-  // Brand breakdown
   if(s.brandRows && s.brandRows.length){
-    rows.push(line);
-    rows.push('By Brand:');
-    s.brandRows.forEach(r => rows.push('  '+pad(r.brand+':',20)+r.count));
+    rows.push('');
+    rows.push('By Brand');
+    s.brandRows.forEach(r => rows.push(pad(r.brand, col) + r.count));
   }
 
-  rows.push(line);
-  const text = rows.join('\n');
+  return rows.join('\n');
+}
 
+// ── SUMMARY PREVIEW MODAL ─────────────────────────────────────────────────
+function openSumPreview(){
+  const s    = sumCache;
+  const text = buildSummaryText();
+
+  // Render preview as styled rows inside the modal
+  const lines = text.split('\n');
+  let html = '';
+  lines.forEach((l, i) => {
+    if(l === ''){
+      html += '<div style="height:6px"></div>';
+    } else if(i === 0){
+      html += `<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">${l}</div>`;
+    } else if(['By Brand','Cycle Start','Hit 15 on'].some(k => l.startsWith(k)) === false && l.indexOf('  ')!==0 && !l.match(/^\s/) && l.indexOf(' ')>5 && i < 5){
+      // section headers like "By Brand"
+      html += `<div style="font-weight:700;font-size:11px;color:var(--text-2)">${l}</div>`;
+    } else {
+      // data row — split on first 14 chars as label
+      const lbl  = l.substring(0,14).trimEnd();
+      const val  = l.substring(14).trim();
+      if(val){
+        html += `<div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:var(--text-3);font-size:11px;font-weight:600">${lbl}</span>
+          <span style="color:var(--navy);font-size:12px;font-weight:700">${val}</span>
+        </div>`;
+      } else {
+        html += `<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">${l}</div>`;
+      }
+    }
+  });
+
+  document.getElementById('sumPreviewMonth').textContent = s.month||'';
+  document.getElementById('sumPreviewBody').innerHTML    = html;
+
+  // Reset copy button
+  const cb = document.getElementById('btnDoSumCopy');
+  if(cb){ cb.textContent='Copy'; cb.style.background=''; }
+
+  // Store text for the copy action
+  document.getElementById('sumPreviewModal')._text = text;
+  document.getElementById('sumPreviewModal').style.display = 'flex';
+}
+
+function closeSumPreview(){
+  document.getElementById('sumPreviewModal').style.display = 'none';
+}
+
+function doSumCopy(btnEl){
+  const text = document.getElementById('sumPreviewModal')._text || '';
   navigator.clipboard.writeText(text).then(()=>{
-    if(btnEl){ btnEl.textContent='Copied!'; btnEl.classList.add('ok');
-      setTimeout(()=>{ btnEl.textContent='Copy Summary Text'; btnEl.classList.remove('ok'); }, 2500);
+    if(btnEl){
+      btnEl.textContent = 'Copied!';
+      btnEl.style.background = 'var(--green)';
+      setTimeout(()=>{ btnEl.textContent='Copy'; btnEl.style.background=''; }, 2500);
     }
   });
 }
+
+// kept for any legacy references — now just opens preview
+function copySummaryText(){ openSumPreview(); }
 
 // ── MARK DONE — writes "Completed" which matches sheet dropdown exactly ───
 async function markDone(id, btnEl){
