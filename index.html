@@ -350,13 +350,6 @@
         <div><div style="font-size:20px;font-weight:800;color:#92570a" id="cPend">—</div><div style="font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;margin-top:2px">Pending</div></div>
       </div>
     </div>
-    <label style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--canvas);border-radius:10px;margin-bottom:18px;cursor:pointer">
-      <input type="checkbox" id="cycleSendSum" checked style="width:18px;height:18px;accent-color:#00e676;flex-shrink:0;margin-top:1px">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--navy)">Send closing summary to PR Work</div>
-        <div style="font-size:10px;color:var(--text-3);margin-top:2px;line-height:1.4">Pushes the monthly summary card before switching</div>
-      </div>
-    </label>
     <div style="display:flex;gap:10px">
       <button onclick="closeCycleModal()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Cancel</button>
       <button onclick="confirmCycle(this)" style="flex:2;height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Start New Cycle</button>
@@ -682,29 +675,65 @@ function switchView(v){
 
 // ── CYCLE MODAL ───────────────────────────────────────────────────────────
 function openCycleModal(){
-  const done=entries.filter(e=>DONE_STATES.includes(e.handoff)).length;
-  const total=entries.length;
-  const sel=document.getElementById('monthFilter');
-  const prev=sel&&sel.value?sel.value:'Current Month';
-  const now=new Date(), next=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
-  document.getElementById('cyclePrev').textContent=prev;
-  document.getElementById('cycleNext').textContent=next;
-  document.getElementById('cycleSubtitle').textContent='Closing '+prev+' · Opening '+next;
-  document.getElementById('cTotal').textContent=total;
-  document.getElementById('cDone').textContent=done;
-  document.getElementById('cPend').textContent=total-done;
-  document.getElementById('cycleModal').style.display='flex';
+  const done  = entries.filter(e=>DONE_STATES.includes(e.handoff)).length;
+  const total = entries.length;
+
+  // Closing month = currently selected month in the filter
+  const sel       = document.getElementById('monthFilter');
+  const prevLabel = sel&&sel.value ? sel.value : 'Current Month';
+
+  // Next month = closing month + 1, with proper year rollover
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let nextLabel = prevLabel;
+  const parts = prevLabel.match(/^(\w+)\s+(\d{4})$/);
+  if(parts){
+    const mIdx = MONTHS.indexOf(parts[1]);
+    if(mIdx !== -1){
+      const nextMIdx = (mIdx + 1) % 12;
+      const nextYear = mIdx === 11 ? parseInt(parts[2]) + 1 : parseInt(parts[2]);
+      nextLabel = MONTHS[nextMIdx] + ' ' + nextYear;
+    }
+  }
+
+  document.getElementById('cyclePrev').textContent     = prevLabel;
+  document.getElementById('cycleNext').textContent     = nextLabel;
+  document.getElementById('cycleSubtitle').textContent = 'Closing '+prevLabel+' · Opening '+nextLabel;
+  document.getElementById('cTotal').textContent = total;
+  document.getElementById('cDone').textContent  = done;
+  document.getElementById('cPend').textContent  = total - done;
+
+  // Store next month so confirmCycle uses it
+  document.getElementById('cycleModal')._nextMonth = nextLabel;
+  document.getElementById('cycleModal').style.display = 'flex';
 }
 function closeCycleModal(){ document.getElementById('cycleModal').style.display='none'; }
 async function confirmCycle(btnEl){
-  const orig=btnEl.textContent; btnEl.disabled=true; btnEl.textContent='Starting...';
-  if(document.getElementById('cycleSendSum').checked){ try { await gasGet(GAS+'?action=summary&group=PR_WORK&t='+Date.now()); } catch(e){} }
-  const now=new Date(), rm=now.toLocaleString('en-US',{month:'long'})+' '+now.getFullYear();
-  const sel=document.getElementById('monthFilter');
-  if(sel){let f=false;for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===rm){sel.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;sel.insertBefore(o,sel.firstChild);}}
+  const orig = btnEl.textContent;
+  btnEl.disabled = true; btnEl.textContent = 'Starting...';
+
+  // Use the next month computed when modal opened
+  const rm = document.getElementById('cycleModal')._nextMonth
+    || (new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
+
+  // Add month option to selector if not already present
+  const sel = document.getElementById('monthFilter');
+  if(sel){
+    let found = false;
+    for(let i=0;i<sel.options.length;i++){ if(sel.options[i].value===rm){sel.options[i].selected=true;found=true;break;} }
+    if(!found){ const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;sel.insertBefore(o,sel.firstChild); }
+  }
+
   closeCycleModal();
-  await fetchData(rm);
-  switchView('report');
+
+  // Safety: reset button after 8s regardless of fetch result
+  const safetyTimer = setTimeout(()=>{ btnEl.disabled=false; btnEl.textContent=orig; }, 8000);
+
+  try {
+    await fetchData(rm);
+    switchView('report');
+  } catch(e){ console.error('confirmCycle fetchData failed:',e); }
+
+  clearTimeout(safetyTimer);
   btnEl.disabled=false; btnEl.textContent=orig;
 }
 
