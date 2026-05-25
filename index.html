@@ -596,15 +596,35 @@ async function fetchData(month){
     const r=JSON.parse(await res.text());
     if(r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data; entries=d.entries;
+
+    // The month we actually want to display — prefer what was requested
+    const displayMonth = month || d.month;
+
     const sel=document.getElementById('monthFilter');
-    if(sel){ sel.innerHTML=''; (d.availableMonths||[]).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===d.month)o.selected=true;sel.appendChild(o);}); }
+    if(sel){
+      sel.innerHTML='';
+      (d.availableMonths||[]).forEach(m=>{
+        const o=document.createElement('option');
+        o.value=m; o.textContent=m;
+        if(m===displayMonth) o.selected=true;
+        sel.appendChild(o);
+      });
+      // If displayMonth isn't in the list (e.g. brand-new cycle with no entries yet), add it
+      const exists=[...sel.options].some(o=>o.value===displayMonth);
+      if(!exists){
+        const o=document.createElement('option');
+        o.value=displayMonth; o.textContent=displayMonth; o.selected=true;
+        sel.insertBefore(o,sel.firstChild);
+      }
+    }
+
     document.getElementById('vTotal').textContent  = d.totalSeeded;
     document.getElementById('vPending').textContent= d.pendingDeliveries;
     document.getElementById('vToMin').textContent  = d.remainingToMin;
     document.getElementById('vToMax').textContent  = d.remainingToMax;
     document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
     document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    computeSummary(d.month);
+    computeSummary(displayMonth);  // always use the display month, not GAS default
     if(d.packages&&d.packages.length){
       const ps=document.getElementById('pkgSel');
       if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
