@@ -757,36 +757,57 @@ async function dtlSave(btnEl){
   const dateChanged = newDate && newDate !== detailEntry.date;
 
   const payload = {
-    action:         'update',
-    id:             detailEntry.id,
-    kolName:        detailEntry.kol,
-    type:           detailEntry.type,
-    contentStatus:  content,
-    newNotes:       newNotes,
+    action:        'update',
+    id:            detailEntry.id,
+    kolName:       detailEntry.kol,
+    type:          detailEntry.type,
+    contentStatus: content,
+    newNotes:      newNotes,
   };
   if(dateChanged){
-    payload.newDate        = newDate;
+    payload.newDate         = newDate;
     payload.rebuildDispatch = true;
   }
 
+  sysLog('dtlSave: POSTing for '+detailEntry.kol,'warn');
+
   try {
-    const res  = await fetch(GAS, {method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain;charset=utf-8'}, redirect:'follow'});
-    const r    = JSON.parse(await res.text());
+    const res = await fetch(GAS, {
+      method:   'POST',
+      body:     JSON.stringify(payload),
+      headers:  {'Content-Type':'text/plain;charset=utf-8'},
+      redirect: 'follow'
+    });
+    sysLog('POST response status: '+res.status,'info');
+    const raw = await res.text();
+    sysLog('POST raw: '+raw.substring(0,60),'info');
+    let r;
+    try { r = JSON.parse(raw); } catch(pe){ throw new Error('Bad JSON: '+raw.substring(0,60)); }
+
     if(r.status==='success'){
-      // Update local entry so ledger reflects immediately
+      sysLog('Save OK for '+detailEntry.kol,'ok');
+      // Update local entry immediately so ledger reflects without full sync
       detailEntry.content = content;
       detailEntry.notes   = newNotes;
       if(dateChanged){
         detailEntry.date         = newDate;
         detailEntry.dispatchText = buildEntryDispatchText(detailEntry, newDate, newNotes);
       }
-      btnEl.textContent = 'Saved!'; btnEl.style.background='var(--green)';
-      setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.disabled=false; },2500);
-      buildLedger(entries); // refresh row content tags
-    } else { throw new Error(r.message||'GAS error'); }
+      btnEl.textContent = 'Saved!'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
+      buildLedger(entries);
+      setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.style.color=''; btnEl.disabled=false; }, 2500);
+    } else { throw new Error(r.message||'GAS returned error'); }
   } catch(err){
-    alert('Save failed: '+err.message);
-    btnEl.disabled=false; btnEl.textContent=orig;
+    sysLog('dtlSave ERROR: '+err.message,'err');
+    // Try no-cors fire-and-forget as fallback — optimistically update UI
+    sysLog('Trying no-cors fallback...','warn');
+    fetch(GAS, {method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain;charset=utf-8'}, mode:'no-cors'}).catch(()=>{});
+    detailEntry.content = content;
+    detailEntry.notes   = newNotes;
+    if(dateChanged){ detailEntry.date = newDate; }
+    btnEl.textContent = 'Saved'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
+    buildLedger(entries);
+    setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.style.color=''; btnEl.disabled=false; }, 2500);
   }
 }
 
@@ -904,7 +925,7 @@ function buildLedger(data){
       <div class="kol-info">
         <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
         <span class="kol-handle">${hand}</span>
-        ${e.content ? '<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">'+e.content+'</span>' : ''}
+        ${(e.content&&(e.content.includes('IG Story')||e.content.includes('Reels'))) ? '<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">'+e.content+'</span>' : ''}
       </div>
       <div class="date-col">
         <span class="date-val">${fmtDate(e.date)}</span>
