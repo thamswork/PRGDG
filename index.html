@@ -966,7 +966,7 @@ async function submitEntry(){
 
 // ── FETCH DATA ────────────────────────────────────────────────────────────
 async function fetchData(month){
-  sysLog('fetchData() called, month='+( month||'(current)'),'info');
+  sysLog('fetchData() called, month='+(month||'(let GAS decide — latest entry month)'),'info');
   try {
     let url=GAS+'?t='+Date.now();
     if(month) url+='&month='+encodeURIComponent(month);
@@ -979,10 +979,14 @@ async function fetchData(month){
     sysLog('JSON status='+r.status,'info');
     if(r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data; entries=d.entries;
-    sysLog('Entries loaded: '+d.entries.length+', month='+d.month,'ok');
+    sysLog('Entries loaded: '+d.entries.length+', GAS returned month='+d.month,'ok');
+    sysLog('availableMonths: '+(d.availableMonths||[]).join(', '),'info');
 
-    // The month we actually want to display — prefer what was requested
-    const displayMonth = month || d.month;
+    // The month we actually want to display:
+    // If a specific month was requested, use it.
+    // Otherwise use d.month which GAS sets to the latest month that has entries.
+    // This means on boot (month=null) we always land on the most recent active month.
+    const displayMonth = month || d.month || (d.availableMonths&&d.availableMonths[0]) || '';
 
     const sel=document.getElementById('monthFilter');
     if(sel){
@@ -1115,25 +1119,17 @@ async function confirmCycle(btnEl){
   const orig = btnEl.textContent;
   btnEl.disabled = true; btnEl.textContent = 'Starting...';
 
-  // Use the next month computed when modal opened
-  const rm = document.getElementById('cycleModal')._nextMonth
-    || (new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
-
-  // Add month option to selector if not already present
+  // Stay on the currently selected month — do NOT force switch to next month
+  // The user can manually pick the new month from the dropdown when ready
   const sel = document.getElementById('monthFilter');
-  if(sel){
-    let found = false;
-    for(let i=0;i<sel.options.length;i++){ if(sel.options[i].value===rm){sel.options[i].selected=true;found=true;break;} }
-    if(!found){ const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;sel.insertBefore(o,sel.firstChild); }
-  }
+  const currentMonth = sel && sel.value ? sel.value : null;
 
   closeCycleModal();
 
-  // Safety: reset button after 8s regardless of fetch result
   const safetyTimer = setTimeout(()=>{ btnEl.disabled=false; btnEl.textContent=orig; }, 8000);
 
   try {
-    await fetchData(rm);
+    await fetchData(currentMonth); // refreshes current view unchanged
     switchView('report');
   } catch(e){ console.error('confirmCycle fetchData failed:',e); }
 
@@ -1146,7 +1142,9 @@ window.onload=function(){
   sysLog('Page loaded, JS running','ok');
   sysLog('GAS URL: '+GAS.substring(0,50)+'...','info');
   loadBrand();
-  fetchData(new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
+  // Load with no month param — GAS will return availableMonths and
+  // we pick the one with the most recent entry, not today's calendar month
+  fetchData(null);
 };
 </script>
 </body>
