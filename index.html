@@ -210,6 +210,9 @@
       <button class="archive-btn" id="btnArchive" onclick="toggleArchive(this)" style="display:none">Show Completed History</button>
       <div id="archiveBody" style="display:none;margin-top:8px"></div>
     </div>
+
+    <!-- SYSTEM LOG — send screenshot of this to diagnose loading issues -->
+    <div id="sysLog" style="background:#0f172a;border-radius:10px;padding:12px;margin-bottom:12px;font-family:monospace;font-size:10px;color:#94a3b8;line-height:1.7;max-height:200px;overflow-y:auto"></div>
   </div>
 
   <!-- ENTRY -->
@@ -429,11 +432,32 @@ let sumCache   = {};
 // ── Only "Completed" is the done state — matches sheet dropdown exactly ──
 const DONE_STATES = ['Completed', 'No-Show / Cancelled'];
 
+// ── SYSTEM LOG ────────────────────────────────────────────────────────────
+function sysLog(msg, color){
+  const el = document.getElementById('sysLog'); if(!el) return;
+  const colors = {ok:'#4ade80', err:'#f87171', warn:'#fbbf24', info:'#94a3b8'};
+  const c = colors[color||'info']||'#94a3b8';
+  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const line = document.createElement('div');
+  line.style.color = c;
+  line.textContent = '['+t+'] '+msg;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+  // Keep max 30 lines
+  while(el.children.length > 30) el.removeChild(el.firstChild);
+}
+
 // ── GAS fetch helper — no-cors fallback so Done never shows "fetch failed" ──
 function gasGet(url){
+  sysLog('GET → '+url.split('?')[1]?.substring(0,40),'warn');
   return fetch(url, {redirect:'follow'})
-    .then(r => r.text()).then(t => JSON.parse(t))
-    .catch(() => { fetch(url, {mode:'no-cors'}).catch(()=>{}); return {status:'success', _noCors:true}; });
+    .then(r => { sysLog('Response status: '+r.status,'info'); return r.text(); })
+    .then(t => { const d=JSON.parse(t); sysLog('Parsed OK, status='+d.status, d.status==='success'?'ok':'err'); return d; })
+    .catch(err => {
+      sysLog('Fetch failed: '+err.message+' — trying no-cors','err');
+      fetch(url, {mode:'no-cors'}).catch(()=>{});
+      return {status:'success', _noCors:true};
+    });
 }
 
 // ── BRAND MEMORY (localStorage) ──────────────────────────────────────────
@@ -802,13 +826,20 @@ async function submitEntry(){
 
 // ── FETCH DATA ────────────────────────────────────────────────────────────
 async function fetchData(month){
+  sysLog('fetchData() called, month='+( month||'(current)'),'info');
   try {
     let url=GAS+'?t='+Date.now();
     if(month) url+='&month='+encodeURIComponent(month);
+    sysLog('Fetching: '+GAS.substring(0,40)+'...','warn');
     const res=await fetch(url,{redirect:'follow'});
-    const r=JSON.parse(await res.text());
+    sysLog('HTTP '+res.status+' received','info');
+    const raw=await res.text();
+    sysLog('Raw length: '+raw.length+' chars','info');
+    const r=JSON.parse(raw);
+    sysLog('JSON status='+r.status,'info');
     if(r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data; entries=d.entries;
+    sysLog('Entries loaded: '+d.entries.length+', month='+d.month,'ok');
 
     // The month we actually want to display — prefer what was requested
     const displayMonth = month || d.month;
@@ -843,7 +874,7 @@ async function fetchData(month){
       if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
     }
     buildLedger(d.entries);
-  } catch(err){ console.error('fetchData:',err.message); }
+  } catch(err){ sysLog('fetchData ERROR: '+err.message,'err'); console.error('fetchData:',err.message); }
 }
 
 // ── BUILD LEDGER ──────────────────────────────────────────────────────────
@@ -973,7 +1004,9 @@ async function confirmCycle(btnEl){
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 window.onload=function(){
-  loadBrand(); // restore last selected brand
+  sysLog('Page loaded, JS running','ok');
+  sysLog('GAS URL: '+GAS.substring(0,50)+'...','info');
+  loadBrand();
   fetchData(new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear());
 };
 </script>
