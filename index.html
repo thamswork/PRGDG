@@ -357,6 +357,69 @@
   </div>
 </div>
 
+<!-- KOL DETAIL / EDIT MODAL -->
+<div class="overlay" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
+  <div class="mbox" style="max-height:90vh;overflow-y:auto;padding:0">
+    <!-- Header -->
+    <div style="padding:20px 20px 16px;border-bottom:1px solid var(--border-soft)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="min-width:0;flex:1">
+          <div style="font-size:16px;font-weight:800;color:var(--navy)" id="dtlName">—</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px" id="dtlHandle">—</div>
+        </div>
+        <button onclick="closeDetailModal()" style="background:transparent;border:none;font-size:18px;color:var(--text-3);cursor:pointer;padding:0 0 0 12px;flex-shrink:0">&#x2715;</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:3px 9px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
+        <span id="dtlTypeTag"  style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
+        <span id="dtlStatusTag" style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
+      </div>
+    </div>
+
+    <!-- Info rows -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Date</div>
+          <!-- Editable date -->
+          <input type="date" id="dtlDate" class="ibox" style="height:34px;font-size:12px;padding:0 10px">
+        </div>
+        <div id="dtlPkgWrap">
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Package</div>
+          <div style="font-size:12px;font-weight:600;color:var(--navy);padding-top:8px" id="dtlPkg">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Status -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Content Posted</div>
+      <div style="display:flex;gap:8px">
+        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblStory">
+          <input type="checkbox" id="cbStory" onchange="onContentChange()" style="width:15px;height:15px;accent-color:var(--navy);flex-shrink:0">
+          <span style="font-size:11px;font-weight:700;color:var(--text-2)">IG Story</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblReels">
+          <input type="checkbox" id="cbReels" onchange="onContentChange()" style="width:15px;height:15px;accent-color:var(--navy);flex-shrink:0">
+          <span style="font-size:11px;font-weight:700;color:var(--text-2)">Reels</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Notes</div>
+      <textarea id="dtlNotes" class="ibox" style="height:72px;font-size:12px" placeholder="Add notes..."></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div style="padding:14px 20px;display:flex;gap:8px">
+      <button onclick="dtlCopy()" class="btn" style="flex:1;height:38px;font-size:10px">Copy Dispatch</button>
+      <button id="btnDtlSave" onclick="dtlSave(this)" style="flex:2;height:38px;background:var(--navy);border:none;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
 
@@ -553,7 +616,157 @@ function openMap(){ const u=document.getElementById('googleMap').value; if(u) wi
 function toggleOtherPkg(){ document.getElementById('pkgOther').style.display=document.getElementById('pkgSel').value==='Others'?'block':'none'; }
 function getPkg(){ const s=document.getElementById('pkgSel'); return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value; }
 
-function copyText(){
+// ── DETAIL MODAL — state ──────────────────────────────────────────────────
+let detailEntry = null; // currently open entry
+
+// Build dispatch text from entry data (with optional date override)
+function buildEntryDispatchText(e, dateOverride, notesOverride){
+  const isDel  = String(e.type||'').trim()==='Delivery';
+  const brand  = e.brand||'';
+  const bl     = brand ? 'Brand: '+brand+'\n' : '';
+  const date   = dateOverride || e.date || '';
+  const notes  = notesOverride !== undefined ? notesOverride : (e.notes||'');
+  if(!isDel){
+    return bl+'Name: '+e.kol+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nVenue: '+(e.address||'')+(notes?'\nNotes: '+notes:'');
+  } else {
+    const phone = (e.phone||'') + (e.backupPhone ? ' (Backup: '+e.backupPhone+')' : '');
+    return bl+'Name: '+e.kol+'\nPhone: '+phone+'\nPackage: '+(e.pkg||'')+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nAddress: '+(e.address||'')+'\nMap: '+(e.googleMap||e.map||'')+(notes?'\nNotes: '+notes:'');
+  }
+}
+
+function openDetailModal(id){
+  const e = entries.find(x=>x.id===id);
+  if(!e) return;
+  detailEntry = e;
+
+  // Header
+  document.getElementById('dtlName').textContent   = e.kol||'—';
+  document.getElementById('dtlHandle').textContent = (e.url&&e.url!=='TBD') ? e.url.replace(/https?:\/\//,'').replace('instagram.com/','@') : (e.handle||'—');
+
+  // Tags
+  const brandTag  = document.getElementById('dtlBrandTag');
+  const typeTag   = document.getElementById('dtlTypeTag');
+  const statusTag = document.getElementById('dtlStatusTag');
+  const isD = String(e.type||'').trim()==='Delivery';
+
+  if(e.brand&&e.brand.trim()){ brandTag.textContent=e.brand; brandTag.style.display='inline-flex'; }
+  else { brandTag.style.display='none'; }
+
+  typeTag.textContent = isD ? 'Delivery' : 'Store Visit';
+  typeTag.style.background = isD ? 'var(--green-bg)' : 'var(--amber-bg)';
+  typeTag.style.color       = isD ? 'var(--green)'    : 'var(--amber)';
+
+  const isDone = DONE_STATES.includes(e.handoff);
+  statusTag.textContent       = e.handoff||'Pending';
+  statusTag.style.background  = isDone ? 'var(--green-bg)' : 'var(--amber-bg)';
+  statusTag.style.color       = isDone ? 'var(--green)'    : 'var(--amber)';
+
+  // Date (editable)
+  document.getElementById('dtlDate').value = e.date||'';
+
+  // Package
+  const pkgWrap = document.getElementById('dtlPkgWrap');
+  if(isD && e.pkg && e.pkg!=='N/A'){
+    pkgWrap.style.display='block';
+    document.getElementById('dtlPkg').textContent = e.pkg;
+  } else {
+    pkgWrap.style.display='none';
+  }
+
+  // Content checkboxes
+  const content = (e.content||'').toLowerCase();
+  document.getElementById('cbStory').checked = content.includes('ig story');
+  document.getElementById('cbReels').checked = content.includes('reels');
+  syncContentLabels();
+
+  // Notes
+  document.getElementById('dtlNotes').value = e.notes||'';
+
+  // Reset save button
+  const sb = document.getElementById('btnDtlSave');
+  if(sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background=''; }
+
+  document.getElementById('detailModal').style.display='flex';
+}
+
+function closeDetailModal(){
+  document.getElementById('detailModal').style.display='none';
+  detailEntry = null;
+}
+
+function onContentChange(){ syncContentLabels(); }
+function syncContentLabels(){
+  const story = document.getElementById('cbStory').checked;
+  const reels = document.getElementById('cbReels').checked;
+  document.getElementById('lblStory').style.borderColor = story ? 'var(--navy)' : 'var(--border)';
+  document.getElementById('lblStory').style.background  = story ? 'var(--surface)' : 'var(--canvas)';
+  document.getElementById('lblReels').style.borderColor = reels ? 'var(--navy)' : 'var(--border)';
+  document.getElementById('lblReels').style.background  = reels ? 'var(--surface)' : 'var(--canvas)';
+}
+
+function getContentValue(){
+  const parts = [];
+  if(document.getElementById('cbStory').checked) parts.push('IG Story');
+  if(document.getElementById('cbReels').checked) parts.push('Reels');
+  return parts.join(', ');
+}
+
+function dtlCopy(){
+  if(!detailEntry) return;
+  const dateVal  = document.getElementById('dtlDate').value;
+  const notesVal = document.getElementById('dtlNotes').value;
+  const text = buildEntryDispatchText(detailEntry, dateVal, notesVal);
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.querySelector('#detailModal .btn');
+    if(btn){ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy Dispatch',2000); }
+  });
+}
+
+async function dtlSave(btnEl){
+  if(!detailEntry) return;
+  const orig = btnEl.textContent;
+  btnEl.disabled=true; btnEl.textContent='Saving...';
+
+  const newDate    = document.getElementById('dtlDate').value;
+  const newNotes   = document.getElementById('dtlNotes').value;
+  const content    = getContentValue();
+  const dateChanged = newDate && newDate !== detailEntry.date;
+
+  const payload = {
+    action:         'update',
+    id:             detailEntry.id,
+    kolName:        detailEntry.kol,
+    type:           detailEntry.type,
+    contentStatus:  content,
+    newNotes:       newNotes,
+  };
+  if(dateChanged){
+    payload.newDate        = newDate;
+    payload.rebuildDispatch = true;
+  }
+
+  try {
+    const res  = await fetch(GAS, {method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain;charset=utf-8'}, redirect:'follow'});
+    const r    = JSON.parse(await res.text());
+    if(r.status==='success'){
+      // Update local entry so ledger reflects immediately
+      detailEntry.content = content;
+      detailEntry.notes   = newNotes;
+      if(dateChanged){
+        detailEntry.date         = newDate;
+        detailEntry.dispatchText = buildEntryDispatchText(detailEntry, newDate, newNotes);
+      }
+      btnEl.textContent = 'Saved!'; btnEl.style.background='var(--green)';
+      setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.disabled=false; },2500);
+      buildLedger(entries); // refresh row content tags
+    } else { throw new Error(r.message||'GAS error'); }
+  } catch(err){
+    alert('Save failed: '+err.message);
+    btnEl.disabled=false; btnEl.textContent=orig;
+  }
+}
+
+
   const name=document.getElementById('kolName').value||'TBD';
   const brand=getBrand(), type=getType();
   const date=document.getElementById('logDate').value||'TBD';
@@ -657,8 +870,9 @@ function buildLedger(data){
 
     const row=`<div class="ledger-row">
       <div class="kol-info">
-        <span class="kol-name${past?' due':''}">${e.kol}</span>
+        <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
         <span class="kol-handle">${hand}</span>
+        ${e.content ? `<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">${e.content}</span>` : ''}
       </div>
       <div class="date-col">
         <span class="date-val">${fmtDate(e.date)}</span>
