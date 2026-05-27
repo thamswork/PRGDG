@@ -872,7 +872,7 @@ function buildLedger(data){
       <div class="kol-info">
         <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
         <span class="kol-handle">${hand}</span>
-        ${e.content ? `<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">${e.content}</span>` : ''}
+        ${e.content ? '<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">'+e.content+'</span>' : ''}
       </div>
       <div class="date-col">
         <span class="date-val">${fmtDate(e.date)}</span>
