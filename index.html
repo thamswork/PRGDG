@@ -360,98 +360,95 @@
   </div>
 </div>
 
-<!-- KOL DETAIL MODAL — mobile bottom sheet -->
-<div id="detailModal" style="display:none;position:fixed;inset:0;z-index:1100;background:rgba(26,31,46,.6);backdrop-filter:blur(3px);align-items:flex-end;justify-content:center" onclick="if(event.target===this)closeDetailModal()">
-  <div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -8px 40px rgba(0,0,0,.2)">
-
-    <!-- Drag handle -->
-    <div style="display:flex;justify-content:center;padding:12px 0 4px;flex-shrink:0">
-      <div style="width:40px;height:4px;border-radius:4px;background:var(--border)"></div>
-    </div>
+<!-- KOL DETAIL MODAL — compact centered -->
+<div id="detailModal" style="display:none;position:fixed;inset:0;z-index:1100;background:rgba(26,31,46,.65);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeDetailModal()">
+  <div style="background:var(--surface);border-radius:18px;width:100%;max-width:420px;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 20px 60px rgba(0,0,0,.25)">
 
     <!-- Header -->
-    <div style="padding:12px 20px 14px;border-bottom:1px solid var(--border-soft)">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div style="min-width:0;flex:1;padding-right:12px">
-          <div style="font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.3px;line-height:1.2" id="dtlName">—</div>
-          <div style="font-size:12px;color:var(--text-3);margin-top:3px;font-weight:500" id="dtlHandle">—</div>
+    <div style="padding:16px 18px 12px;border-bottom:1px solid var(--border-soft);position:sticky;top:0;background:var(--surface);z-index:1;border-radius:18px 18px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="min-width:0;flex:1;padding-right:10px">
+          <div style="font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.3px;line-height:1.2" id="dtlName">—</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px;font-weight:500" id="dtlHandle">—</div>
         </div>
-        <!-- Close button — 44x44 touch target -->
-        <button onclick="closeDetailModal()" style="background:var(--canvas);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;min-width:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-3);flex-shrink:0">&#x2715;</button>
+        <button onclick="closeDetailModal()" style="background:var(--canvas);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;min-width:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text-3);flex-shrink:0">&#x2715;</button>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-        <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:5px 11px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
-        <span id="dtlTypeTag" style="font-size:9px;font-weight:700;padding:5px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
-        <span id="dtlStatusTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:5px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;min-height:28px;display:inline-flex;align-items:center" title="Tap to mark complete"></span>
-      </div>
-    </div>
-
-    <!-- Date + Package -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft);display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <div>
-        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Date</div>
-        <input type="date" id="dtlDate" class="ibox" style="height:42px;font-size:13px;padding:0 12px">
-      </div>
-      <div id="dtlPkgWrap">
-        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Package</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy);padding-top:10px;line-height:1.4" id="dtlPkg">—</div>
+      <!-- Tags -->
+      <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:4px 9px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
+        <span id="dtlTypeTag" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
+        <span id="dtlStatusTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;display:inline-flex;align-items:center"></span>
+        <span id="dtlContentTag" style="display:none;font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;background:var(--green-bg);color:var(--green);text-transform:uppercase;letter-spacing:.5px"></span>
       </div>
     </div>
 
-    <!-- Content Posted -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Content Posted</div>
+    <!-- Body — compact sections -->
+    <div style="padding:12px 18px;display:flex;flex-direction:column;gap:12px">
+
+      <!-- Date + Package row -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <label style="display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;min-height:46px" id="lblStory">
-          <input type="checkbox" id="cbStory" onchange="onContentChange()" style="width:18px;height:18px;accent-color:var(--navy);flex-shrink:0">
-          <span style="font-size:13px;font-weight:700;color:var(--text-2)">IG Story</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;min-height:46px" id="lblReels">
-          <input type="checkbox" id="cbReels" onchange="onContentChange()" style="width:18px;height:18px;accent-color:var(--navy);flex-shrink:0">
-          <span style="font-size:13px;font-weight:700;color:var(--text-2)">Reels</span>
-        </label>
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Date</div>
+          <input type="date" id="dtlDate" class="ibox" style="height:38px;font-size:12px;padding:0 10px">
+        </div>
+        <div id="dtlPkgWrap">
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Package</div>
+          <div style="font-size:11px;font-weight:600;color:var(--navy);padding-top:8px;line-height:1.4" id="dtlPkg">—</div>
+        </div>
       </div>
-    </div>
 
-    <!-- Content Link -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Content Link</div>
-      <input type="url" id="dtlLink" class="ibox" style="height:42px;font-size:13px" placeholder="https://instagram.com/..." inputmode="url">
-    </div>
-
-    <!-- Screenshot Upload -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Screenshot</div>
-      <div id="dtlUploadArea" onclick="document.getElementById('dtlFileInput').click()"
-        style="border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:.15s;background:var(--canvas);min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
-        <div style="font-size:13px;font-weight:600;color:var(--text-3)">Tap to upload screenshot</div>
-        <div style="font-size:10px;color:var(--text-3)">JPG, PNG · saved to Cloudinary</div>
+      <!-- Content Posted -->
+      <div>
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Content Posted</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblStory">
+            <input type="checkbox" id="cbStory" onchange="onContentChange()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
+            <span style="font-size:12px;font-weight:700;color:var(--text-2)">IG Story</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblReels">
+            <input type="checkbox" id="cbReels" onchange="onContentChange()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
+            <span style="font-size:12px;font-weight:700;color:var(--text-2)">Reels</span>
+          </label>
+        </div>
       </div>
-      <input type="file" id="dtlFileInput" accept="image/*" capture="environment" style="display:none" onchange="dtlHandleUpload(this)">
-      <div id="dtlUploadStatus" style="display:none;margin-top:8px;font-size:11px;font-weight:600;color:var(--text-3)"></div>
-      <img id="dtlUploadPreview" style="display:none;margin-top:10px;width:100%;border-radius:10px;object-fit:cover;max-height:160px" alt="">
+
+      <!-- Content Link -->
+      <div>
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Content Link</div>
+        <input type="url" id="dtlLink" class="ibox" style="height:38px;font-size:12px" placeholder="https://instagram.com/..." inputmode="url">
+      </div>
+
+      <!-- Screenshot Upload -->
+      <div>
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Screenshot</div>
+        <div id="dtlUploadArea" onclick="document.getElementById('dtlFileInput').click()"
+          style="border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.15s;background:var(--canvas);display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px">
+          <span style="font-size:12px;font-weight:600;color:var(--text-3)">Tap to upload</span>
+          <span style="font-size:10px;color:var(--text-3)">· JPG, PNG</span>
+        </div>
+        <input type="file" id="dtlFileInput" accept="image/*" capture="environment" style="display:none" onchange="dtlHandleUpload(this)">
+        <div id="dtlUploadStatus" style="display:none;margin-top:6px;font-size:10px;font-weight:600;color:var(--text-3)"></div>
+        <img id="dtlUploadPreview" style="display:none;margin-top:8px;width:100%;border-radius:8px;object-fit:cover;max-height:120px" alt="">
+      </div>
+
+      <!-- Notes -->
+      <div>
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Notes</div>
+        <textarea id="dtlNotes" class="ibox" style="height:64px;font-size:12px" placeholder="Add notes..."></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:2px">
+        <button onclick="dtlCopy()" class="btn" style="height:44px;font-size:11px;border-radius:10px">Copy Dispatch</button>
+        <button id="btnDtlSave" onclick="dtlSave(this)" style="height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
+      </div>
+
+      <!-- Update history -->
+      <div id="dtlHistory" style="display:none;border-top:1px solid var(--border-soft);padding-top:10px">
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Update History</div>
+      </div>
+
     </div>
-
-    <!-- Notes -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Notes</div>
-      <textarea id="dtlNotes" class="ibox" style="height:80px;font-size:13px" placeholder="Add notes..."></textarea>
-    </div>
-
-    <!-- Actions — full width buttons, 50px tall touch targets -->
-    <div style="padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;border-bottom:1px solid var(--border-soft)">
-      <button onclick="dtlCopy()" class="btn" style="height:50px;font-size:11px;border-radius:10px">Copy Dispatch</button>
-      <button id="btnDtlSave" onclick="dtlSave(this)" style="height:50px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
-    </div>
-
-    <!-- Update history -->
-    <div id="dtlHistory" style="display:none;padding:12px 20px 20px">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Update History</div>
-    </div>
-
-    <!-- Safe area spacer for iPhone home bar -->
-    <div style="height:env(safe-area-inset-bottom,16px)"></div>
-
   </div>
 </div>
 
@@ -719,6 +716,15 @@ function openDetailModal(id){
   statusTag.style.color      = isDone ? 'var(--green)'    : 'var(--amber)';
   statusTag.style.cursor     = isDone ? 'default' : 'pointer';
   statusTag.title            = isDone ? '' : 'Tap to mark complete';
+
+  // Content tag in header — shows IG Story / Reels already filed
+  const contentTag = document.getElementById('dtlContentTag');
+  const contentVal = (e.content||'').trim();
+  const hasContent = contentVal.includes('IG Story') || contentVal.includes('Reels');
+  if(contentTag){
+    if(hasContent){ contentTag.textContent=contentVal; contentTag.style.display='inline-flex'; }
+    else { contentTag.style.display='none'; }
+  }
 
   document.getElementById('dtlDate').value = e.date||'';
 
