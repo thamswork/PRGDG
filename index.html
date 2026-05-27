@@ -360,76 +360,106 @@
   </div>
 </div>
 
-<!-- KOL DETAIL / EDIT MODAL -->
+<!-- KOL DETAIL MODAL — upgraded -->
 <div class="overlay" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
-  <div class="mbox" style="max-height:90vh;overflow-y:auto;padding:0">
+  <div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;position:fixed;bottom:0;left:50%;transform:translateX(-50%);box-shadow:0 -8px 40px rgba(0,0,0,.18)">
+
+    <!-- Drag handle -->
+    <div style="display:flex;justify-content:center;padding:10px 0 2px">
+      <div style="width:36px;height:4px;border-radius:4px;background:var(--border)"></div>
+    </div>
+
     <!-- Header -->
-    <div style="padding:20px 20px 16px;border-bottom:1px solid var(--border-soft)">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div style="padding:14px 20px 16px;border-bottom:1px solid var(--border-soft)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div style="min-width:0;flex:1">
-          <div style="font-size:16px;font-weight:800;color:var(--navy)" id="dtlName">—</div>
-          <div style="font-size:11px;color:var(--text-3);margin-top:2px" id="dtlHandle">—</div>
+          <div style="font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.3px" id="dtlName">—</div>
+          <div style="font-size:12px;color:var(--text-3);margin-top:2px;font-weight:500" id="dtlHandle">—</div>
         </div>
-        <button onclick="closeDetailModal()" style="background:transparent;border:none;font-size:18px;color:var(--text-3);cursor:pointer;padding:0 0 0 12px;flex-shrink:0">&#x2715;</button>
+        <button onclick="closeDetailModal()" style="background:var(--canvas);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-3);flex-shrink:0;margin-left:12px">&#x2715;</button>
       </div>
-      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-        <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:3px 9px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
-        <span id="dtlTypeTag"  style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
-        <span id="dtlStatusTag" style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
-      </div>
-    </div>
-
-    <!-- Info rows -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Date</div>
-          <!-- Editable date -->
-          <input type="date" id="dtlDate" class="ibox" style="height:34px;font-size:12px;padding:0 10px">
-        </div>
-        <div id="dtlPkgWrap">
-          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Package</div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);padding-top:8px" id="dtlPkg">—</div>
-        </div>
+      <!-- Tags row -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:4px 10px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
+        <span id="dtlTypeTag" style="font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
+        <!-- Status tag — clickable to mark complete -->
+        <span id="dtlStatusTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer" title="Tap to mark complete"></span>
       </div>
     </div>
 
-    <!-- Content Status -->
+    <!-- Date + Package -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft);display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Date</div>
+        <input type="date" id="dtlDate" class="ibox" style="height:36px;font-size:12px;padding:0 10px">
+      </div>
+      <div id="dtlPkgWrap">
+        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Package</div>
+        <div style="font-size:12px;font-weight:600;color:var(--navy);padding-top:6px;line-height:1.3" id="dtlPkg">—</div>
+      </div>
+    </div>
+
+    <!-- Content Posted -->
     <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
       <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Content Posted</div>
       <div style="display:flex;gap:8px">
-        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblStory">
+        <label style="display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;flex:1" id="lblStory">
           <input type="checkbox" id="cbStory" onchange="onContentChange()" style="width:15px;height:15px;accent-color:var(--navy);flex-shrink:0">
           <span style="font-size:11px;font-weight:700;color:var(--text-2)">IG Story</span>
         </label>
-        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblReels">
+        <label style="display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;flex:1" id="lblReels">
           <input type="checkbox" id="cbReels" onchange="onContentChange()" style="width:15px;height:15px;accent-color:var(--navy);flex-shrink:0">
           <span style="font-size:11px;font-weight:700;color:var(--text-2)">Reels</span>
         </label>
       </div>
     </div>
 
+    <!-- Content Link -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Content Link</div>
+      <input type="url" id="dtlLink" class="ibox" style="height:36px;font-size:12px" placeholder="https://instagram.com/..." inputmode="url">
+    </div>
+
+    <!-- Screenshot Upload -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Screenshot</div>
+      <!-- Upload area -->
+      <div id="dtlUploadArea" onclick="document.getElementById('dtlFileInput').click()"
+        style="border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:.15s;background:var(--canvas)">
+        <div style="font-size:11px;font-weight:600;color:var(--text-3)">Tap to upload screenshot</div>
+        <div style="font-size:9px;color:var(--text-3);margin-top:3px">JPG, PNG — uploads to Cloudinary</div>
+      </div>
+      <input type="file" id="dtlFileInput" accept="image/*" style="display:none" onchange="dtlHandleUpload(this)">
+      <!-- Upload progress / preview -->
+      <div id="dtlUploadStatus" style="display:none;margin-top:8px;font-size:10px;font-weight:600;color:var(--text-3)"></div>
+      <img id="dtlUploadPreview" style="display:none;margin-top:8px;width:100%;border-radius:8px;object-fit:cover;max-height:140px" alt="">
+    </div>
+
     <!-- Notes -->
     <div style="padding:14px 20px;border-bottom:1px solid var(--border-soft)">
       <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Notes</div>
-      <textarea id="dtlNotes" class="ibox" style="height:72px;font-size:12px" placeholder="Add notes..."></textarea>
+      <textarea id="dtlNotes" class="ibox" style="height:68px;font-size:12px" placeholder="Add notes..."></textarea>
     </div>
 
     <!-- Actions -->
-    <div style="padding:14px 20px;display:flex;gap:8px;border-top:1px solid var(--border-soft)">
-      <button onclick="dtlCopy()" class="btn" style="flex:1;height:38px;font-size:10px">Copy Dispatch</button>
-      <button id="btnDtlSave" onclick="dtlSave(this)" style="flex:2;height:38px;background:var(--navy);border:none;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
+    <div style="padding:14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;border-bottom:1px solid var(--border-soft)">
+      <button onclick="dtlCopy()" class="btn" style="height:40px;font-size:10px">Copy Dispatch</button>
+      <button id="btnDtlSave" onclick="dtlSave(this)" style="height:40px;background:var(--navy);border:none;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
     </div>
 
     <!-- Update history -->
-    <div id="dtlHistory" style="display:none;padding:10px 20px 14px;border-top:1px solid var(--border-soft)">
-      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Update History</div>
+    <div id="dtlHistory" style="display:none;padding:12px 20px 16px">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Update History</div>
     </div>
+
   </div>
 </div>
 
 <script>
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
+const CLOUDINARY_CLOUD  = 'dynjnftnu';
+const CLOUDINARY_PRESET = 'gdg_seed';
+const CLOUDINARY_FOLDER = 'GUSS/seed';
 
 let entries    = [];
 let sumCache   = {};
@@ -668,58 +698,125 @@ function openDetailModal(id){
   if(!e) return;
   detailEntry = e;
 
-  // Header
   document.getElementById('dtlName').textContent   = e.kol||'—';
   document.getElementById('dtlHandle').textContent = (e.url&&e.url!=='TBD') ? e.url.replace(/https?:\/\//,'').replace('instagram.com/','@') : (e.handle||'—');
 
-  // Tags
   const brandTag  = document.getElementById('dtlBrandTag');
   const typeTag   = document.getElementById('dtlTypeTag');
   const statusTag = document.getElementById('dtlStatusTag');
   const isD = String(e.type||'').trim()==='Delivery';
+  const isDone = DONE_STATES.includes(e.handoff);
 
   if(e.brand&&e.brand.trim()){ brandTag.textContent=e.brand; brandTag.style.display='inline-flex'; }
   else { brandTag.style.display='none'; }
 
-  typeTag.textContent = isD ? 'Delivery' : 'Store Visit';
+  typeTag.textContent      = isD ? 'Delivery' : 'Store Visit';
   typeTag.style.background = isD ? 'var(--green-bg)' : 'var(--amber-bg)';
-  typeTag.style.color       = isD ? 'var(--green)'    : 'var(--amber)';
+  typeTag.style.color      = isD ? 'var(--green)'    : 'var(--amber)';
 
-  const isDone = DONE_STATES.includes(e.handoff);
-  statusTag.textContent       = e.handoff||'Pending';
-  statusTag.style.background  = isDone ? 'var(--green-bg)' : 'var(--amber-bg)';
-  statusTag.style.color       = isDone ? 'var(--green)'    : 'var(--amber)';
+  statusTag.textContent      = e.handoff||'Pending';
+  statusTag.style.background = isDone ? 'var(--green-bg)' : 'var(--amber-bg)';
+  statusTag.style.color      = isDone ? 'var(--green)'    : 'var(--amber)';
+  statusTag.style.cursor     = isDone ? 'default' : 'pointer';
+  statusTag.title            = isDone ? '' : 'Tap to mark complete';
 
-  // Date (editable)
   document.getElementById('dtlDate').value = e.date||'';
 
-  // Package
   const pkgWrap = document.getElementById('dtlPkgWrap');
-  if(isD && e.pkg && e.pkg!=='N/A'){
-    pkgWrap.style.display='block';
-    document.getElementById('dtlPkg').textContent = e.pkg;
-  } else {
-    pkgWrap.style.display='none';
-  }
+  if(isD && e.pkg && e.pkg!=='N/A'){ pkgWrap.style.display='block'; document.getElementById('dtlPkg').textContent=e.pkg; }
+  else { pkgWrap.style.display='none'; }
 
-  // Content checkboxes
   const content = (e.content||'').toLowerCase();
   document.getElementById('cbStory').checked = content.includes('ig story');
   document.getElementById('cbReels').checked = content.includes('reels');
   syncContentLabels();
 
-  // Notes
+  // Content link — pre-fill from existing link field
+  document.getElementById('dtlLink').value = e.link||'';
+
   document.getElementById('dtlNotes').value = e.notes||'';
 
-  // Clear history panel for fresh open
+  // Reset upload area
+  document.getElementById('dtlUploadArea').style.borderColor = '';
+  document.getElementById('dtlUploadStatus').style.display = 'none';
+  document.getElementById('dtlUploadStatus').textContent = '';
+  document.getElementById('dtlUploadPreview').style.display = 'none';
+  document.getElementById('dtlFileInput').value = '';
+  detailEntry._uploadedUrl = '';
+
+  // Clear history panel
   const hist = document.getElementById('dtlHistory');
   if(hist){ hist.style.display='none'; while(hist.children.length>1) hist.removeChild(hist.lastChild); }
 
-  // Reset save button
   const sb = document.getElementById('btnDtlSave');
   if(sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background='var(--navy)'; sb.style.color='#fff'; }
 
   document.getElementById('detailModal').style.display='flex';
+}
+
+// ── MARK COMPLETE FROM POPUP ──────────────────────────────────────────────
+async function dtlMarkComplete(tagEl){
+  if(!detailEntry) return;
+  if(DONE_STATES.includes(detailEntry.handoff)) return; // already done
+  tagEl.textContent='Marking...';
+  tagEl.style.opacity='.5';
+  const isDel = String(detailEntry.type||'').trim()==='Delivery';
+  const kolSafe=(detailEntry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
+  const idSafe=(detailEntry.id||'').replace(/[^A-Za-z0-9-]/g,'');
+  const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
+  try {
+    await gasGet(url);
+    detailEntry.handoff='Completed';
+    tagEl.textContent='Completed';
+    tagEl.style.background='var(--green-bg)'; tagEl.style.color='var(--green)';
+    tagEl.style.opacity='1'; tagEl.style.cursor='default'; tagEl.title='';
+    buildLedger(entries);
+    sysLog('Marked complete from popup: '+detailEntry.kol,'ok');
+  } catch(err){
+    tagEl.textContent=detailEntry.handoff;
+    tagEl.style.opacity='1';
+    sysLog('Mark complete failed: '+err.message,'err');
+  }
+}
+
+// ── CLOUDINARY UPLOAD ─────────────────────────────────────────────────────
+async function dtlHandleUpload(input){
+  const file = input.files[0]; if(!file) return;
+  const statusEl  = document.getElementById('dtlUploadStatus');
+  const previewEl = document.getElementById('dtlUploadPreview');
+  const areaEl    = document.getElementById('dtlUploadArea');
+
+  statusEl.style.display='block'; statusEl.style.color='var(--text-3)';
+  statusEl.textContent='Uploading...';
+  areaEl.style.borderColor='var(--navy)';
+  sysLog('Uploading to Cloudinary: '+file.name,'warn');
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('folder', CLOUDINARY_FOLDER);
+
+    const res  = await fetch('https://api.cloudinary.com/v1_1/'+CLOUDINARY_CLOUD+'/image/upload', {method:'POST', body:fd});
+    const data = await res.json();
+
+    if(data.secure_url){
+      detailEntry._uploadedUrl = data.secure_url;
+      statusEl.textContent = 'Uploaded';
+      statusEl.style.color = 'var(--green)';
+      previewEl.src = data.secure_url;
+      previewEl.style.display = 'block';
+      areaEl.style.borderColor = 'var(--green)';
+      sysLog('Upload OK: '+data.secure_url.substring(0,60),'ok');
+    } else {
+      throw new Error(data.error?.message||'Upload failed');
+    }
+  } catch(err){
+    statusEl.textContent = 'Upload failed: '+err.message;
+    statusEl.style.color = 'var(--red)';
+    areaEl.style.borderColor = 'var(--red)';
+    sysLog('Upload ERROR: '+err.message,'err');
+  }
 }
 
 function closeDetailModal(){
@@ -763,9 +860,17 @@ async function dtlSave(btnEl){
   const newDate     = document.getElementById('dtlDate').value;
   const newNotes    = document.getElementById('dtlNotes').value;
   const content     = getContentValue();
+  const linkVal     = document.getElementById('dtlLink').value.trim();
+  const uploadedUrl = detailEntry._uploadedUrl || '';
   const dateChanged = newDate && newDate !== detailEntry.date;
 
-  // Build GET URL — avoids CORS preflight entirely
+  // Build comma-separated link value for col Q
+  const linkParts = [linkVal, uploadedUrl].filter(Boolean);
+  // Merge with existing link if new parts added
+  const existingParts = (detailEntry.link||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const allLinks = [...new Set([...existingParts, ...linkParts])]; // dedupe
+  const finalLink = allLinks.join(', ');
+
   let url = GAS
     + '?action=update_entry'
     + '&id='            + encodeURIComponent(detailEntry.id)
@@ -773,6 +878,7 @@ async function dtlSave(btnEl){
     + '&type='          + encodeURIComponent(detailEntry.type)
     + '&contentStatus=' + encodeURIComponent(content)
     + '&notes='         + encodeURIComponent(newNotes)
+    + '&driveLink='     + encodeURIComponent(finalLink)
     + '&t='             + Date.now();
 
   if(dateChanged){
@@ -780,28 +886,25 @@ async function dtlSave(btnEl){
     url += '&rebuildDispatch=1';
   }
 
-  sysLog('dtlSave GET: '+url.substring(0,80)+'...','warn');
+  sysLog('dtlSave GET for '+detailEntry.kol,'warn');
 
   try {
     const data = await gasGet(url);
     if(data.status==='success'){
       sysLog('Save OK, updated='+data.updated,'ok');
-
-      // Update local entry
       detailEntry.content = content;
       detailEntry.notes   = newNotes;
+      detailEntry.link    = finalLink;
+      detailEntry._uploadedUrl = '';
       if(dateChanged){
         detailEntry.date         = newDate;
         detailEntry.dispatchText = buildEntryDispatchText(detailEntry, newDate, newNotes);
       }
-
-      // Add history line to popup
-      const ts = data.updated || new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-      addHistoryLine(ts, content, newNotes, dateChanged ? newDate : null);
-
-      btnEl.textContent = 'Saved!'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
+      const ts = data.updated || new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      addHistoryLine(ts, content, newNotes, dateChanged?newDate:null, finalLink);
+      btnEl.textContent='Saved!'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
       buildLedger(entries);
-      setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.style.color=''; btnEl.disabled=false; }, 2500);
+      setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background='var(--navy)'; btnEl.style.color='#fff'; btnEl.disabled=false; },2500);
     } else { throw new Error(data.message||'GAS error'); }
   } catch(err){
     sysLog('dtlSave ERROR: '+err.message,'err');
@@ -810,18 +913,19 @@ async function dtlSave(btnEl){
   }
 }
 
-function addHistoryLine(ts, content, notes, newDate){
+function addHistoryLine(ts, content, notes, newDate, link){
   let hist = document.getElementById('dtlHistory');
   if(!hist) return;
   const parts = [];
   if(content)  parts.push(content);
   if(notes)    parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
   if(newDate)  parts.push('Date → '+fmtDate(newDate));
+  if(link)     parts.push('Link saved');
   if(!parts.length) parts.push('Saved');
   const line = document.createElement('div');
-  line.style.cssText='font-size:10px;color:var(--text-3);padding:3px 0;border-bottom:1px solid var(--border-soft)';
+  line.style.cssText='font-size:10px;color:var(--text-3);padding:4px 0;border-bottom:1px solid var(--border-soft);line-height:1.5';
   line.textContent = ts+' · '+parts.join(' · ');
-  hist.insertBefore(line, hist.firstChild);
+  hist.insertBefore(line, hist.children[1]||null);
   hist.style.display='block';
 }
 
