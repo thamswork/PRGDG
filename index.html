@@ -220,6 +220,13 @@
     <div class="card">
       <div class="sec-lbl">KOL Information</div>
       <div class="f-stack">
+        <!-- Entry Month — defaults to current/latest month, can be changed -->
+        <div class="f-group">
+          <label class="f-lbl" for="entryMonth">Campaign Month</label>
+          <select id="entryMonth" class="ibox">
+            <option value="">Loading...</option>
+          </select>
+        </div>
         <div class="f-group">
           <label class="f-lbl" for="kolName">KOL Name</label>
           <input type="text" id="kolName" class="ibox" placeholder="e.g. Thyme" autocomplete="off">
@@ -942,16 +949,19 @@ function copyText(){
   const date=document.getElementById('logDate').value||'TBD';
   const time=document.getElementById('logTime').value||'TBD';
   const bl=brand?'Brand: '+brand+'\n':'';
-  const text=type==='Store Invite'
-    ?(bl+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
-    :(bl+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
+  const header = type==='Store Invite' ? 'STORE VISIT\n\n' : 'DELIVERY\n\n';
+  const text = type==='Store Invite'
+    ?(header+bl+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
+    :(header+bl+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
   navigator.clipboard.writeText(text).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); });
 }
 
 // ── SUBMIT ENTRY ──────────────────────────────────────────────────────────
 async function submitEntry(){
   const btn=document.getElementById('btnSubmit'), type=getType();
-  const payload={ action:'add', kolName:document.getElementById('kolName').value, handleUrl:document.getElementById('handleUrl').value, brand:getBrand(), seedingType:type, deliverable:'', date:document.getElementById('logDate').value, time:document.getElementById('logTime').value, packageStr:type==='Store Invite'?'N/A':getPkg(), phone:type==='Store Invite'?'N/A':document.getElementById('logPhone').value, backupPhone:type==='Store Invite'?'':document.getElementById('backupPhone').value, address:type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value, googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value, notes:'' };
+  const payload={ action:'add',
+    entryMonth:  document.getElementById('entryMonth').value||'',
+    kolName:     document.getElementById('kolName').value, handleUrl:document.getElementById('handleUrl').value, brand:getBrand(), seedingType:type, deliverable:'', date:document.getElementById('logDate').value, time:document.getElementById('logTime').value, packageStr:type==='Store Invite'?'N/A':getPkg(), phone:type==='Store Invite'?'N/A':document.getElementById('logPhone').value, backupPhone:type==='Store Invite'?'':document.getElementById('backupPhone').value, address:type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value, googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value, notes:'' };
   btn.textContent='Saving...'; btn.disabled=true;
   try {
     const res=await fetch(GAS,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow'});
@@ -1019,6 +1029,25 @@ async function fetchData(month){
     document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
     document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     computeSummary(displayMonth);  // always use the display month, not GAS default
+
+    // Populate the Entry tab month selector with same available months
+    const eSel = document.getElementById('entryMonth');
+    if(eSel){
+      const prev = eSel.value;
+      eSel.innerHTML='';
+      // Add current/next months at top so user can log upcoming entries
+      const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const now2=new Date(), curMo=now2.toLocaleString('en-US',{month:'long'})+' '+now2.getFullYear();
+      const curIdx=MONTHS.indexOf(now2.toLocaleString('en-US',{month:'long'}));
+      const nextMo=MONTHS[(curIdx+1)%12]+' '+(curIdx===11?now2.getFullYear()+1:now2.getFullYear());
+      const allMonths=[...new Set([displayMonth, nextMo, curMo, ...(d.availableMonths||[])])];
+      allMonths.forEach(m=>{
+        const o=document.createElement('option');
+        o.value=m; o.textContent=m;
+        if(m===(prev||displayMonth)) o.selected=true;
+        eSel.appendChild(o);
+      });
+    }
     if(d.packages&&d.packages.length){
       const ps=document.getElementById('pkgSel');
       if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
