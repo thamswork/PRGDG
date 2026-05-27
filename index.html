@@ -416,9 +416,14 @@
     </div>
 
     <!-- Actions -->
-    <div style="padding:14px 20px;display:flex;gap:8px">
+    <div style="padding:14px 20px;display:flex;gap:8px;border-top:1px solid var(--border-soft)">
       <button onclick="dtlCopy()" class="btn" style="flex:1;height:38px;font-size:10px">Copy Dispatch</button>
       <button id="btnDtlSave" onclick="dtlSave(this)" style="flex:2;height:38px;background:var(--navy);border:none;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
+    </div>
+
+    <!-- Update history -->
+    <div id="dtlHistory" style="display:none;padding:10px 20px 14px;border-top:1px solid var(--border-soft)">
+      <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Update History</div>
     </div>
   </div>
 </div>
@@ -706,9 +711,13 @@ function openDetailModal(id){
   // Notes
   document.getElementById('dtlNotes').value = e.notes||'';
 
+  // Clear history panel for fresh open
+  const hist = document.getElementById('dtlHistory');
+  if(hist){ hist.style.display='none'; while(hist.children.length>1) hist.removeChild(hist.lastChild); }
+
   // Reset save button
   const sb = document.getElementById('btnDtlSave');
-  if(sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background=''; }
+  if(sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background='var(--navy)'; sb.style.color='#fff'; }
 
   document.getElementById('detailModal').style.display='flex';
 }
@@ -751,64 +760,69 @@ async function dtlSave(btnEl){
   const orig = btnEl.textContent;
   btnEl.disabled=true; btnEl.textContent='Saving...';
 
-  const newDate    = document.getElementById('dtlDate').value;
-  const newNotes   = document.getElementById('dtlNotes').value;
-  const content    = getContentValue();
+  const newDate     = document.getElementById('dtlDate').value;
+  const newNotes    = document.getElementById('dtlNotes').value;
+  const content     = getContentValue();
   const dateChanged = newDate && newDate !== detailEntry.date;
 
-  const payload = {
-    action:        'update',
-    id:            detailEntry.id,
-    kolName:       detailEntry.kol,
-    type:          detailEntry.type,
-    contentStatus: content,
-    newNotes:      newNotes,
-  };
+  // Build GET URL — avoids CORS preflight entirely
+  let url = GAS
+    + '?action=update_entry'
+    + '&id='            + encodeURIComponent(detailEntry.id)
+    + '&kolName='       + encodeURIComponent(detailEntry.kol)
+    + '&type='          + encodeURIComponent(detailEntry.type)
+    + '&contentStatus=' + encodeURIComponent(content)
+    + '&notes='         + encodeURIComponent(newNotes)
+    + '&t='             + Date.now();
+
   if(dateChanged){
-    payload.newDate         = newDate;
-    payload.rebuildDispatch = true;
+    url += '&newDate='          + encodeURIComponent(newDate);
+    url += '&rebuildDispatch=1';
   }
 
-  sysLog('dtlSave: POSTing for '+detailEntry.kol,'warn');
+  sysLog('dtlSave GET: '+url.substring(0,80)+'...','warn');
 
   try {
-    const res = await fetch(GAS, {
-      method:   'POST',
-      body:     JSON.stringify(payload),
-      headers:  {'Content-Type':'text/plain;charset=utf-8'},
-      redirect: 'follow'
-    });
-    sysLog('POST response status: '+res.status,'info');
-    const raw = await res.text();
-    sysLog('POST raw: '+raw.substring(0,60),'info');
-    let r;
-    try { r = JSON.parse(raw); } catch(pe){ throw new Error('Bad JSON: '+raw.substring(0,60)); }
+    const data = await gasGet(url);
+    if(data.status==='success'){
+      sysLog('Save OK, updated='+data.updated,'ok');
 
-    if(r.status==='success'){
-      sysLog('Save OK for '+detailEntry.kol,'ok');
-      // Update local entry immediately so ledger reflects without full sync
+      // Update local entry
       detailEntry.content = content;
       detailEntry.notes   = newNotes;
       if(dateChanged){
         detailEntry.date         = newDate;
         detailEntry.dispatchText = buildEntryDispatchText(detailEntry, newDate, newNotes);
       }
+
+      // Add history line to popup
+      const ts = data.updated || new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      addHistoryLine(ts, content, newNotes, dateChanged ? newDate : null);
+
       btnEl.textContent = 'Saved!'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
       buildLedger(entries);
       setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.style.color=''; btnEl.disabled=false; }, 2500);
-    } else { throw new Error(r.message||'GAS returned error'); }
+    } else { throw new Error(data.message||'GAS error'); }
   } catch(err){
     sysLog('dtlSave ERROR: '+err.message,'err');
-    // Try no-cors fire-and-forget as fallback — optimistically update UI
-    sysLog('Trying no-cors fallback...','warn');
-    fetch(GAS, {method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'text/plain;charset=utf-8'}, mode:'no-cors'}).catch(()=>{});
-    detailEntry.content = content;
-    detailEntry.notes   = newNotes;
-    if(dateChanged){ detailEntry.date = newDate; }
-    btnEl.textContent = 'Saved'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
-    buildLedger(entries);
-    setTimeout(()=>{ btnEl.textContent=orig; btnEl.style.background=''; btnEl.style.color=''; btnEl.disabled=false; }, 2500);
+    btnEl.disabled=false; btnEl.textContent=orig;
+    alert('Save failed: '+err.message);
   }
+}
+
+function addHistoryLine(ts, content, notes, newDate){
+  let hist = document.getElementById('dtlHistory');
+  if(!hist) return;
+  const parts = [];
+  if(content)  parts.push(content);
+  if(notes)    parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
+  if(newDate)  parts.push('Date → '+fmtDate(newDate));
+  if(!parts.length) parts.push('Saved');
+  const line = document.createElement('div');
+  line.style.cssText='font-size:10px;color:var(--text-3);padding:3px 0;border-bottom:1px solid var(--border-soft)';
+  line.textContent = ts+' · '+parts.join(' · ');
+  hist.insertBefore(line, hist.firstChild);
+  hist.style.display='block';
 }
 
 
@@ -925,7 +939,6 @@ function buildLedger(data){
       <div class="kol-info">
         <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
         <span class="kol-handle">${hand}</span>
-        ${(e.content&&(e.content.includes('IG Story')||e.content.includes('Reels'))) ? '<span style="font-size:8px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 6px;border-radius:5px;margin-top:1px;display:inline-block">'+e.content+'</span>' : ''}
       </div>
       <div class="date-col">
         <span class="date-val">${fmtDate(e.date)}</span>
