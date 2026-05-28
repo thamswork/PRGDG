@@ -112,6 +112,7 @@ function renderVoucher(data){
         '<div class="v-footer">'
           +(data.date?'<div class="v-detail-row"><span class="v-detail-lbl">Visit Date</span><span class="v-detail-val">'+escHtml(data.date)+'</span></div>':'')
           +(data.seedingType?'<div class="v-detail-row"><span class="v-detail-lbl">Type</span><span class="v-detail-val">'+escHtml(data.seedingType)+'</span></div>':'')
+          +(data.conditions&&data.conditions!=='-'&&data.conditions!=='N/A'?'<div class="v-detail-row" style="align-items:flex-start"><span class="v-detail-lbl" style="flex-shrink:0">Details</span><span class="v-detail-val" style="text-align:right;line-height:1.5">'+escHtml(data.conditions)+'</span></div>':'')
         +'</div>':'')
       +(data.conditions&&data.conditions!=='-'?'<div class="v-conditions">'+escHtml(data.conditions)+'</div>':'')
     +'</div>'
