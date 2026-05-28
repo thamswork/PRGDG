@@ -481,6 +481,7 @@ let entries     = [];
 let sumCache    = {};
 let detailEntry = null;
 let _qrUrl      = '';
+const sessionDone = new Set(); // IDs marked done this session — survives re-fetches
 
 // "Completed" = archived row (col M Acknowledged)
 const DONE_STATES = ['Completed','No-Show / Cancelled'];
@@ -610,7 +611,8 @@ async function markDone(id,btnEl){
   try{
     await gasGet(url);
     entry.acknowledged='Completed';
-    buildLedger(entries); // move row to archive immediately
+    sessionDone.add(id); // persist across re-fetches this session
+    buildLedger(entries);
     setTimeout(()=>fetchData(document.getElementById('monthFilter').value),1800);
   }catch(err){if(btnEl){btnEl.disabled=false;btnEl.textContent=orig;}}
 }
@@ -838,6 +840,7 @@ async function dtlMarkComplete(tagEl){
   try{
     await gasGet(url);
     detailEntry.acknowledged='Completed';
+    sessionDone.add(detailEntry.id);
     tagEl.textContent='Completed';tagEl.style.background='var(--green-bg)';tagEl.style.color='var(--green)';
     tagEl.style.opacity='1';tagEl.style.cursor='default';tagEl.title='';
     buildLedger(entries);
@@ -985,11 +988,15 @@ async function fetchData(month){
     if(r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data;
 
-    // Preserve any entries locally marked Completed that GAS hasn't caught up to yet
-    const localDone = new Set(entries.filter(e=>e.acknowledged==='Completed').map(e=>e.id));
+    // Apply session-level done overrides — survives re-fetches until page reload
     entries=d.entries.map(e=>{
-      if(localDone.has(e.id)&&!DONE_STATES.includes(e.acknowledged)){
+      if(sessionDone.has(e.id)&&!DONE_STATES.includes(e.acknowledged)){
         return Object.assign({},e,{acknowledged:'Completed'});
+      }
+      // Also validate stale acknowledged values
+      const VALID=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+      if(!VALID.includes(e.acknowledged||'')){
+        return Object.assign({},e,{acknowledged:'Pending'});
       }
       return e;
     });
