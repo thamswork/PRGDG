@@ -611,9 +611,11 @@ async function markDone(id,btnEl){
   try{
     await gasGet(url);
     entry.acknowledged='Completed';
-    sessionDone.add(id); // persist across re-fetches this session
+    sessionDone.add(id);
+    sysLog('Added to sessionDone: "'+id+'" (size='+sessionDone.size+')','ok');
     buildLedger(entries);
-    setTimeout(()=>fetchData(document.getElementById('monthFilter').value),1800);
+    // No auto re-fetch — GAS may not have deployed yet, sessionDone preserves state
+    // User can manually Sync to get fresh server data
   }catch(err){if(btnEl){btnEl.disabled=false;btnEl.textContent=orig;}}
 }
 
@@ -989,11 +991,13 @@ async function fetchData(month){
     const d=r.data;
 
     // Apply session-level done overrides — survives re-fetches until page reload
+    sysLog('sessionDone has '+sessionDone.size+' entries: '+[...sessionDone].join(','),'info');
     entries=d.entries.map(e=>{
       if(sessionDone.has(e.id)&&!DONE_STATES.includes(e.acknowledged)){
+        sysLog('Overriding '+e.id+' to Completed (GAS returned: '+e.acknowledged+')','ok');
         return Object.assign({},e,{acknowledged:'Completed'});
       }
-      // Also validate stale acknowledged values
+      // Validate stale acknowledged values
       const VALID=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
       if(!VALID.includes(e.acknowledged||'')){
         return Object.assign({},e,{acknowledged:'Pending'});
