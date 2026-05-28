@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GDG Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:#0f1117;color:#e8e4dc;display:flex;flex-direction:column;min-height:100vh}
+
+    /* NAV */
+    .nav{height:52px;background:#0f1117;border-bottom:1px solid #1e2030;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
+    .nav-mark{font-size:14px;font-weight:800;color:#e8e4dc;letter-spacing:.5px}
+    .nav-tag{font-size:8px;font-weight:700;color:#444;letter-spacing:2px;text-transform:uppercase}
+
+    /* STATES */
+    .state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+    .state.hidden{display:none}
+
+    /* SCANNER VIEW */
+    .scanner-wrap{position:relative;width:100%;max-width:340px;margin:0 auto}
+    #videoEl{width:100%;border-radius:16px;display:block;background:#000}
+    .scan-frame{position:absolute;inset:0;pointer-events:none}
+    .scan-frame::before,.scan-frame::after{content:'';position:absolute;width:36px;height:36px;border-color:#4ade80;border-style:solid}
+    .scan-frame::before{top:12px;left:12px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+    .scan-frame::after{bottom:12px;right:12px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+    .scan-line{position:absolute;left:12px;right:12px;height:2px;background:linear-gradient(90deg,transparent,#4ade80,transparent);animation:scanline 2s ease-in-out infinite}
+    @keyframes scanline{0%,100%{top:20px;opacity:0}10%{opacity:1}90%{opacity:1}50%{top:calc(100% - 20px)}}
+    .scan-hint-text{margin-top:14px;font-size:11px;color:#555;font-weight:500}
+
+    /* RESULT CARD */
+    .result-card{background:#161b28;border-radius:20px;width:100%;max-width:340px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+    .result-header{padding:20px 20px 16px;border-bottom:1px solid #1e2030}
+    .result-sys{font-size:8px;font-weight:700;letter-spacing:3px;color:#333;text-transform:uppercase;margin-bottom:8px}
+    .result-name{font-size:20px;font-weight:800;color:#e8e4dc;letter-spacing:-.3px}
+    .result-brand{font-size:9px;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+    .result-body{padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+    .result-row{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+    .result-lbl{color:#555;font-weight:600}
+    .result-val{color:#e8e4dc;font-weight:700}
+    .status-badge{padding:4px 12px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+    .status-badge.active{background:rgba(74,222,128,.15);color:#4ade80}
+    .status-badge.redeemed{background:rgba(248,113,113,.15);color:#f87171}
+    .status-badge.inactive{background:rgba(100,100,100,.15);color:#666}
+    .result-footer{padding:14px 20px 20px;display:flex;flex-direction:column;gap:10px}
+    .btn-confirm{height:50px;background:#4ade80;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:800;color:#0f1117;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:.15s}
+    .btn-confirm:active{transform:scale(.97)}
+    .btn-confirm:disabled{opacity:.4;cursor:not-allowed}
+    .btn-cancel{height:42px;background:transparent;border:1px solid #1e2030;border-radius:12px;font-family:inherit;font-size:12px;font-weight:600;color:#555;cursor:pointer}
+    .btn-rescan{height:42px;background:#1a1f2e;border:1px solid #2a3050;border-radius:12px;font-family:inherit;font-size:12px;font-weight:700;color:#e8e4dc;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+
+    /* SUCCESS */
+    .success-icon{width:72px;height:72px;background:rgba(74,222,128,.12);border:2px solid rgba(74,222,128,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px}
+    .success-title{font-size:20px;font-weight:800;color:#4ade80;margin-bottom:6px}
+    .success-sub{font-size:12px;color:#555;margin-bottom:4px}
+
+    /* ALREADY REDEEMED */
+    .warn-icon{width:72px;height:72px;background:rgba(248,113,113,.08);border:2px solid rgba(248,113,113,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px}
+    .warn-title{font-size:18px;font-weight:800;color:#f87171;margin-bottom:6px}
+    .warn-sub{font-size:12px;color:#555;line-height:1.6}
+
+    .txt-btn{height:44px;background:transparent;border:1px solid #2a3050;border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:#555;cursor:pointer;width:100%;max-width:280px;margin-top:8px}
+    .spinner{width:28px;height:28px;border:3px solid #1e2030;border-top-color:#4ade80;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* MANUAL INPUT */
+    .manual-wrap{width:100%;max-width:300px}
+    .manual-input{width:100%;height:48px;background:#161b28;border:1.5px solid #2a3050;border-radius:10px;color:#e8e4dc;font-family:'Plus Jakarta Sans',monospace;font-size:13px;font-weight:600;padding:0 14px;outline:none;letter-spacing:1px;margin-bottom:12px}
+    .manual-input:focus{border-color:#4ade80}
+    .btn-lookup{height:46px;width:100%;background:#4ade80;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:#0f1117;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+    .or-divider{display:flex;align-items:center;gap:10px;margin:16px 0;width:100%;max-width:300px}
+    .or-divider span{color:#333;font-size:10px;font-weight:600;white-space:nowrap}
+    .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:#1e2030}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div>
+    <div class="nav-mark">GDG</div>
+    <div class="nav-tag">Cashier Scanner</div>
+  </div>
+  <div id="navStatus" style="font-size:10px;color:#333;font-weight:600">Ready</div>
+</nav>
+
+<!-- STATE: SCAN -->
+<div class="state" id="stScan">
+  <div class="scanner-wrap">
+    <video id="videoEl" playsinline autoplay muted></video>
+    <div class="scan-frame">
+      <div class="scan-line"></div>
+    </div>
+  </div>
+  <div class="scan-hint-text">Point camera at customer's QR code</div>
+
+  <div class="or-divider" style="margin-top:24px"><span>or enter manually</span></div>
+  <div class="manual-wrap">
+    <input type="text" id="manualId" class="manual-input" placeholder="KOL-XXXXXXXX" autocomplete="off" spellcheck="false">
+    <button class="btn-lookup" onclick="lookupManual()">Look Up Voucher</button>
+  </div>
+</div>
+
+<!-- STATE: LOADING -->
+<div class="state hidden" id="stLoading">
+  <div class="spinner"></div>
+  <div style="font-size:12px;color:#555;font-weight:600">Verifying voucher...</div>
+</div>
+
+<!-- STATE: CONFIRM -->
+<div class="state hidden" id="stConfirm">
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-sys">GDG Seeding System</div>
+      <div class="result-name" id="confName">—</div>
+      <div class="result-brand" id="confBrand">—</div>
+    </div>
+    <div class="result-body">
+      <div class="result-row">
+        <span class="result-lbl">Status</span>
+        <span class="status-badge active" id="confStatusBadge">Active</span>
+      </div>
+      <div class="result-row">
+        <span class="result-lbl">Visit Date</span>
+        <span class="result-val" id="confDate">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-lbl">Type</span>
+        <span class="result-val" id="confType">Store Invite</span>
+      </div>
+      <div class="result-row">
+        <span class="result-lbl">Voucher ID</span>
+        <span class="result-val" id="confId" style="font-family:monospace;font-size:10px;color:#555">—</span>
+      </div>
+    </div>
+    <div class="result-footer">
+      <button class="btn-confirm" id="btnConfirm" onclick="confirmRedeem()">Confirm Redemption</button>
+      <button class="btn-cancel" onclick="resetScanner()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATE: SUCCESS -->
+<div class="state hidden" id="stSuccess">
+  <div class="success-icon">&#10003;</div>
+  <div class="success-title">Redeemed!</div>
+  <div class="success-sub" id="succName">—</div>
+  <div class="success-sub" id="succTime" style="color:#333;font-size:10px;margin-top:2px">—</div>
+  <button class="txt-btn" onclick="resetScanner()" style="margin-top:20px">Scan Next Customer</button>
+</div>
+
+<!-- STATE: ALREADY REDEEMED -->
+<div class="state hidden" id="stRedeemed">
+  <div class="warn-icon">&#x26D4;</div>
+  <div class="warn-title">Already Redeemed</div>
+  <div class="warn-sub" id="redeemedMsg">This voucher has already been used.</div>
+  <button class="txt-btn" onclick="resetScanner()">Back to Scanner</button>
+</div>
+
+<!-- STATE: ERROR -->
+<div class="state hidden" id="stError">
+  <div class="warn-icon" style="border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.06)">&#x26A0;</div>
+  <div class="warn-title" style="color:#fbbf24">Error</div>
+  <div class="warn-sub" id="errMsg">Something went wrong.</div>
+  <button class="txt-btn" onclick="resetScanner()">Try Again</button>
+</div>
+
+<script>
+const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
+
+let stream       = null;
+let scanning     = false;
+let currentId    = '';
+let pendingData  = null;
+
+// ── STATES ────────────────────────────────────────────────────────────────
+const STATES = ['stScan','stLoading','stConfirm','stSuccess','stRedeemed','stError'];
+function showState(id){STATES.forEach(s=>{document.getElementById(s).classList.toggle('hidden',s!==id);});}
+
+// ── CAMERA ────────────────────────────────────────────────────────────────
+async function startCamera(){
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
+    const vid=document.getElementById('videoEl');
+    vid.srcObject=stream;
+    await vid.play();
+    scanning=true;
+    requestAnimationFrame(tick);
+    document.getElementById('navStatus').textContent='Camera active';
+  }catch(err){
+    document.getElementById('navStatus').textContent='No camera';
+    // Camera unavailable — scanner still works via manual input
+  }
+}
+
+function stopCamera(){
+  scanning=false;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+}
+
+// ── QR DECODE via BarcodeDetector ─────────────────────────────────────────
+let detector=null;
+if(window.BarcodeDetector){
+  try{detector=new BarcodeDetector({formats:['qr_code']});}catch(e){}
+}
+
+async function tick(){
+  if(!scanning) return;
+  const vid=document.getElementById('videoEl');
+  if(vid.readyState>=2&&detector){
+    try{
+      const codes=await detector.detect(vid);
+      if(codes.length>0){
+        const raw=codes[0].rawValue;
+        const id=extractId(raw);
+        if(id&&id!==currentId){
+          currentId=id;
+          scanning=false;
+          lookup(id);
+          return;
+        }
+      }
+    }catch(e){}
+  }
+  requestAnimationFrame(tick);
+}
+
+function extractId(raw){
+  // Try URL param first: ...?id=KOL-XXXXXXXX
+  try{
+    const u=new URL(raw);
+    const id=u.searchParams.get('id');
+    if(id&&id.startsWith('KOL-')) return id.trim();
+  }catch(e){}
+  // Try raw string match
+  const m=raw.match(/KOL-[A-Z0-9]+/);
+  return m?m[0]:null;
+}
+
+// ── MANUAL LOOKUP ─────────────────────────────────────────────────────────
+function lookupManual(){
+  const val=document.getElementById('manualId').value.trim().toUpperCase();
+  if(!val){document.getElementById('manualId').focus();return;}
+  currentId=val;
+  scanning=false;
+  lookup(val);
+}
+
+// ── LOOKUP ────────────────────────────────────────────────────────────────
+async function lookup(id){
+  showState('stLoading');
+  document.getElementById('navStatus').textContent='Checking...';
+  try{
+    const res=await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(),{redirect:'follow'});
+    const data=await res.json();
+
+    if(data.status==='ok'){
+      pendingData=data;
+      if(data.voucher_status==='Redeemed'){
+        document.getElementById('redeemedMsg').textContent=
+          'This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'.')+'.';
+        showState('stRedeemed');
+        document.getElementById('navStatus').textContent='Already redeemed';
+      }else if(data.voucher_status==='Active'){
+        populateConfirm(data);
+        showState('stConfirm');
+        document.getElementById('navStatus').textContent='Voucher found';
+      }else{
+        showError('Voucher is '+data.voucher_status+'. Only active vouchers can be redeemed.');
+      }
+    }else if(data.status==='not_found'){
+      showError('Voucher not found for ID: '+id);
+    }else{
+      showError(data.message||'Lookup failed');
+    }
+  }catch(err){
+    showError('Connection error. Check network and try again.');
+  }
+}
+
+function populateConfirm(data){
+  document.getElementById('confName').textContent=data.name||'—';
+  document.getElementById('confBrand').textContent=(data.brand||'GDG')+' · '+(data.seedingType||'Store Invite');
+  document.getElementById('confDate').textContent=data.date||'—';
+  document.getElementById('confType').textContent=data.seedingType||'Store Invite';
+  document.getElementById('confId').textContent=data.id||'—';
+  const badge=document.getElementById('confStatusBadge');
+  badge.textContent=data.voucher_status||'Active';
+  badge.className='status-badge '+(data.voucher_status||'active').toLowerCase();
+  const btn=document.getElementById('btnConfirm');
+  btn.disabled=false;btn.textContent='Confirm Redemption';
+}
+
+// ── CONFIRM REDEEM ────────────────────────────────────────────────────────
+async function confirmRedeem(){
+  if(!currentId) return;
+  const btn=document.getElementById('btnConfirm');
+  btn.disabled=true;btn.textContent='Redeeming...';
+  document.getElementById('navStatus').textContent='Processing...';
+  try{
+    const res=await fetch(GAS+'?action=redeem&id='+encodeURIComponent(currentId)+'&t='+Date.now(),{redirect:'follow'});
+    const data=await res.json();
+    if(data.status==='redeemed'){
+      document.getElementById('succName').textContent=(pendingData&&pendingData.name)||data.name||'—';
+      document.getElementById('succTime').textContent='Redeemed at '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      showState('stSuccess');
+      document.getElementById('navStatus').textContent='Redeemed ✓';
+    }else if(data.status==='already_redeemed'){
+      document.getElementById('redeemedMsg').textContent='This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'.')+'.';
+      showState('stRedeemed');
+      document.getElementById('navStatus').textContent='Already redeemed';
+    }else{
+      showError(data.message||'Redemption failed');
+    }
+  }catch(err){
+    showError('Connection error during redemption. Please try again.');
+    btn.disabled=false;btn.textContent='Confirm Redemption';
+  }
+}
+
+function showError(msg){
+  document.getElementById('errMsg').textContent=msg;
+  showState('stError');
+  document.getElementById('navStatus').textContent='Error';
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────
+function resetScanner(){
+  currentId='';pendingData=null;
+  document.getElementById('manualId').value='';
+  showState('stScan');
+  document.getElementById('navStatus').textContent='Ready';
+  if(stream){
+    // Resume scanning on existing stream
+    scanning=true;
+    requestAnimationFrame(tick);
+  }
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+// Check if opened with ?id= directly (from voucher.html link)
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  const id=(p.get('id')||'').trim();
+  if(id){currentId=id;lookup(id);return;}
+  startCamera();
+})();
+
+// Manual input — support Enter key
+document.getElementById('manualId').addEventListener('keydown',function(e){
+  if(e.key==='Enter') lookupManual();
+});
+</script>
+</body>
+</html>
