@@ -14,7 +14,7 @@
       --green:#166534; --green-bg:#dcfce7;
       --amber:#92570a; --amber-bg:#fef3c7;
       --blue:#1e40af; --blue-bg:#dbeafe;
-      --red:#b91c1c;
+      --red:#b91c1c; --red-bg:#fee2e2;
       --r-md:12px; --r-lg:16px;
       --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
     }
@@ -22,19 +22,23 @@
     html,body{height:100%;-webkit-font-smoothing:antialiased}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);padding-bottom:60px}
 
+    /* NAV */
     .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
     .nav-l{display:flex;align-items:center;gap:10px}
     .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
     .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
     .btn-cycle{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);color:rgba(0,230,118,.9);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:8px;cursor:pointer}
 
+    /* TABS */
     .tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:52px;z-index:190}
     .tab{flex:1;height:42px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;cursor:pointer;transition:.2s;border-bottom:2.5px solid transparent}
     .tab.on{color:var(--navy);border-bottom-color:var(--navy)}
 
+    /* LAYOUT */
     .wrap{padding:14px;max-width:480px;margin:0 auto}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
 
+    /* REPORTING */
     .sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
     .sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
     .hero{font-size:34px;font-weight:800;color:var(--navy);line-height:1}
@@ -50,34 +54,24 @@
     .metric-val{font-size:18px;font-weight:800}
     .mo-dd{background:var(--canvas);border:1px solid var(--border);font-family:inherit;font-size:10px;font-weight:700;color:var(--text-2);text-transform:uppercase;cursor:pointer;outline:none;padding:5px 10px;border-radius:8px}
 
-    /* Summary strip */
+    /* SUMMARY STRIP */
     .sum-strip{border-top:1px solid var(--border-soft);padding-top:14px;margin-top:2px}
     .sum-strip-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .sum-strip-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-3)}
     .sum-strip-mo{font-size:10px;font-weight:700;color:var(--text-3)}
-    .sum-btns{display:flex;gap:8px}
 
-    /* Buttons */
+    /* BUTTONS */
     .btn{height:30px;padding:0 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--canvas);color:var(--text-3);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
     .btn:hover{border-color:var(--text-2);color:var(--text-2)}
     .btn:disabled{opacity:.35;cursor:not-allowed}
     .btn.ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
     .btn.due{border-color:var(--red);color:var(--red)}
     .btn.full{width:100%;height:34px;font-size:10px}
-
     .sync-btn{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--canvas);border:1px solid var(--border);padding:5px 10px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.15s;font-family:inherit}
     .sync-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-    /* ── LEDGER — strict 4-col grid ──
-       [KOL name+handle | Date+type 100px | Badge 74px | Button 52px]  */
-    .ledger-row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 100px 74px 52px;
-      align-items:center;
-      gap:8px;
-      padding:10px 4px;
-      border-bottom:1px solid var(--border-soft);
-    }
+    /* LEDGER */
+    .ledger-row{display:grid;grid-template-columns:minmax(0,1fr) 100px 74px 52px;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border-soft)}
     .ledger-row:last-child{border-bottom:none}
     .kol-info{display:flex;flex-direction:column;gap:2px;min-width:0}
     .kol-name{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -90,11 +84,11 @@
     .badge-p{background:var(--amber-bg);color:var(--amber)}
     .badge-a{background:var(--blue-bg);color:var(--blue)}
     .badge-d{background:var(--green-bg);color:var(--green)}
+    .badge-r{background:var(--red-bg);color:var(--red)}
     .row-btn{width:100%}
-
     .archive-btn{width:100%;text-align:center;background:transparent;border:1px dashed var(--border);color:var(--text-3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
 
-    /* Form */
+    /* FORM */
     .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
     .f-stack{display:flex;flex-direction:column;gap:12px}
@@ -125,10 +119,26 @@
     .map-wrap .ibox{padding-right:42px}
     .map-pin{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--canvas);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
 
-    /* Modals */
+    /* MODALS */
     .overlay{display:none;position:fixed;inset:0;background:rgba(26,31,46,.72);z-index:1100;padding:20px;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .mbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
     .empty{padding:24px 20px;text-align:center;color:var(--text-3);font-size:12px}
+
+    /* VOUCHER SECTION inside detail modal */
+    .voucher-block{background:var(--canvas);border:1px solid var(--border-soft);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+    .voucher-block-hdr{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px}
+    .voucher-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .v-pill{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:4px 10px;border-radius:20px}
+    .v-pill.active{background:var(--green-bg);color:var(--green)}
+    .v-pill.redeemed{background:var(--red-bg);color:var(--red)}
+    .v-pill.inactive{background:var(--border-soft);color:var(--text-3)}
+    .voucher-actions{display:flex;gap:8px}
+    .btn-voucher{flex:1;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--canvas);color:var(--text-2);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.15s}
+    .btn-voucher:hover{border-color:var(--navy);color:var(--navy)}
+    .btn-voucher.activate{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+    .btn-voucher.activate:hover{background:#bbf7d0}
+    .btn-voucher.deactivate{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+    .btn-voucher:disabled{opacity:.35;cursor:not-allowed}
   </style>
 </head>
 <body>
@@ -182,19 +192,16 @@
           <div class="metric-val" id="vToMax" style="color:var(--green)">--</div>
         </div>
       </div>
-      <!-- Summary send strip -->
       <div class="sum-strip">
         <div class="sum-strip-hdr">
           <span class="sum-strip-lbl">Campaign Summary</span>
           <span class="sum-strip-mo" id="sumMonth">--</span>
         </div>
-        <div class="sum-btns">
-          <button class="btn full" onclick="openSumPreview()">Copy Summary Text</button>
-        </div>
+        <button class="btn full" onclick="openSumPreview()">Copy Summary Text</button>
       </div>
     </div>
 
-    <!-- Master Ledger -->
+    <!-- MASTER LEDGER -->
     <div class="card" style="padding:14px">
       <div class="sec-row" style="margin-bottom:0">
         <span class="sec-title">Master Ledger</span>
@@ -211,7 +218,6 @@
       <div id="archiveBody" style="display:none;margin-top:8px"></div>
     </div>
 
-    <!-- SYSTEM LOG — send screenshot of this to diagnose loading issues -->
     <div id="sysLog" style="border-radius:8px;padding:8px 10px;margin-bottom:12px;font-family:monospace;font-size:9px;color:rgba(150,150,150,0.5);line-height:1.6;max-height:120px;overflow-y:auto;background:transparent;border:1px solid rgba(0,0,0,0.06)"></div>
   </div>
 
@@ -220,12 +226,9 @@
     <div class="card">
       <div class="sec-lbl">KOL Information</div>
       <div class="f-stack">
-        <!-- Entry Month — defaults to current/latest month, can be changed -->
         <div class="f-group">
           <label class="f-lbl" for="entryMonth">Campaign Month</label>
-          <select id="entryMonth" class="ibox">
-            <option value="">Loading...</option>
-          </select>
+          <select id="entryMonth" class="ibox"><option value="">Loading...</option></select>
         </div>
         <div class="f-group">
           <label class="f-lbl" for="kolName">KOL Name</label>
@@ -235,7 +238,6 @@
           <label class="f-lbl" for="handleUrl">Profile URL</label>
           <input type="url" id="handleUrl" class="ibox" placeholder="instagram.com/username" autocomplete="off" inputmode="url">
         </div>
-        <!-- Brand — remembered across sessions -->
         <div class="f-group">
           <label class="f-lbl" for="brandSel">Brand</label>
           <select id="brandSel" class="ibox" onchange="saveBrand()">
@@ -279,9 +281,9 @@
                 </select>
                 <input type="text" id="pkgOther" class="ibox" placeholder="Describe the package..." style="display:none;margin-top:8px">
               </div>
-              <div class="f-row c2">
-                <div class="f-group"><label class="f-lbl" for="logPhone">Phone</label><input type="tel" id="logPhone" class="ibox" placeholder="08X-XXX-XXXX" inputmode="tel"></div>
-                <div class="f-group"><label class="f-lbl" for="backupPhone">Backup</label><input type="tel" id="backupPhone" class="ibox" placeholder="Optional" inputmode="tel"></div>
+              <div class="f-group">
+                <label class="f-lbl" for="logPhone">Phone</label>
+                <input type="tel" id="logPhone" class="ibox" placeholder="08X-XXX-XXXX" inputmode="tel">
               </div>
               <div class="f-group">
                 <label class="f-lbl" for="logAddr">Delivery Address</label>
@@ -310,7 +312,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- SUMMARY PREVIEW MODAL -->
@@ -320,7 +321,6 @@
       <div style="font-size:14px;font-weight:800;color:var(--navy)">Campaign Summary</div>
       <span id="sumPreviewMonth" style="font-size:10px;font-weight:700;color:var(--text-3)">--</span>
     </div>
-    <!-- Preview text rendered as rows -->
     <div id="sumPreviewBody" style="background:var(--canvas);border-radius:10px;padding:14px;margin-bottom:16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;line-height:1.8;color:var(--text)"></div>
     <div style="display:flex;gap:10px">
       <button onclick="closeSumPreview()" style="flex:1;height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer">Close</button>
@@ -367,7 +367,7 @@
   </div>
 </div>
 
-<!-- KOL DETAIL MODAL — compact centered -->
+<!-- KOL DETAIL MODAL -->
 <div id="detailModal" style="display:none;position:fixed;inset:0;z-index:1100;background:rgba(26,31,46,.65);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeDetailModal()">
   <div style="background:var(--surface);border-radius:18px;width:100%;max-width:420px;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 20px 60px rgba(0,0,0,.25)">
 
@@ -380,19 +380,18 @@
         </div>
         <button onclick="closeDetailModal()" style="background:var(--canvas);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;min-width:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--text-3);flex-shrink:0">&#x2715;</button>
       </div>
-      <!-- Tags -->
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:8px">
         <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:4px 9px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
         <span id="dtlTypeTag" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
-        <span id="dtlStatusTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;display:inline-flex;align-items:center"></span>
+        <span id="dtlAckTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;display:inline-flex;align-items:center"></span>
         <span id="dtlContentTag" style="display:none;font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;background:var(--green-bg);color:var(--green);text-transform:uppercase;letter-spacing:.5px"></span>
       </div>
     </div>
 
-    <!-- Body — compact sections -->
+    <!-- Body -->
     <div style="padding:12px 18px;display:flex;flex-direction:column;gap:12px">
 
-      <!-- Date + Package row -->
+      <!-- Date + Package -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
           <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Date</div>
@@ -404,16 +403,29 @@
         </div>
       </div>
 
+      <!-- VOUCHER BLOCK — Store Visit only -->
+      <div id="dtlVoucherBlock" class="voucher-block" style="display:none">
+        <div class="voucher-block-hdr">Store Visit Voucher</div>
+        <div class="voucher-status-row">
+          <span id="dtlVPill" class="v-pill inactive">—</span>
+          <span id="dtlVRedeemed" style="font-size:9px;color:var(--text-3);font-weight:600"></span>
+        </div>
+        <div class="voucher-actions">
+          <button id="btnActivate" class="btn-voucher activate" onclick="dtlToggleVoucher(this)">Activate Voucher</button>
+          <button id="btnQR" class="btn-voucher" onclick="dtlShowQR()" style="display:none">Show QR</button>
+        </div>
+      </div>
+
       <!-- Content Posted -->
       <div>
         <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Content Posted</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblStory">
-            <input type="checkbox" id="cbStory" onchange="onContentChange()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
+            <input type="checkbox" id="cbStory" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
             <span style="font-size:12px;font-weight:700;color:var(--text-2)">IG Story</span>
           </label>
           <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblReels">
-            <input type="checkbox" id="cbReels" onchange="onContentChange()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
+            <input type="checkbox" id="cbReels" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
             <span style="font-size:12px;font-weight:700;color:var(--text-2)">Reels</span>
           </label>
         </div>
@@ -428,8 +440,7 @@
       <!-- Screenshot Upload -->
       <div>
         <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Screenshot</div>
-        <div id="dtlUploadArea" onclick="document.getElementById('dtlFileInput').click()"
-          style="border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.15s;background:var(--canvas);display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px">
+        <div id="dtlUploadArea" onclick="document.getElementById('dtlFileInput').click()" style="border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.15s;background:var(--canvas);display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px">
           <span style="font-size:12px;font-weight:600;color:var(--text-3)">Tap to upload</span>
           <span style="font-size:10px;color:var(--text-3)">· JPG, PNG</span>
         </div>
@@ -460,520 +471,549 @@
 </div>
 
 <script>
-const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const GAS             = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
 const CLOUDINARY_CLOUD  = 'dynjnftnu';
 const CLOUDINARY_PRESET = 'gdg_seed';
 const CLOUDINARY_FOLDER = 'GUSS/seed';
+const GITHUB_BASE     = 'https://thamswork.github.io/PRGDG';
 
+// ── STATE ─────────────────────────────────────────────────────────────────
 let entries    = [];
 let sumCache   = {};
+let detailEntry = null;
 
-// ── Only "Completed" is the done state — matches sheet dropdown exactly ──
+// Acknowledged = "Completed" moves row to archive
 const DONE_STATES = ['Completed', 'No-Show / Cancelled'];
 
 // ── SYSTEM LOG ────────────────────────────────────────────────────────────
-function sysLog(msg, color){
-  const el = document.getElementById('sysLog'); if(!el) return;
-  const colors = {ok:'#4ade80', err:'#f87171', warn:'#fbbf24', info:'#94a3b8'};
-  const c = colors[color||'info']||'#94a3b8';
-  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const line = document.createElement('div');
-  line.style.color = c;
-  line.textContent = '['+t+'] '+msg;
-  el.appendChild(line);
-  el.scrollTop = el.scrollHeight;
-  // Keep max 30 lines
-  while(el.children.length > 30) el.removeChild(el.firstChild);
+function sysLog(msg, color) {
+  const el = document.getElementById('sysLog'); if (!el) return;
+  const c  = {ok:'#4ade80',err:'#f87171',warn:'#fbbf24',info:'#94a3b8'}[color||'info']||'#94a3b8';
+  const t  = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const ln = document.createElement('div');
+  ln.style.color = c; ln.textContent = '['+t+'] '+msg;
+  el.appendChild(ln); el.scrollTop = el.scrollHeight;
+  while (el.children.length > 30) el.removeChild(el.firstChild);
 }
 
-// ── GAS fetch helper — no-cors fallback so Done never shows "fetch failed" ──
-function gasGet(url){
+// ── GAS FETCH — no-cors fallback ──────────────────────────────────────────
+function gasGet(url) {
   sysLog('GET → '+url.split('?')[1]?.substring(0,40),'warn');
-  return fetch(url, {redirect:'follow'})
-    .then(r => { sysLog('Response status: '+r.status,'info'); return r.text(); })
-    .then(t => { const d=JSON.parse(t); sysLog('Parsed OK, status='+d.status, d.status==='success'?'ok':'err'); return d; })
-    .catch(err => {
-      sysLog('Fetch failed: '+err.message+' — trying no-cors','err');
-      fetch(url, {mode:'no-cors'}).catch(()=>{});
-      return {status:'success', _noCors:true};
+  return fetch(url,{redirect:'follow'})
+    .then(r=>{ sysLog('HTTP '+r.status,'info'); return r.text(); })
+    .then(t=>{ const d=JSON.parse(t); sysLog('status='+d.status, d.status==='success'?'ok':'err'); return d; })
+    .catch(err=>{
+      sysLog('Fetch failed: '+err.message+' — no-cors fallback','err');
+      fetch(url,{mode:'no-cors'}).catch(()=>{});
+      return {status:'success',_noCors:true};
     });
 }
 
-// ── BRAND MEMORY (localStorage) ──────────────────────────────────────────
-function saveBrand(){
+// ── BRAND MEMORY ──────────────────────────────────────────────────────────
+function saveBrand() {
   try { localStorage.setItem('gdg_brand', document.getElementById('brandSel').value); } catch(e){}
 }
-function loadBrand(){
+function loadBrand() {
   try {
     const b = localStorage.getItem('gdg_brand');
-    if(b){ const s=document.getElementById('brandSel'); for(let i=0;i<s.options.length;i++){if(s.options[i].value===b){s.selectedIndex=i;break;}} }
+    if (!b) return;
+    const s = document.getElementById('brandSel');
+    for (let i=0; i<s.options.length; i++) { if (s.options[i].value===b) { s.selectedIndex=i; break; } }
   } catch(e){}
 }
 
-// ── UTILS ─────────────────────────────────────────────────────────────────
-function fmtDate(d){
-  if(!d) return '';
+// ── DATE / TIME UTILS ─────────────────────────────────────────────────────
+function fmtDate(d) {
+  if (!d) return '';
   const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const m=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
   return m ? parseInt(m[3],10)+' '+mo[parseInt(m[2],10)-1]+' '+m[1] : String(d);
 }
-function isPast(ds){
-  if(!ds) return false;
-  const m=String(ds).match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(!m) return false;
+function isPast(ds) {
+  if (!ds) return false;
+  const m = String(ds).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return false;
   const d=new Date(+m[1],+m[2]-1,+m[3]), t=new Date(); t.setHours(0,0,0,0); return d<t;
 }
 
-// ── COMPUTE SUMMARY from entries — full detail version ────────────────────
-function computeSummary(month){
-  const validEntries = entries.filter(e=>e.kol&&e.kol.trim());
-
-  // Sort by appointment date ascending for cycle / hit-15 detection
-  const sorted = validEntries.slice().sort((a,b)=>{
-    const da = a.date ? new Date(a.date) : new Date(9999,0,1);
-    const db = b.date ? new Date(b.date) : new Date(9999,0,1);
-    return da - db;
-  });
-
-  const cycleStart = sorted.length > 0 ? sorted[0].date : null;
-  const hit15Date  = sorted.length >= 15 ? sorted[14].date : null;
-
+// ── SUMMARY ───────────────────────────────────────────────────────────────
+function computeSummary(month) {
+  const valid = entries.filter(e=>e.kol&&e.kol.trim());
+  const sorted = valid.slice().sort((a,b)=>(a.date?new Date(a.date):new Date(9999,0,1))-(b.date?new Date(b.date):new Date(9999,0,1)));
   let total=0, del=0, vis=0, completed=0;
-  const brandMap = {};
-  const BRAND_ORDER = ['Guss Damn Good','Adam and Eve','Charuss'];
-
-  validEntries.forEach(e=>{
-    total++;
-    if(String(e.type).trim()==='Delivery') del++; else vis++;
-    if(e.handoff==='Completed') completed++;
-    const b = (e.brand&&e.brand.trim()) ? e.brand.trim() : '(No brand)';
-    brandMap[b] = (brandMap[b]||0) + 1;
+  const brandMap={}, BRAND_ORDER=['Guss Damn Good','Adam and Eve','Charuss'];
+  valid.forEach(e=>{
+    total++; if (String(e.type).trim()==='Delivery') del++; else vis++;
+    if (DONE_STATES.includes(e.acknowledged)) completed++;
+    const b=(e.brand&&e.brand.trim())?e.brand.trim():'(No brand)';
+    brandMap[b]=(brandMap[b]||0)+1;
   });
-
-  const brandRows = [];
-  BRAND_ORDER.forEach(b=>{ if(brandMap[b]) brandRows.push({brand:b, count:brandMap[b]}); });
-  if(brandMap['(No brand)']) brandRows.push({brand:'(No brand)', count:brandMap['(No brand)']});
-
-  sumCache = {month, total, del, vis, completed, toMin:Math.max(0,15-total), cycleStart, hit15Date, brandRows};
-  document.getElementById('sumMonth').textContent = month||'';
+  const brandRows=[];
+  BRAND_ORDER.forEach(b=>{ if(brandMap[b]) brandRows.push({brand:b,count:brandMap[b]}); });
+  if (brandMap['(No brand)']) brandRows.push({brand:'(No brand)',count:brandMap['(No brand)']});
+  sumCache={month,total,del,vis,completed,toMin:Math.max(0,15-total),
+    cycleStart:sorted.length>0?sorted[0].date:null,
+    hit15Date:sorted.length>=15?sorted[14].date:null, brandRows};
+  document.getElementById('sumMonth').textContent=month||'';
 }
 
-// ── BUILD SUMMARY TEXT — clean format, no separator lines ─────────────────
-function buildSummaryText(){
-  const s   = sumCache;
-  const col = 14; // label column width
-  const pad = (str, w) => { const t=String(str); return t+' '.repeat(Math.max(0,w-t.length)); };
-
-  const rows = [
-    'GDG SEEDING \u00B7 ' + (s.month||'—'),
-    '',
-    pad('Cycle Start',col)  + (s.cycleStart ? fmtDate(s.cycleStart) : '—'),
-    pad('Hit 15 on',col)    + (s.hit15Date  ? fmtDate(s.hit15Date)  : 'Not yet reached'),
-    '',
-    pad('Total',col)        + (s.total||0) + ' / 15',
-    pad('Deliveries',col)   + (s.del||0),
-    pad('Store Visits',col) + (s.vis||0),
-    pad('Completed',col)    + (s.completed||0),
-    pad('To Min (15)',col)   + (s.toMin>0 ? s.toMin+' more needed' : 'Target reached'),
+function buildSummaryText() {
+  const s=sumCache, col=14;
+  const pad=(str,w)=>{ const t=String(str); return t+' '.repeat(Math.max(0,w-t.length)); };
+  const rows=[
+    'GDG SEEDING \u00B7 '+(s.month||'—'),'',
+    pad('Cycle Start',col)+(s.cycleStart?fmtDate(s.cycleStart):'—'),
+    pad('Hit 15 on',col)+(s.hit15Date?fmtDate(s.hit15Date):'Not yet reached'),'',
+    pad('Total',col)+(s.total||0)+' / 15',
+    pad('Deliveries',col)+(s.del||0),
+    pad('Store Visits',col)+(s.vis||0),
+    pad('Completed',col)+(s.completed||0),
+    pad('To Min (15)',col)+(s.toMin>0?s.toMin+' more needed':'Target reached'),
   ];
-
-  if(s.brandRows && s.brandRows.length){
-    rows.push('');
-    rows.push('By Brand');
-    s.brandRows.forEach(r => rows.push(pad(r.brand, col) + r.count));
+  if (s.brandRows&&s.brandRows.length) {
+    rows.push('','By Brand');
+    s.brandRows.forEach(r=>rows.push(pad(r.brand,col)+r.count));
   }
-
   return rows.join('\n');
 }
 
-// ── SUMMARY PREVIEW MODAL ─────────────────────────────────────────────────
-function openSumPreview(){
-  const s    = sumCache;
-  const text = buildSummaryText();
-
-  // Render preview as styled rows inside the modal
-  const lines = text.split('\n');
-  let html = '';
-  lines.forEach((l, i) => {
-    if(l === ''){
-      html += '<div style="height:6px"></div>';
-    } else if(i === 0){
-      html += `<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">${l}</div>`;
-    } else if(['By Brand','Cycle Start','Hit 15 on'].some(k => l.startsWith(k)) === false && l.indexOf('  ')!==0 && !l.match(/^\s/) && l.indexOf(' ')>5 && i < 5){
-      // section headers like "By Brand"
-      html += `<div style="font-weight:700;font-size:11px;color:var(--text-2)">${l}</div>`;
-    } else {
-      // data row — split on first 14 chars as label
-      const lbl  = l.substring(0,14).trimEnd();
-      const val  = l.substring(14).trim();
-      if(val){
-        html += `<div style="display:flex;justify-content:space-between;align-items:baseline">
-          <span style="color:var(--text-3);font-size:11px;font-weight:600">${lbl}</span>
-          <span style="color:var(--navy);font-size:12px;font-weight:700">${val}</span>
-        </div>`;
-      } else {
-        html += `<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">${l}</div>`;
-      }
-    }
+function openSumPreview() {
+  const text=buildSummaryText(), lines=text.split('\n');
+  let html='';
+  lines.forEach((l,i)=>{
+    if (!l){ html+='<div style="height:6px"></div>'; return; }
+    if (i===0){ html+=`<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">${l}</div>`; return; }
+    const lbl=l.substring(0,14).trimEnd(), val=l.substring(14).trim();
+    if (val) html+=`<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text-3);font-size:11px;font-weight:600">${lbl}</span><span style="color:var(--navy);font-size:12px;font-weight:700">${val}</span></div>`;
+    else html+=`<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">${l}</div>`;
   });
-
-  document.getElementById('sumPreviewMonth').textContent = s.month||'';
-  document.getElementById('sumPreviewBody').innerHTML    = html;
-
-  // Reset copy button
-  const cb = document.getElementById('btnDoSumCopy');
-  if(cb){ cb.textContent='Copy'; cb.style.background=''; }
-
-  // Store text for the copy action
-  document.getElementById('sumPreviewModal')._text = text;
-  document.getElementById('sumPreviewModal').style.display = 'flex';
+  document.getElementById('sumPreviewMonth').textContent=sumCache.month||'';
+  document.getElementById('sumPreviewBody').innerHTML=html;
+  const cb=document.getElementById('btnDoSumCopy');
+  if (cb){ cb.textContent='Copy'; cb.style.background=''; }
+  document.getElementById('sumPreviewModal')._text=text;
+  document.getElementById('sumPreviewModal').style.display='flex';
 }
-
-function closeSumPreview(){
-  document.getElementById('sumPreviewModal').style.display = 'none';
-}
-
-function doSumCopy(btnEl){
-  const text = document.getElementById('sumPreviewModal')._text || '';
+function closeSumPreview(){ document.getElementById('sumPreviewModal').style.display='none'; }
+function doSumCopy(btnEl) {
+  const text=document.getElementById('sumPreviewModal')._text||'';
   navigator.clipboard.writeText(text).then(()=>{
-    if(btnEl){
-      btnEl.textContent = 'Copied!';
-      btnEl.style.background = 'var(--green)';
-      setTimeout(()=>{ btnEl.textContent='Copy'; btnEl.style.background=''; }, 2500);
-    }
+    if (btnEl){ btnEl.textContent='Copied!'; btnEl.style.background='var(--green)';
+      setTimeout(()=>{ btnEl.textContent='Copy'; btnEl.style.background=''; },2500); }
   });
 }
 
-// kept for any legacy references — now just opens preview
-function copySummaryText(){ openSumPreview(); }
-
-// ── MARK DONE — writes "Completed" which matches sheet dropdown exactly ───
-async function markDone(id, btnEl){
-  const entry=entries.find(e=>e.id===id); if(!entry) return;
+// ── MARK DONE (ledger Done button) ────────────────────────────────────────
+async function markDone(id, btnEl) {
+  const entry=entries.find(e=>e.id===id); if (!entry) return;
   const orig=btnEl?btnEl.textContent:'Done';
-  if(btnEl){ btnEl.disabled=true; btnEl.textContent='...'; }
+  if (btnEl){ btnEl.disabled=true; btnEl.textContent='...'; }
   const isDel=String(entry.type||'').trim()==='Delivery';
   const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const idSafe=(id||'').replace(/[^A-Za-z0-9-]/g,'');
-  // type param still sent so GAS can tick logistics sheet for deliveries
   const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
   try {
-    await gasGet(url); // no-cors fallback — never throws
-    entry.handoff='Completed';
-    if(btnEl){ btnEl.textContent='Done'; btnEl.classList.add('ok'); btnEl.disabled=true; }
-    setTimeout(()=>fetchData(document.getElementById('monthFilter').value), 1800);
-  } catch(err){
-    if(btnEl){ btnEl.disabled=false; btnEl.textContent=orig; }
-  }
+    await gasGet(url);
+    entry.acknowledged='Completed';
+    if (btnEl){ btnEl.textContent='Done'; btnEl.classList.add('ok'); btnEl.disabled=true; }
+    setTimeout(()=>fetchData(document.getElementById('monthFilter').value),1800);
+  } catch(err){ if (btnEl){ btnEl.disabled=false; btnEl.textContent=orig; } }
 }
 
 // ── FORM HELPERS ──────────────────────────────────────────────────────────
-function onTypeChange(){
+function onTypeChange() {
   const v=document.getElementById('typeVis').checked;
   document.getElementById('deliveryFields').style.display=v?'none':'block';
   document.getElementById('venueFields').style.display=v?'block':'none';
 }
-function getType(){ return document.getElementById('typeVis').checked?'Store Invite':'Delivery'; }
-function getBrand(){ return document.getElementById('brandSel').value||''; }
-function openMap(){ const u=document.getElementById('googleMap').value; if(u) window.open(u,'_blank'); }
-function toggleOtherPkg(){ document.getElementById('pkgOther').style.display=document.getElementById('pkgSel').value==='Others'?'block':'none'; }
-function getPkg(){ const s=document.getElementById('pkgSel'); return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value; }
-
-// ── DETAIL MODAL — state ──────────────────────────────────────────────────
-let detailEntry = null; // currently open entry
-
-// Build dispatch text from entry data (with optional date override)
-function buildEntryDispatchText(e, dateOverride, notesOverride){
-  const isDel  = String(e.type||'').trim()==='Delivery';
-  const brand  = e.brand||'';
-  const bl     = brand ? 'Brand: '+brand+'\n' : '';
-  const date   = dateOverride || e.date || '';
-  const notes  = notesOverride !== undefined ? notesOverride : (e.notes||'');
-  if(!isDel){
-    return bl+'Name: '+e.kol+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nVenue: '+(e.address||'')+(notes?'\nNotes: '+notes:'');
-  } else {
-    const phone = (e.phone||'') + (e.backupPhone ? ' (Backup: '+e.backupPhone+')' : '');
-    return bl+'Name: '+e.kol+'\nPhone: '+phone+'\nPackage: '+(e.pkg||'')+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nAddress: '+(e.address||'')+'\nMap: '+(e.googleMap||e.map||'')+(notes?'\nNotes: '+notes:'');
-  }
+function getType()  { return document.getElementById('typeVis').checked?'Store Invite':'Delivery'; }
+function getBrand() { return document.getElementById('brandSel').value||''; }
+function openMap()  { const u=document.getElementById('googleMap').value; if(u) window.open(u,'_blank'); }
+function toggleOtherPkg() { document.getElementById('pkgOther').style.display=document.getElementById('pkgSel').value==='Others'?'block':'none'; }
+function getPkg()   { const s=document.getElementById('pkgSel'); return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value; }
+function getContentValue() {
+  const p=[];
+  if (document.getElementById('cbStory').checked) p.push('IG Story');
+  if (document.getElementById('cbReels').checked) p.push('Reels');
+  return p.join(', ');
+}
+function syncContentLabels() {
+  const story=document.getElementById('cbStory').checked, reels=document.getElementById('cbReels').checked;
+  document.getElementById('lblStory').style.borderColor=story?'var(--navy)':'var(--border)';
+  document.getElementById('lblStory').style.background =story?'var(--surface)':'var(--canvas)';
+  document.getElementById('lblReels').style.borderColor=reels?'var(--navy)':'var(--border)';
+  document.getElementById('lblReels').style.background =reels?'var(--surface)':'var(--canvas)';
 }
 
-function openDetailModal(id){
-  const e = entries.find(x=>x.id===id);
-  if(!e) return;
-  detailEntry = e;
+// ── DISPATCH TEXT ─────────────────────────────────────────────────────────
+function buildDispatchText(e, dateOverride, notesOverride) {
+  const isDel=String(e.type||'').trim()==='Delivery';
+  const bl=(e.brand?'Brand: '+e.brand+'\n':'');
+  const date=dateOverride||e.date||'';
+  const notes=notesOverride!==undefined?notesOverride:(e.notes||'');
+  if (!isDel) return bl+'Name: '+e.kol+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nVenue: '+(e.address||'')+(notes?'\nNotes: '+notes:'');
+  return bl+'Name: '+e.kol+'\nPhone: '+(e.phone||'')+'\nPackage: '+(e.pkg||'')+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nAddress: '+(e.address||'')+'\nMap: '+(e.googleMap||'')+(notes?'\nNotes: '+notes:'');
+}
+
+// ── DETAIL MODAL — OPEN ───────────────────────────────────────────────────
+function openDetailModal(id) {
+  const e=entries.find(x=>x.id===id); if (!e) return;
+  detailEntry=e;
 
   document.getElementById('dtlName').textContent   = e.kol||'—';
-  document.getElementById('dtlHandle').textContent = (e.url&&e.url!=='TBD') ? e.url.replace(/https?:\/\//,'').replace('instagram.com/','@') : (e.handle||'—');
+  document.getElementById('dtlHandle').textContent = (e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
 
-  const brandTag  = document.getElementById('dtlBrandTag');
-  const typeTag   = document.getElementById('dtlTypeTag');
-  const statusTag = document.getElementById('dtlStatusTag');
-  const isD = String(e.type||'').trim()==='Delivery';
-  const isDone = DONE_STATES.includes(e.handoff);
+  const brandTag=document.getElementById('dtlBrandTag');
+  const typeTag =document.getElementById('dtlTypeTag');
+  const ackTag  =document.getElementById('dtlAckTag');
+  const isD     =String(e.type||'').trim()==='Delivery';
+  const isDone  =DONE_STATES.includes(e.acknowledged);
 
-  if(e.brand&&e.brand.trim()){ brandTag.textContent=e.brand; brandTag.style.display='inline-flex'; }
-  else { brandTag.style.display='none'; }
+  brandTag.style.display=e.brand&&e.brand.trim()?'inline-flex':'none';
+  if (e.brand) brandTag.textContent=e.brand;
 
-  typeTag.textContent      = isD ? 'Delivery' : 'Store Visit';
-  typeTag.style.background = isD ? 'var(--green-bg)' : 'var(--amber-bg)';
-  typeTag.style.color      = isD ? 'var(--green)'    : 'var(--amber)';
+  typeTag.textContent=isD?'Delivery':'Store Visit';
+  typeTag.style.background=isD?'var(--green-bg)':'var(--amber-bg)';
+  typeTag.style.color=isD?'var(--green)':'var(--amber)';
 
-  statusTag.textContent      = e.handoff||'Pending';
-  statusTag.style.background = isDone ? 'var(--green-bg)' : 'var(--amber-bg)';
-  statusTag.style.color      = isDone ? 'var(--green)'    : 'var(--amber)';
-  statusTag.style.cursor     = isDone ? 'default' : 'pointer';
-  statusTag.title            = isDone ? '' : 'Tap to mark complete';
+  ackTag.textContent=e.acknowledged||'Pending';
+  ackTag.style.background=isDone?'var(--green-bg)':'var(--amber-bg)';
+  ackTag.style.color=isDone?'var(--green)':'var(--amber)';
+  ackTag.style.cursor=isDone?'default':'pointer';
+  ackTag.title=isDone?'':'Tap to mark complete';
 
-  // Content tag in header — shows IG Story / Reels already filed
-  const contentTag = document.getElementById('dtlContentTag');
-  const contentVal = (e.content||'').trim();
-  const hasContent = contentVal.includes('IG Story') || contentVal.includes('Reels');
-  if(contentTag){
-    if(hasContent){ contentTag.textContent=contentVal; contentTag.style.display='inline-flex'; }
-    else { contentTag.style.display='none'; }
-  }
+  const contentTag=document.getElementById('dtlContentTag');
+  const cv=(e.content||'').trim();
+  const hasContent=cv.includes('IG Story')||cv.includes('Reels');
+  contentTag.style.display=hasContent?'inline-flex':'none';
+  if (hasContent) contentTag.textContent=cv;
 
-  document.getElementById('dtlDate').value = e.date||'';
+  document.getElementById('dtlDate').value=e.date||'';
 
-  const pkgWrap = document.getElementById('dtlPkgWrap');
-  if(isD && e.pkg && e.pkg!=='N/A'){ pkgWrap.style.display='block'; document.getElementById('dtlPkg').textContent=e.pkg; }
+  const pkgWrap=document.getElementById('dtlPkgWrap');
+  if (isD&&e.pkg&&e.pkg!=='N/A'){ pkgWrap.style.display='block'; document.getElementById('dtlPkg').textContent=e.pkg; }
   else { pkgWrap.style.display='none'; }
 
-  const content = (e.content||'').toLowerCase();
-  document.getElementById('cbStory').checked = content.includes('ig story');
-  document.getElementById('cbReels').checked = content.includes('reels');
+  // VOUCHER BLOCK — only for Store Invite
+  const vBlock=document.getElementById('dtlVoucherBlock');
+  if (!isD) {
+    vBlock.style.display='block';
+    renderVoucherBlock(e);
+  } else {
+    vBlock.style.display='none';
+  }
+
+  const content=(e.content||'').toLowerCase();
+  document.getElementById('cbStory').checked=content.includes('ig story');
+  document.getElementById('cbReels').checked=content.includes('reels');
   syncContentLabels();
 
-  // Content link — pre-fill from existing link field
-  document.getElementById('dtlLink').value = e.link||'';
+  document.getElementById('dtlLink').value=e.link||'';
+  document.getElementById('dtlNotes').value=e.notes||'';
 
-  document.getElementById('dtlNotes').value = e.notes||'';
+  // Reset upload
+  document.getElementById('dtlUploadArea').style.borderColor='';
+  document.getElementById('dtlUploadStatus').style.display='none';
+  document.getElementById('dtlUploadStatus').textContent='';
+  document.getElementById('dtlUploadPreview').style.display='none';
+  document.getElementById('dtlFileInput').value='';
+  detailEntry._uploadedUrl='';
 
-  // Reset upload area
-  document.getElementById('dtlUploadArea').style.borderColor = '';
-  document.getElementById('dtlUploadStatus').style.display = 'none';
-  document.getElementById('dtlUploadStatus').textContent = '';
-  document.getElementById('dtlUploadPreview').style.display = 'none';
-  document.getElementById('dtlFileInput').value = '';
-  detailEntry._uploadedUrl = '';
+  // Reset history
+  const hist=document.getElementById('dtlHistory');
+  if (hist){ hist.style.display='none'; while(hist.children.length>1) hist.removeChild(hist.lastChild); }
 
-  // Clear history panel
-  const hist = document.getElementById('dtlHistory');
-  if(hist){ hist.style.display='none'; while(hist.children.length>1) hist.removeChild(hist.lastChild); }
-
-  const sb = document.getElementById('btnDtlSave');
-  if(sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background='var(--navy)'; sb.style.color='#fff'; }
+  const sb=document.getElementById('btnDtlSave');
+  if (sb){ sb.textContent='Save'; sb.disabled=false; sb.style.background='var(--navy)'; sb.style.color='#fff'; }
 
   document.getElementById('detailModal').style.display='flex';
 }
 
+// ── VOUCHER BLOCK RENDER ──────────────────────────────────────────────────
+function renderVoucherBlock(e) {
+  const pill    = document.getElementById('dtlVPill');
+  const redeemEl= document.getElementById('dtlVRedeemed');
+  const btnA    = document.getElementById('btnActivate');
+  const btnQR   = document.getElementById('btnQR');
+  const vs      = (e.voucherStatus||'').trim();
+
+  // Reset button state
+  btnA.disabled=false;
+
+  if (vs==='Redeemed') {
+    pill.textContent='Redeemed'; pill.className='v-pill redeemed';
+    redeemEl.textContent=e.voucherRedeemed?'on '+e.voucherRedeemed:'';
+    btnA.textContent='Redeemed'; btnA.className='btn-voucher'; btnA.disabled=true;
+    btnQR.style.display='none';
+  } else if (vs==='Active') {
+    pill.textContent='Active'; pill.className='v-pill active';
+    redeemEl.textContent='';
+    btnA.textContent='Deactivate'; btnA.className='btn-voucher deactivate';
+    btnQR.style.display='block';
+  } else {
+    pill.textContent='Inactive'; pill.className='v-pill inactive';
+    redeemEl.textContent='';
+    btnA.textContent='Activate Voucher'; btnA.className='btn-voucher activate';
+    btnQR.style.display='none';
+  }
+}
+
+// ── VOUCHER TOGGLE (Activate / Deactivate) ────────────────────────────────
+async function dtlToggleVoucher(btnEl) {
+  if (!detailEntry) return;
+  const vs=(detailEntry.voucherStatus||'').trim();
+  if (vs==='Redeemed') return;
+
+  const newStatus = vs==='Active' ? '' : 'Active';
+  const orig=btnEl.textContent;
+  btnEl.disabled=true; btnEl.textContent='Saving...';
+
+  const url=GAS
+    +'?action=update_entry'
+    +'&id='+encodeURIComponent(detailEntry.id)
+    +'&kolName='+encodeURIComponent(detailEntry.kol)
+    +'&voucherStatus='+encodeURIComponent(newStatus)
+    +'&t='+Date.now();
+
+  try {
+    await gasGet(url);
+    detailEntry.voucherStatus=newStatus;
+    renderVoucherBlock(detailEntry);
+    buildLedger(entries);
+    sysLog('Voucher '+( newStatus==='Active'?'activated':'deactivated')+': '+detailEntry.kol,'ok');
+  } catch(err) {
+    btnEl.disabled=false; btnEl.textContent=orig;
+    sysLog('Voucher toggle failed: '+err.message,'err');
+  }
+}
+
+// ── SHOW QR (inline in modal) ─────────────────────────────────────────────
+function dtlShowQR() {
+  if (!detailEntry) return;
+  const id  = detailEntry.id;
+  const url = GITHUB_BASE+'/voucher.html?id='+id;
+
+  // Build a modal overlay on top of the detail modal
+  const existing=document.getElementById('qrOverlay');
+  if (existing) existing.remove();
+
+  const overlay=document.createElement('div');
+  overlay.id='qrOverlay';
+  overlay.style.cssText='position:fixed;inset:0;z-index:1200;background:rgba(26,31,46,.8);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+  overlay.onclick=function(ev){ if(ev.target===overlay) overlay.remove(); };
+
+  overlay.innerHTML=`
+    <div id="qrCard" style="background:#faf8f3;border-radius:20px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.3);position:relative">
+      <button onclick="document.getElementById('qrOverlay').remove()" style="position:absolute;top:14px;right:14px;background:transparent;border:none;font-size:18px;color:#9a9690;cursor:pointer;line-height:1">&#x2715;</button>
+      <div style="font-size:9px;font-weight:700;letter-spacing:3px;color:#c8c4bb;text-transform:uppercase;margin-bottom:16px">GDG Seeding System</div>
+      <div style="font-size:18px;font-weight:800;color:#1a1f2e;letter-spacing:-.3px;margin-bottom:4px">${detailEntry.kol||'—'}</div>
+      <div style="font-size:10px;color:#9a9690;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px">${(detailEntry.brand||'GDG')} &nbsp;·&nbsp; Store Visit</div>
+      <div style="background:#fff;border-radius:12px;padding:14px;display:inline-block;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08)" id="qrTarget"></div>
+      <div style="background:#f0ede6;border-radius:8px;padding:10px 14px;margin-bottom:14px">
+        <div style="font-size:8px;font-weight:700;letter-spacing:2px;color:#9a9690;text-transform:uppercase;margin-bottom:4px">Voucher ID</div>
+        <div style="font-family:monospace;font-size:14px;font-weight:700;color:#1a1f2e;letter-spacing:2px">${id}</div>
+      </div>
+      <div style="font-size:8px;color:#c8c4bb;letter-spacing:.5px;word-break:break-all;line-height:1.6;margin-bottom:16px">${url}</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="dtlSaveQRImage()" style="flex:1;height:38px;background:#1a1f2e;border:none;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.8px;text-transform:uppercase">Save PNG</button>
+        <a href="${url}" target="_blank" style="flex:1;height:38px;background:transparent;border:1.5px solid #e4e1db;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:#5a5750;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;text-decoration:none">Open ↗</a>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  // Inject QRCode lib and render
+  if (!window.QRCode) {
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+    s.onload=()=>renderQR(url);
+    document.head.appendChild(s);
+  } else { renderQR(url); }
+}
+
+function renderQR(url) {
+  const el=document.getElementById('qrTarget'); if(!el) return;
+  el.innerHTML='';
+  new QRCode(el,{text:url,width:180,height:180,colorDark:'#1a1f2e',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+}
+
+// ── SAVE QR AS PNG ────────────────────────────────────────────────────────
+async function dtlSaveQRImage() {
+  const card=document.getElementById('qrCard'); if (!card) return;
+  // Wait for QR to finish rendering
+  await new Promise(r=>setTimeout(r,200));
+
+  if (!window.html2canvas) {
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(s);
+    await new Promise(r=>{ s.onload=r; });
+  }
+
+  html2canvas(card,{scale:3,backgroundColor:'#faf8f3',useCORS:true}).then(canvas=>{
+    const a=document.createElement('a');
+    a.href=canvas.toDataURL('image/png');
+    a.download='voucher-'+(detailEntry?detailEntry.id:'GDG')+'.png';
+    a.click();
+    sysLog('Voucher PNG saved for '+( detailEntry?detailEntry.kol:''),'ok');
+  }).catch(err=>sysLog('PNG save failed: '+err.message,'err'));
+}
+
 // ── MARK COMPLETE FROM POPUP ──────────────────────────────────────────────
-async function dtlMarkComplete(tagEl){
-  if(!detailEntry) return;
-  if(DONE_STATES.includes(detailEntry.handoff)) return; // already done
-  tagEl.textContent='Marking...';
-  tagEl.style.opacity='.5';
-  const isDel = String(detailEntry.type||'').trim()==='Delivery';
+async function dtlMarkComplete(tagEl) {
+  if (!detailEntry) return;
+  if (DONE_STATES.includes(detailEntry.acknowledged)) return;
+  tagEl.textContent='Marking...'; tagEl.style.opacity='.5';
+  const isDel=String(detailEntry.type||'').trim()==='Delivery';
   const kolSafe=(detailEntry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const idSafe=(detailEntry.id||'').replace(/[^A-Za-z0-9-]/g,'');
   const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
   try {
     await gasGet(url);
-    detailEntry.handoff='Completed';
-    tagEl.textContent='Completed';
-    tagEl.style.background='var(--green-bg)'; tagEl.style.color='var(--green)';
+    detailEntry.acknowledged='Completed';
+    tagEl.textContent='Completed'; tagEl.style.background='var(--green-bg)'; tagEl.style.color='var(--green)';
     tagEl.style.opacity='1'; tagEl.style.cursor='default'; tagEl.title='';
     buildLedger(entries);
-    sysLog('Marked complete from popup: '+detailEntry.kol,'ok');
-  } catch(err){
-    tagEl.textContent=detailEntry.handoff;
-    tagEl.style.opacity='1';
-    sysLog('Mark complete failed: '+err.message,'err');
-  }
+    sysLog('Marked complete: '+detailEntry.kol,'ok');
+  } catch(err){ tagEl.textContent=detailEntry.acknowledged; tagEl.style.opacity='1'; sysLog('Mark complete failed','err'); }
 }
 
 // ── CLOUDINARY UPLOAD ─────────────────────────────────────────────────────
-async function dtlHandleUpload(input){
-  const file = input.files[0]; if(!file) return;
-  const statusEl  = document.getElementById('dtlUploadStatus');
-  const previewEl = document.getElementById('dtlUploadPreview');
-  const areaEl    = document.getElementById('dtlUploadArea');
-
-  statusEl.style.display='block'; statusEl.style.color='var(--text-3)';
-  statusEl.textContent='Uploading...';
+async function dtlHandleUpload(input) {
+  const file=input.files[0]; if (!file) return;
+  const statusEl=document.getElementById('dtlUploadStatus');
+  const previewEl=document.getElementById('dtlUploadPreview');
+  const areaEl=document.getElementById('dtlUploadArea');
+  statusEl.style.display='block'; statusEl.style.color='var(--text-3)'; statusEl.textContent='Uploading...';
   areaEl.style.borderColor='var(--navy)';
-  sysLog('Uploading to Cloudinary: '+file.name,'warn');
-
+  sysLog('Uploading: '+file.name,'warn');
   try {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    fd.append('folder', CLOUDINARY_FOLDER);
-
-    const res  = await fetch('https://api.cloudinary.com/v1_1/'+CLOUDINARY_CLOUD+'/image/upload', {method:'POST', body:fd});
-    const data = await res.json();
-
-    if(data.secure_url){
-      detailEntry._uploadedUrl = data.secure_url;
-      statusEl.textContent = 'Uploaded';
-      statusEl.style.color = 'var(--green)';
-      previewEl.src = data.secure_url;
-      previewEl.style.display = 'block';
-      areaEl.style.borderColor = 'var(--green)';
-      sysLog('Upload OK: '+data.secure_url.substring(0,60),'ok');
-    } else {
-      throw new Error(data.error?.message||'Upload failed');
-    }
-  } catch(err){
-    statusEl.textContent = 'Upload failed: '+err.message;
-    statusEl.style.color = 'var(--red)';
-    areaEl.style.borderColor = 'var(--red)';
-    sysLog('Upload ERROR: '+err.message,'err');
-  }
+    const fd=new FormData();
+    fd.append('file',file); fd.append('upload_preset',CLOUDINARY_PRESET); fd.append('folder',CLOUDINARY_FOLDER);
+    const res=await fetch('https://api.cloudinary.com/v1_1/'+CLOUDINARY_CLOUD+'/image/upload',{method:'POST',body:fd});
+    const data=await res.json();
+    if (data.secure_url) {
+      detailEntry._uploadedUrl=data.secure_url;
+      statusEl.textContent='Uploaded'; statusEl.style.color='var(--green)';
+      previewEl.src=data.secure_url; previewEl.style.display='block';
+      areaEl.style.borderColor='var(--green)';
+      sysLog('Upload OK','ok');
+    } else { throw new Error(data.error?.message||'Upload failed'); }
+  } catch(err){ statusEl.textContent='Failed: '+err.message; statusEl.style.color='var(--red)'; areaEl.style.borderColor='var(--red)'; sysLog('Upload ERROR: '+err.message,'err'); }
 }
 
-function closeDetailModal(){
-  document.getElementById('detailModal').style.display='none';
-  detailEntry = null;
-}
+function closeDetailModal() { document.getElementById('detailModal').style.display='none'; detailEntry=null; }
 
-function onContentChange(){ syncContentLabels(); }
-function syncContentLabels(){
-  const story = document.getElementById('cbStory').checked;
-  const reels = document.getElementById('cbReels').checked;
-  document.getElementById('lblStory').style.borderColor = story ? 'var(--navy)' : 'var(--border)';
-  document.getElementById('lblStory').style.background  = story ? 'var(--surface)' : 'var(--canvas)';
-  document.getElementById('lblReels').style.borderColor = reels ? 'var(--navy)' : 'var(--border)';
-  document.getElementById('lblReels').style.background  = reels ? 'var(--surface)' : 'var(--canvas)';
-}
-
-function getContentValue(){
-  const parts = [];
-  if(document.getElementById('cbStory').checked) parts.push('IG Story');
-  if(document.getElementById('cbReels').checked) parts.push('Reels');
-  return parts.join(', ');
-}
-
-function dtlCopy(){
-  if(!detailEntry) return;
-  const dateVal  = document.getElementById('dtlDate').value;
-  const notesVal = document.getElementById('dtlNotes').value;
-  const text = buildEntryDispatchText(detailEntry, dateVal, notesVal);
+function dtlCopy() {
+  if (!detailEntry) return;
+  const text=buildDispatchText(detailEntry, document.getElementById('dtlDate').value, document.getElementById('dtlNotes').value);
   navigator.clipboard.writeText(text).then(()=>{
-    const btn = document.querySelector('#detailModal .btn');
-    if(btn){ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy Dispatch',2000); }
+    const btn=document.querySelector('#detailModal .btn');
+    if (btn){ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy Dispatch',2000); }
   });
 }
 
-async function dtlSave(btnEl){
-  if(!detailEntry) return;
-  const orig = btnEl.textContent;
+async function dtlSave(btnEl) {
+  if (!detailEntry) return;
+  const orig=btnEl.textContent;
   btnEl.disabled=true; btnEl.textContent='Saving...';
 
-  const newDate     = document.getElementById('dtlDate').value;
-  const newNotes    = document.getElementById('dtlNotes').value;
-  const content     = getContentValue();
-  const linkVal     = document.getElementById('dtlLink').value.trim();
-  const uploadedUrl = detailEntry._uploadedUrl || '';
-  const dateChanged = newDate && newDate !== detailEntry.date;
+  const newDate    =document.getElementById('dtlDate').value;
+  const newNotes   =document.getElementById('dtlNotes').value;
+  const content    =getContentValue();
+  const linkVal    =document.getElementById('dtlLink').value.trim();
+  const uploadedUrl=detailEntry._uploadedUrl||'';
+  const dateChanged=newDate&&newDate!==detailEntry.date;
 
-  // Build comma-separated link value for col Q
-  const linkParts = [linkVal, uploadedUrl].filter(Boolean);
-  // Merge with existing link if new parts added
-  const existingParts = (detailEntry.link||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const allLinks = [...new Set([...existingParts, ...linkParts])]; // dedupe
-  const finalLink = allLinks.join(', ');
+  const existingParts=(detailEntry.link||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const allLinks=[...new Set([...existingParts,...[linkVal,uploadedUrl].filter(Boolean)])];
+  const finalLink=allLinks.join(', ');
 
-  let url = GAS
-    + '?action=update_entry'
-    + '&id='            + encodeURIComponent(detailEntry.id)
-    + '&kolName='       + encodeURIComponent(detailEntry.kol)
-    + '&type='          + encodeURIComponent(detailEntry.type)
-    + '&contentStatus=' + encodeURIComponent(content)
-    + '&notes='         + encodeURIComponent(newNotes)
-    + '&driveLink='     + encodeURIComponent(finalLink)
-    + '&t='             + Date.now();
+  let url=GAS+'?action=update_entry'
+    +'&id='+encodeURIComponent(detailEntry.id)
+    +'&kolName='+encodeURIComponent(detailEntry.kol)
+    +'&type='+encodeURIComponent(detailEntry.type)
+    +'&contentStatus='+encodeURIComponent(content)
+    +'&notes='+encodeURIComponent(newNotes)
+    +'&driveLink='+encodeURIComponent(finalLink)
+    +'&t='+Date.now();
 
-  if(dateChanged){
-    url += '&newDate='          + encodeURIComponent(newDate);
-    url += '&rebuildDispatch=1';
-  }
+  if (dateChanged){ url+='&newDate='+encodeURIComponent(newDate)+'&rebuildDispatch=1'; }
 
-  sysLog('dtlSave GET for '+detailEntry.kol,'warn');
-
+  sysLog('Saving: '+detailEntry.kol,'warn');
   try {
-    const data = await gasGet(url);
-    if(data.status==='success'){
-      sysLog('Save OK, updated='+data.updated,'ok');
-      detailEntry.content = content;
-      detailEntry.notes   = newNotes;
-      detailEntry.link    = finalLink;
-      detailEntry._uploadedUrl = '';
-      if(dateChanged){
-        detailEntry.date         = newDate;
-        detailEntry.dispatchText = buildEntryDispatchText(detailEntry, newDate, newNotes);
-      }
-      const ts = data.updated || new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
-      addHistoryLine(ts, content, newNotes, dateChanged?newDate:null, finalLink);
+    const data=await gasGet(url);
+    if (data.status==='success') {
+      detailEntry.content=content; detailEntry.notes=newNotes; detailEntry.link=finalLink; detailEntry._uploadedUrl='';
+      if (dateChanged){ detailEntry.date=newDate; detailEntry.dispatchText=buildDispatchText(detailEntry,newDate,newNotes); }
+      addHistoryLine(data.updated||new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}),content,newNotes,dateChanged?newDate:null,finalLink);
       btnEl.textContent='Saved!'; btnEl.style.background='var(--green)'; btnEl.style.color='#fff';
       buildLedger(entries);
-      setTimeout(()=>{ closeDetailModal(); }, 1200);
+      setTimeout(()=>closeDetailModal(),1200);
     } else { throw new Error(data.message||'GAS error'); }
-  } catch(err){
-    sysLog('dtlSave ERROR: '+err.message,'err');
-    btnEl.disabled=false; btnEl.textContent=orig;
-    alert('Save failed: '+err.message);
-  }
+  } catch(err){ sysLog('Save ERROR: '+err.message,'err'); btnEl.disabled=false; btnEl.textContent=orig; alert('Save failed: '+err.message); }
 }
 
-function addHistoryLine(ts, content, notes, newDate, link){
-  let hist = document.getElementById('dtlHistory');
-  if(!hist) return;
-  const parts = [];
-  if(content)  parts.push(content);
-  if(notes)    parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
-  if(newDate)  parts.push('Date → '+fmtDate(newDate));
-  if(link)     parts.push('Link saved');
-  if(!parts.length) parts.push('Saved');
-  const line = document.createElement('div');
-  line.style.cssText='font-size:10px;color:var(--text-3);padding:4px 0;border-bottom:1px solid var(--border-soft);line-height:1.5';
-  line.textContent = ts+' · '+parts.join(' · ');
-  hist.insertBefore(line, hist.children[1]||null);
+function addHistoryLine(ts,content,notes,newDate,link) {
+  const hist=document.getElementById('dtlHistory'); if (!hist) return;
+  const parts=[];
+  if (content) parts.push(content);
+  if (notes)   parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
+  if (newDate) parts.push('Date → '+fmtDate(newDate));
+  if (link)    parts.push('Link saved');
+  if (!parts.length) parts.push('Saved');
+  const ln=document.createElement('div');
+  ln.style.cssText='font-size:10px;color:var(--text-3);padding:4px 0;border-bottom:1px solid var(--border-soft);line-height:1.5';
+  ln.textContent=ts+' · '+parts.join(' · ');
+  hist.insertBefore(ln,hist.children[1]||null);
   hist.style.display='block';
 }
 
-
-function copyText(){
+// ── ENTRY FORM — COPY ─────────────────────────────────────────────────────
+function copyText() {
   const name=document.getElementById('kolName').value||'TBD';
   const brand=getBrand(), type=getType();
   const date=document.getElementById('logDate').value||'TBD';
   const time=document.getElementById('logTime').value||'TBD';
   const bl=brand?'Brand: '+brand+'\n':'';
-  const header = type==='Store Invite' ? 'STORE VISIT\n\n' : 'DELIVERY\n\n';
-  const text = type==='Store Invite'
+  const header=type==='Store Invite'?'STORE VISIT\n\n':'DELIVERY\n\n';
+  const text=type==='Store Invite'
     ?(header+bl+'Name: '+name+'\nDate: '+date+'\nTime: '+time+'\nVenue: '+document.getElementById('storeVenue').value)
     :(header+bl+'Name: '+name+'\nPhone: '+document.getElementById('logPhone').value+'\nPackage: '+getPkg()+'\nDate: '+date+'\nTime: '+time+'\nAddress: '+document.getElementById('logAddr').value+'\nMap: '+document.getElementById('googleMap').value);
   navigator.clipboard.writeText(text).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',2000); });
 }
 
 // ── SUBMIT ENTRY ──────────────────────────────────────────────────────────
-async function submitEntry(){
+async function submitEntry() {
   const btn=document.getElementById('btnSubmit'), type=getType();
-  const payload={ action:'add',
+  const payload={
+    action:'add',
     entryMonth:  document.getElementById('entryMonth').value||'',
-    kolName:     document.getElementById('kolName').value, handleUrl:document.getElementById('handleUrl').value, brand:getBrand(), seedingType:type, deliverable:'', date:document.getElementById('logDate').value, time:document.getElementById('logTime').value, packageStr:type==='Store Invite'?'N/A':getPkg(), phone:type==='Store Invite'?'N/A':document.getElementById('logPhone').value, backupPhone:type==='Store Invite'?'':document.getElementById('backupPhone').value, address:type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value, googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value, notes:'' };
+    kolName:     document.getElementById('kolName').value,
+    handleUrl:   document.getElementById('handleUrl').value,
+    brand:       getBrand(),
+    seedingType: type,
+    deliverable: '',
+    date:        document.getElementById('logDate').value,
+    time:        document.getElementById('logTime').value,
+    packageStr:  type==='Store Invite'?'N/A':getPkg(),
+    phone:       type==='Store Invite'?'N/A':document.getElementById('logPhone').value,
+    address:     type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value,
+    googleMap:   type==='Store Invite'?'':document.getElementById('googleMap').value,
+    notes:       ''
+  };
   btn.textContent='Saving...'; btn.disabled=true;
   try {
     const res=await fetch(GAS,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow'});
     const r=JSON.parse(await res.text());
-    if(r.status==='success'){
+    if (r.status==='success') {
       btn.textContent='Saved!'; btn.classList.add('ok');
-      // Clear fields but keep brand selection
-      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.id!=='brandSel'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA')) el.value='';});
+      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{ if(el.id!=='brandSel'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA')) el.value=''; });
       document.getElementById('typeDel').checked=true; onTypeChange();
       const rm=new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear();
       const s=document.getElementById('monthFilter');
-      if(s){let f=false;for(let i=0;i<s.options.length;i++){if(s.options[i].value===rm){s.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;s.insertBefore(o,s.firstChild);}}
+      if (s){ let f=false; for(let i=0;i<s.options.length;i++){ if(s.options[i].value===rm){s.options[i].selected=true;f=true;break;} } if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;s.insertBefore(o,s.firstChild);} }
       fetchData(rm);
       setTimeout(()=>{ btn.textContent='Log Entry'; btn.classList.remove('ok'); btn.disabled=false; },3000);
     } else { throw new Error(r.message||'GAS error'); }
@@ -981,134 +1021,113 @@ async function submitEntry(){
 }
 
 // ── FETCH DATA ────────────────────────────────────────────────────────────
-async function fetchData(month){
-  sysLog('fetchData() called, month='+(month||'(let GAS decide — latest entry month)'),'info');
+async function fetchData(month) {
+  sysLog('fetchData month='+(month||'latest'),'info');
   try {
     let url=GAS+'?t='+Date.now();
-    if(month) url+='&month='+encodeURIComponent(month);
-    sysLog('Fetching: '+GAS.substring(0,40)+'...','warn');
+    if (month) url+='&month='+encodeURIComponent(month);
     const res=await fetch(url,{redirect:'follow'});
-    sysLog('HTTP '+res.status+' received','info');
-    const raw=await res.text();
-    sysLog('Raw length: '+raw.length+' chars','info');
-    const r=JSON.parse(raw);
-    sysLog('JSON status='+r.status,'info');
-    if(r.status!=='success') throw new Error(r.message||'GAS error');
+    sysLog('HTTP '+res.status,'info');
+    const r=JSON.parse(await res.text());
+    if (r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data; entries=d.entries;
-    sysLog('Entries loaded: '+d.entries.length+', GAS returned month='+d.month,'ok');
-    sysLog('availableMonths: '+(d.availableMonths||[]).join(', '),'info');
+    sysLog('Loaded '+d.entries.length+' entries, month='+d.month,'ok');
 
-    // The month we actually want to display:
-    // If a specific month was requested, use it.
-    // Otherwise use d.month which GAS sets to the latest month that has entries.
-    // This means on boot (month=null) we always land on the most recent active month.
-    const displayMonth = month || d.month || (d.availableMonths&&d.availableMonths[0]) || '';
-
+    const displayMonth=month||d.month||(d.availableMonths&&d.availableMonths[0])||'';
     const sel=document.getElementById('monthFilter');
-    if(sel){
+    if (sel) {
       sel.innerHTML='';
-      (d.availableMonths||[]).forEach(m=>{
-        const o=document.createElement('option');
-        o.value=m; o.textContent=m;
-        if(m===displayMonth) o.selected=true;
-        sel.appendChild(o);
-      });
-      // If displayMonth isn't in the list (e.g. brand-new cycle with no entries yet), add it
-      const exists=[...sel.options].some(o=>o.value===displayMonth);
-      if(!exists){
-        const o=document.createElement('option');
-        o.value=displayMonth; o.textContent=displayMonth; o.selected=true;
-        sel.insertBefore(o,sel.firstChild);
-      }
+      (d.availableMonths||[]).forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; if(m===displayMonth) o.selected=true; sel.appendChild(o); });
+      if (![...sel.options].some(o=>o.value===displayMonth)){ const o=document.createElement('option'); o.value=displayMonth; o.textContent=displayMonth; o.selected=true; sel.insertBefore(o,sel.firstChild); }
     }
 
-    document.getElementById('vTotal').textContent  = d.totalSeeded;
-    document.getElementById('vPending').textContent= d.pendingDeliveries;
-    document.getElementById('vToMin').textContent  = d.remainingToMin;
-    document.getElementById('vToMax').textContent  = d.remainingToMax;
-    document.getElementById('progBar').style.width = Math.min(100,(d.totalSeeded/20)*100)+'%';
-    document.getElementById('syncTime').textContent= new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    computeSummary(displayMonth);  // always use the display month, not GAS default
+    document.getElementById('vTotal').textContent  =d.totalSeeded;
+    document.getElementById('vPending').textContent=d.pendingDeliveries;
+    document.getElementById('vToMin').textContent  =d.remainingToMin;
+    document.getElementById('vToMax').textContent  =d.remainingToMax;
+    document.getElementById('progBar').style.width =Math.min(100,(d.totalSeeded/20)*100)+'%';
+    document.getElementById('syncTime').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    computeSummary(displayMonth);
 
-    // Populate the Entry tab month selector with same available months
-    const eSel = document.getElementById('entryMonth');
-    if(eSel){
-      const prev = eSel.value;
-      eSel.innerHTML='';
-      // Add current/next months at top so user can log upcoming entries
+    const eSel=document.getElementById('entryMonth');
+    if (eSel) {
+      const prev=eSel.value; eSel.innerHTML='';
       const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
       const now2=new Date(), curMo=now2.toLocaleString('en-US',{month:'long'})+' '+now2.getFullYear();
       const curIdx=MONTHS.indexOf(now2.toLocaleString('en-US',{month:'long'}));
       const nextMo=MONTHS[(curIdx+1)%12]+' '+(curIdx===11?now2.getFullYear()+1:now2.getFullYear());
-      const allMonths=[...new Set([displayMonth, nextMo, curMo, ...(d.availableMonths||[])])];
-      allMonths.forEach(m=>{
-        const o=document.createElement('option');
-        o.value=m; o.textContent=m;
-        if(m===(prev||displayMonth)) o.selected=true;
-        eSel.appendChild(o);
-      });
+      [...new Set([displayMonth,nextMo,curMo,...(d.availableMonths||[])])].forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; if(m===(prev||displayMonth)) o.selected=true; eSel.appendChild(o); });
     }
-    if(d.packages&&d.packages.length){
+    if (d.packages&&d.packages.length) {
       const ps=document.getElementById('pkgSel');
-      if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
+      if (ps){ ps.innerHTML='<option value="">Select package...</option>'; d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`); ps.innerHTML+='<option value="Others">Others (specify)</option>'; }
     }
     buildLedger(d.entries);
-  } catch(err){ sysLog('fetchData ERROR: '+err.message,'err'); console.error('fetchData:',err.message); }
+  } catch(err){ sysLog('fetchData ERROR: '+err.message,'err'); }
 }
 
 // ── BUILD LEDGER ──────────────────────────────────────────────────────────
-function buildLedger(data){
+function buildLedger(data) {
   const body=document.getElementById('ledgerBody');
   const arch=document.getElementById('archiveBody');
   const arcBtn=document.getElementById('btnArchive');
-  if(!body) return;
-  if(!data||!data.length){ body.innerHTML='<div class="empty">No entries this month</div>'; if(arcBtn) arcBtn.style.display='none'; return; }
+  if (!body) return;
+  if (!data||!data.length){ body.innerHTML='<div class="empty">No entries this month</div>'; if(arcBtn) arcBtn.style.display='none'; return; }
 
   let aHtml='', dHtml='', dCount=0;
   data.forEach(e=>{
-    if(!e.kol||!e.kol.trim()) return;
-    const done = DONE_STATES.includes(e.handoff);
-    const past = !done && isPast(e.date);
-    const bc   = done ? 'badge-d' : (e.handoff==='Acknowledged'?'badge-a':'badge-p');
-    const hand = (e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
-    const isD  = String(e.type).trim()==='Delivery';
+    if (!e.kol||!e.kol.trim()) return;
+    const done  =DONE_STATES.includes(e.acknowledged);
+    const past  =!done&&isPast(e.date);
+    const isD   =String(e.type).trim()==='Delivery';
+    const isV   =!isD;
+    const vs    =(e.voucherStatus||'').trim();
+    const handle=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
 
-    // Col 4: Done button for active rows; empty span for completed (keeps grid)
-    const col4 = !done
-      ? `<button class="btn row-btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
-      : `<span></span>`;
+    // Badge: shows acknowledged state
+    const bc = done?'badge-d':(e.acknowledged==='Acknowledged'?'badge-a':'badge-p');
+
+    // Voucher pill — small, only for Store Visit
+    const vPill = isV&&vs ? `<span style="font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:4px;background:${vs==='Redeemed'?'var(--red-bg)':'var(--green-bg)'};color:${vs==='Redeemed'?'var(--red)':'var(--green)'}">${vs}</span>` : '';
+
+    const col4=!done
+      ?`<button class="btn row-btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
+      :`<span></span>`;
 
     const row=`<div class="ledger-row">
       <div class="kol-info">
-        <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
-        <span class="kol-handle">${hand}</span>
+        <div style="display:flex;align-items:center;gap:4px;min-width:0">
+          <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')" style="cursor:pointer;text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:3px">${e.kol}</span>
+          ${vPill}
+        </div>
+        <span class="kol-handle">${handle}</span>
       </div>
       <div class="date-col">
         <span class="date-val">${fmtDate(e.date)}</span>
         <span class="type-tag">${isD?'Delivery':'Visit'}</span>
       </div>
-      <span class="badge ${bc}">${e.handoff}</span>
+      <span class="badge ${bc}">${e.acknowledged||'Pending'}</span>
       ${col4}
     </div>`;
 
-    if(done){ dHtml+=row; dCount++; } else { aHtml+=row; }
+    if (done){ dHtml+=row; dCount++; } else { aHtml+=row; }
   });
 
   body.innerHTML=aHtml||'<div class="empty">All entries completed</div>';
-  if(arch) arch.innerHTML=dHtml;
-  if(arcBtn){ arcBtn.style.display=dCount>0?'block':'none'; if(dCount>0) arcBtn.textContent='Show Completed History ('+dCount+')'; }
+  if (arch) arch.innerHTML=dHtml;
+  if (arcBtn){ arcBtn.style.display=dCount>0?'block':'none'; if(dCount>0) arcBtn.textContent='Show Completed History ('+dCount+')'; }
 }
 
 // ── ARCHIVE TOGGLE ────────────────────────────────────────────────────────
-function toggleArchive(btn){
-  const d=document.getElementById('archiveBody'); if(!d) return;
+function toggleArchive(btn) {
+  const d=document.getElementById('archiveBody'); if (!d) return;
   const open=d.style.display==='none'||!d.style.display;
   d.style.display=open?'block':'none';
   btn.textContent=btn.textContent.replace(open?'Show':'Hide',open?'Hide':'Show');
 }
 
 // ── VIEW SWITCH ───────────────────────────────────────────────────────────
-function switchView(v){
+function switchView(v) {
   ['Report','Entry'].forEach(n=>{ document.getElementById('view'+n).style.display='none'; const t=document.getElementById('tab'+n); if(t) t.classList.remove('on'); });
   const N=v.charAt(0).toUpperCase()+v.slice(1);
   document.getElementById('view'+N).style.display='block';
@@ -1117,68 +1136,36 @@ function switchView(v){
 }
 
 // ── CYCLE MODAL ───────────────────────────────────────────────────────────
-function openCycleModal(){
-  const done  = entries.filter(e=>DONE_STATES.includes(e.handoff)).length;
-  const total = entries.length;
-
-  // Closing month = currently selected month in the filter
-  const sel       = document.getElementById('monthFilter');
-  const prevLabel = sel&&sel.value ? sel.value : 'Current Month';
-
-  // Next month = closing month + 1, with proper year rollover
-  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  let nextLabel = prevLabel;
-  const parts = prevLabel.match(/^(\w+)\s+(\d{4})$/);
-  if(parts){
-    const mIdx = MONTHS.indexOf(parts[1]);
-    if(mIdx !== -1){
-      const nextMIdx = (mIdx + 1) % 12;
-      const nextYear = mIdx === 11 ? parseInt(parts[2]) + 1 : parseInt(parts[2]);
-      nextLabel = MONTHS[nextMIdx] + ' ' + nextYear;
-    }
-  }
-
-  document.getElementById('cyclePrev').textContent     = prevLabel;
-  document.getElementById('cycleNext').textContent     = nextLabel;
-  document.getElementById('cycleSubtitle').textContent = 'Closing '+prevLabel+' · Opening '+nextLabel;
-  document.getElementById('cTotal').textContent = total;
-  document.getElementById('cDone').textContent  = done;
-  document.getElementById('cPend').textContent  = total - done;
-
-  // Store next month so confirmCycle uses it
-  document.getElementById('cycleModal')._nextMonth = nextLabel;
-  document.getElementById('cycleModal').style.display = 'flex';
+function openCycleModal() {
+  const done=entries.filter(e=>DONE_STATES.includes(e.acknowledged)).length, total=entries.length;
+  const sel=document.getElementById('monthFilter'), prevLabel=sel&&sel.value?sel.value:'Current Month';
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let nextLabel=prevLabel;
+  const parts=prevLabel.match(/^(\w+)\s+(\d{4})$/);
+  if (parts){ const mIdx=MONTHS.indexOf(parts[1]); if(mIdx!==-1){ const ni=(mIdx+1)%12; nextLabel=MONTHS[ni]+' '+(mIdx===11?parseInt(parts[2])+1:parseInt(parts[2])); } }
+  document.getElementById('cyclePrev').textContent=prevLabel;
+  document.getElementById('cycleNext').textContent=nextLabel;
+  document.getElementById('cycleSubtitle').textContent='Closing '+prevLabel+' · Opening '+nextLabel;
+  document.getElementById('cTotal').textContent=total;
+  document.getElementById('cDone').textContent=done;
+  document.getElementById('cPend').textContent=total-done;
+  document.getElementById('cycleModal')._nextMonth=nextLabel;
+  document.getElementById('cycleModal').style.display='flex';
 }
 function closeCycleModal(){ document.getElementById('cycleModal').style.display='none'; }
-async function confirmCycle(btnEl){
-  const orig = btnEl.textContent;
-  btnEl.disabled = true; btnEl.textContent = 'Starting...';
-
-  // Stay on the currently selected month — do NOT force switch to next month
-  // The user can manually pick the new month from the dropdown when ready
-  const sel = document.getElementById('monthFilter');
-  const currentMonth = sel && sel.value ? sel.value : null;
-
+async function confirmCycle(btnEl) {
+  const orig=btnEl.textContent; btnEl.disabled=true; btnEl.textContent='Starting...';
+  const sel=document.getElementById('monthFilter'), currentMonth=sel&&sel.value?sel.value:null;
   closeCycleModal();
-
-  const safetyTimer = setTimeout(()=>{ btnEl.disabled=false; btnEl.textContent=orig; }, 8000);
-
-  try {
-    await fetchData(currentMonth); // refreshes current view unchanged
-    switchView('report');
-  } catch(e){ console.error('confirmCycle fetchData failed:',e); }
-
-  clearTimeout(safetyTimer);
-  btnEl.disabled=false; btnEl.textContent=orig;
+  const t=setTimeout(()=>{ btnEl.disabled=false; btnEl.textContent=orig; },8000);
+  try { await fetchData(currentMonth); switchView('report'); } catch(e){}
+  clearTimeout(t); btnEl.disabled=false; btnEl.textContent=orig;
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 window.onload=function(){
-  sysLog('Page loaded, JS running','ok');
-  sysLog('GAS URL: '+GAS.substring(0,50)+'...','info');
+  sysLog('GDG Seeding Control loaded','ok');
   loadBrand();
-  // Load with no month param — GAS will return availableMonths and
-  // we pick the one with the most recent entry, not today's calendar month
   fetchData(null);
 };
 </script>
