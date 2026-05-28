@@ -7,8 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --navy:#1a1f2e;
-      --canvas:#f7f5f0;--surface:#fff;
+      --navy:#1a1f2e;--canvas:#f7f5f0;--surface:#fff;
       --border:#e4e1db;--border-soft:#f0eee9;
       --text:#1a1f2e;--text-2:#5a5750;--text-3:#9a9690;
       --green:#166534;--green-bg:#dcfce7;
@@ -20,65 +19,60 @@
     html,body{height:100%;-webkit-font-smoothing:antialiased}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
 
-    /* NAV — matches main app */
     .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25);flex-shrink:0}
     .nav-l{display:flex;align-items:center;gap:10px}
     .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
     .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
-    .nav-status{font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.5px}
+    .nav-status{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.3px}
 
-    /* STATES */
-    .state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+    .state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px;text-align:center;overflow-y:auto}
     .state.hidden{display:none}
 
-    /* CAMERA SECTION */
-    .scanner-wrap{position:relative;width:100%;max-width:320px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.15)}
-    #videoEl{width:100%;display:block;background:var(--navy);aspect-ratio:1}
+    /* Camera */
+    .scanner-wrap{position:relative;width:100%;max-width:320px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12);background:var(--navy);margin:0 auto}
+    #videoEl{width:100%;display:block;aspect-ratio:1;object-fit:cover}
     .scan-frame{position:absolute;inset:0;pointer-events:none}
-    .scan-frame::before,.scan-frame::after{content:'';position:absolute;width:32px;height:32px;border-color:var(--navy);border-style:solid}
-    .scan-frame::before{top:10px;left:10px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
-    .scan-frame::after{bottom:10px;right:10px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
-    .scan-line{position:absolute;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,var(--navy),transparent);animation:scanline 2s ease-in-out infinite}
-    @keyframes scanline{0%,100%{top:16px;opacity:0}10%{opacity:1}90%{opacity:1}50%{top:calc(100% - 16px)}}
-    .scan-hint-text{margin-top:12px;font-size:11px;color:var(--text-3);font-weight:600}
+    .scan-corner{position:absolute;width:28px;height:28px;border-color:var(--navy);border-style:solid}
+    .scan-corner.tl{top:10px;left:10px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+    .scan-corner.tr{top:10px;right:10px;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+    .scan-corner.bl{bottom:10px;left:10px;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+    .scan-corner.br{bottom:10px;right:10px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+    .scan-line{position:absolute;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,rgba(26,31,46,.7),transparent);animation:scanline 2s ease-in-out infinite}
+    @keyframes scanline{0%,100%{top:14px;opacity:0}10%{opacity:1}90%{opacity:1}50%{top:calc(100% - 14px)}}
+    .scan-hint-text{margin-top:10px;font-size:11px;color:var(--text-3);font-weight:600}
 
-    /* DIVIDER */
-    .or-divider{display:flex;align-items:center;gap:10px;margin:20px 0;width:100%;max-width:300px}
+    .or-divider{display:flex;align-items:center;gap:10px;margin:16px 0;width:100%;max-width:300px}
     .or-divider span{color:var(--text-3);font-size:10px;font-weight:600;white-space:nowrap}
     .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    /* MANUAL INPUT */
     .manual-wrap{width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px}
-    .manual-input{width:100%;height:44px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:0 14px;outline:none;letter-spacing:.5px;transition:.2s}
+    .manual-input{width:100%;height:44px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:0 14px;outline:none;transition:.2s}
     .manual-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,31,46,.08)}
     .manual-input::placeholder{color:var(--text-3);font-weight:400;letter-spacing:0}
-    .btn-lookup{height:44px;width:100%;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:.15s}
-    .btn-lookup:active{transform:scale(.98)}
+    .btn-lookup{height:44px;width:100%;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
 
-    /* RESULT CARD — matches .card from main app */
+    /* Result card */
     .result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:360px;overflow:hidden;box-shadow:var(--sh)}
     .result-header{padding:18px 20px 14px;border-bottom:1px solid var(--border-soft)}
-    .result-sys{font-size:8px;font-weight:700;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;margin-bottom:8px}
+    .result-sys{font-size:8px;font-weight:700;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;margin-bottom:6px}
     .result-name{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.3px;line-height:1.2}
     .result-brand{font-size:9px;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
-    .result-body{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
-    .result-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border-soft)}
+    .result-body{padding:12px 20px;display:flex;flex-direction:column}
+    .result-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border-soft)}
     .result-row:last-child{border-bottom:none}
-    .result-lbl{color:var(--text-3);font-weight:600;font-size:11px}
-    .result-val{color:var(--navy);font-weight:700}
+    .result-lbl{color:var(--text-3);font-weight:600;font-size:11px;flex-shrink:0;padding-top:1px}
+    .result-val{color:var(--navy);font-weight:700;text-align:right;max-width:65%;line-height:1.4}
     .status-badge{padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
     .status-badge.active{background:var(--green-bg);color:var(--green)}
     .status-badge.redeemed{background:var(--red-bg);color:var(--red)}
     .status-badge.inactive{background:var(--border-soft);color:var(--text-3)}
-    .result-footer{padding:14px 20px 18px;display:flex;flex-direction:column;gap:8px}
+    .result-footer{padding:14px 20px 18px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border-soft)}
     .btn-confirm{height:48px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:.15s}
     .btn-confirm:active{transform:scale(.98)}
     .btn-confirm:disabled{opacity:.35;cursor:not-allowed}
-    .btn-cancel{height:40px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer;transition:.15s}
-    .btn-cancel:hover{border-color:var(--text-2)}
+    .btn-cancel{height:40px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer}
 
-    /* SUCCESS STATE */
-    .state-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px}
+    .state-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
     .icon-success{background:var(--green-bg);border:2px solid rgba(22,101,52,.2)}
     .icon-warn{background:var(--red-bg);border:2px solid rgba(185,28,28,.2)}
     .icon-info{background:var(--amber-bg);border:2px solid rgba(146,87,10,.2)}
@@ -86,12 +80,10 @@
     .state-title.green{color:var(--green)}
     .state-title.red{color:var(--red)}
     .state-title.amber{color:var(--amber)}
-    .state-sub{font-size:12px;color:var(--text-3);line-height:1.6;max-width:260px}
-    .btn-secondary{height:42px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer;width:100%;max-width:260px;margin-top:14px;transition:.15s}
-    .btn-secondary:hover{border-color:var(--navy);color:var(--navy)}
+    .state-sub{font-size:12px;color:var(--text-3);line-height:1.6;max-width:260px;margin:0 auto}
+    .btn-secondary{height:42px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer;width:100%;max-width:260px;margin-top:14px}
 
-    /* SPINNER */
-    .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:14px}
+    .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
@@ -105,32 +97,37 @@
   <div class="nav-status" id="navStatus">Ready</div>
 </nav>
 
-<!-- STATE: SCAN -->
+<!-- SCAN STATE -->
 <div class="state" id="stScan">
+  <div style="height:16px"></div>
   <div class="scanner-wrap">
     <video id="videoEl" playsinline autoplay muted></video>
     <div class="scan-frame">
       <div class="scan-line"></div>
+      <div class="scan-corner tl"></div>
+      <div class="scan-corner tr"></div>
+      <div class="scan-corner bl"></div>
+      <div class="scan-corner br"></div>
     </div>
   </div>
   <div class="scan-hint-text">Point camera at customer QR code</div>
 
   <div class="or-divider"><span>or enter ID manually</span></div>
-
   <div class="manual-wrap">
     <input type="text" id="manualId" class="manual-input" placeholder="KOL-XXXXXXXX" autocomplete="off" spellcheck="false">
     <button class="btn-lookup" onclick="lookupManual()">Look Up Voucher</button>
   </div>
 </div>
 
-<!-- STATE: LOADING -->
+<!-- LOADING STATE -->
 <div class="state hidden" id="stLoading">
+  <div style="height:80px"></div>
   <div class="spinner"></div>
   <div style="font-size:12px;font-weight:600;color:var(--text-3)">Verifying voucher...</div>
 </div>
 
-<!-- STATE: CONFIRM -->
-<div class="state hidden" id="stConfirm">
+<!-- CONFIRM STATE -->
+<div class="state hidden" id="stConfirm" style="justify-content:center">
   <div class="result-card">
     <div class="result-header">
       <div class="result-sys">GDG Seeding System</div>
@@ -148,7 +145,11 @@
       </div>
       <div class="result-row">
         <span class="result-lbl">Type</span>
-        <span class="result-val" id="confType">Store Invite</span>
+        <span class="result-val" id="confType">—</span>
+      </div>
+      <div class="result-row" id="confAddrRow" style="display:none">
+        <span class="result-lbl">Details</span>
+        <span class="result-val" id="confAddr">—</span>
       </div>
       <div class="result-row">
         <span class="result-lbl">Voucher ID</span>
@@ -162,8 +163,8 @@
   </div>
 </div>
 
-<!-- STATE: SUCCESS -->
-<div class="state hidden" id="stSuccess">
+<!-- SUCCESS STATE -->
+<div class="state hidden" id="stSuccess" style="justify-content:center">
   <div class="state-icon icon-success">&#10003;</div>
   <div class="state-title green">Redeemed</div>
   <div class="state-sub" id="succName">—</div>
@@ -171,21 +172,24 @@
   <button class="btn-secondary" onclick="resetScanner()">Scan Next Customer</button>
 </div>
 
-<!-- STATE: ALREADY REDEEMED -->
-<div class="state hidden" id="stRedeemed">
+<!-- ALREADY REDEEMED STATE -->
+<div class="state hidden" id="stRedeemed" style="justify-content:center">
   <div class="state-icon icon-warn">&#x26D4;</div>
   <div class="state-title red">Already Redeemed</div>
   <div class="state-sub" id="redeemedMsg">This voucher has already been used.</div>
   <button class="btn-secondary" onclick="resetScanner()">Back to Scanner</button>
 </div>
 
-<!-- STATE: ERROR -->
-<div class="state hidden" id="stError">
+<!-- ERROR STATE -->
+<div class="state hidden" id="stError" style="justify-content:center">
   <div class="state-icon icon-info">&#x26A0;</div>
   <div class="state-title amber">Error</div>
   <div class="state-sub" id="errMsg">Something went wrong.</div>
   <button class="btn-secondary" onclick="resetScanner()">Try Again</button>
 </div>
+
+<!-- Hidden canvas for QR processing -->
+<canvas id="qrCanvas" style="display:none"></canvas>
 
 <script>
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
@@ -194,69 +198,102 @@ let stream      = null;
 let scanning    = false;
 let currentId   = '';
 let pendingData = null;
+let jsQRLoaded  = false;
+let rafId       = null;
 
 const STATES = ['stScan','stLoading','stConfirm','stSuccess','stRedeemed','stError'];
-function showState(id){STATES.forEach(s=>{document.getElementById(s).classList.toggle('hidden',s!==id);});}
+function showState(id){ STATES.forEach(s=>{ document.getElementById(s).classList.toggle('hidden', s!==id); }); }
+function setStatus(msg){ document.getElementById('navStatus').textContent = msg; }
+
+// ── LOAD jsQR (works on iOS Safari) ──────────────────────────────────────
+function loadJsQR(){
+  return new Promise((resolve)=>{
+    if(window.jsQR){ resolve(); return; }
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
+    s.onload=()=>{ jsQRLoaded=true; resolve(); };
+    s.onerror=()=>resolve(); // fail silently — manual entry still works
+    document.head.appendChild(s);
+  });
+}
 
 // ── CAMERA ────────────────────────────────────────────────────────────────
 async function startCamera(){
+  await loadJsQR();
   try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
-    const vid=document.getElementById('videoEl');
-    vid.srcObject=stream; await vid.play();
-    scanning=true; requestAnimationFrame(tick);
-    setStatus('Camera active');
-  }catch(err){ setStatus('No camera — use manual entry'); }
+    // Prefer rear camera, fall back to any camera
+    const constraints = {
+      video:{ facingMode:{ideal:'environment'}, width:{ideal:640}, height:{ideal:640} }
+    };
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const vid = document.getElementById('videoEl');
+    vid.srcObject = stream;
+    vid.setAttribute('playsinline','true'); // critical for iOS
+    await vid.play();
+    scanning = true;
+    rafId = requestAnimationFrame(tick);
+    setStatus('Scanning...');
+  }catch(err){
+    setStatus('No camera — use manual entry');
+    sysLog && sysLog('Camera error: '+err.message,'warn');
+  }
 }
 
 function stopCamera(){
-  scanning=false;
-  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  scanning = false;
+  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
 }
 
-function setStatus(msg){ document.getElementById('navStatus').textContent=msg; }
-
-// ── QR DECODE ─────────────────────────────────────────────────────────────
-let detector=null;
-if(window.BarcodeDetector){try{detector=new BarcodeDetector({formats:['qr_code']});}catch(e){}}
-
-async function tick(){
+// ── QR TICK — uses jsQR for broad compatibility ───────────────────────────
+function tick(){
   if(!scanning) return;
-  const vid=document.getElementById('videoEl');
-  if(vid.readyState>=2&&detector){
-    try{
-      const codes=await detector.detect(vid);
-      if(codes.length>0){
-        const id=extractId(codes[0].rawValue);
-        if(id&&id!==currentId){ currentId=id; scanning=false; lookup(id); return; }
+  const vid = document.getElementById('videoEl');
+  const canvas = document.getElementById('qrCanvas');
+
+  if(vid.readyState >= 2 && vid.videoWidth > 0 && window.jsQR){
+    const w = vid.videoWidth, h = vid.videoHeight;
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(vid, 0, 0, w, h);
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {inversionAttempts:'dontInvert'});
+    if(code && code.data){
+      const id = extractId(code.data);
+      if(id && id !== currentId){
+        currentId = id;
+        scanning = false;
+        lookup(id);
+        return;
       }
-    }catch(e){}
+    }
   }
-  requestAnimationFrame(tick);
+
+  rafId = requestAnimationFrame(tick);
 }
 
 function extractId(raw){
   try{ const u=new URL(raw); const id=u.searchParams.get('id'); if(id&&id.startsWith('KOL-')) return id.trim(); }catch(e){}
-  const m=raw.match(/KOL-[A-Z0-9]+/); return m?m[0]:null;
+  const m = raw.match(/KOL-[A-Z0-9]+/); return m ? m[0] : null;
 }
 
 // ── MANUAL LOOKUP ─────────────────────────────────────────────────────────
 function lookupManual(){
-  const val=document.getElementById('manualId').value.trim().toUpperCase();
+  const val = document.getElementById('manualId').value.trim().toUpperCase();
   if(!val){ document.getElementById('manualId').focus(); return; }
-  currentId=val; scanning=false; lookup(val);
+  currentId = val; scanning = false; lookup(val);
 }
 
 // ── LOOKUP ────────────────────────────────────────────────────────────────
 async function lookup(id){
   showState('stLoading'); setStatus('Checking...');
   try{
-    const res=await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(),{redirect:'follow'});
-    const data=await res.json();
+    const res = await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(), {redirect:'follow'});
+    const data = await res.json();
     if(data.status==='ok'){
-      pendingData=data;
+      pendingData = data;
       if(data.voucher_status==='Redeemed'){
-        document.getElementById('redeemedMsg').textContent='This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
+        document.getElementById('redeemedMsg').textContent = 'This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
         showState('stRedeemed'); setStatus('Already redeemed');
       }else if(data.voucher_status==='Active'){
         populateConfirm(data); showState('stConfirm'); setStatus('Voucher found');
@@ -272,40 +309,52 @@ async function lookup(id){
 }
 
 function populateConfirm(data){
-  document.getElementById('confName').textContent=data.name||'—';
-  document.getElementById('confBrand').textContent=(data.brand||'GDG')+' · '+(data.seedingType||'Store Invite');
-  document.getElementById('confDate').textContent=data.date||'—';
-  document.getElementById('confType').textContent=data.seedingType||'Store Invite';
-  document.getElementById('confId').textContent=data.id||'—';
-  const badge=document.getElementById('confStatusBadge');
-  badge.textContent=data.voucher_status||'Active';
-  badge.className='status-badge '+(data.voucher_status||'active').toLowerCase();
-  const btn=document.getElementById('btnConfirm');
-  btn.disabled=false; btn.textContent='Confirm Redemption';
+  document.getElementById('confName').textContent  = data.name||'—';
+  document.getElementById('confBrand').textContent = (data.brand||'GDG')+' · '+(data.seedingType||'Store Invite');
+  document.getElementById('confDate').textContent  = data.date||'—';
+  document.getElementById('confType').textContent  = data.seedingType||'Store Invite';
+  document.getElementById('confId').textContent    = data.id||'—';
+
+  // Address / product details (conditions field from col J)
+  const addrRow = document.getElementById('confAddrRow');
+  const addrVal = document.getElementById('confAddr');
+  if(data.conditions && data.conditions !== '-' && data.conditions !== 'N/A'){
+    addrVal.textContent = data.conditions;
+    addrRow.style.display = 'flex';
+  } else {
+    addrRow.style.display = 'none';
+  }
+
+  const badge = document.getElementById('confStatusBadge');
+  badge.textContent = data.voucher_status||'Active';
+  badge.className   = 'status-badge '+(data.voucher_status||'active').toLowerCase();
+
+  const btn = document.getElementById('btnConfirm');
+  btn.disabled = false; btn.textContent = 'Confirm Redemption';
 }
 
 // ── CONFIRM REDEEM ────────────────────────────────────────────────────────
 async function confirmRedeem(){
   if(!currentId) return;
-  const btn=document.getElementById('btnConfirm');
-  btn.disabled=true; btn.textContent='Redeeming...'; setStatus('Processing...');
+  const btn = document.getElementById('btnConfirm');
+  btn.disabled = true; btn.textContent = 'Redeeming...'; setStatus('Processing...');
   try{
-    const res=await fetch(GAS+'?action=redeem&id='+encodeURIComponent(currentId)+'&t='+Date.now(),{redirect:'follow'});
-    const data=await res.json();
+    const res = await fetch(GAS+'?action=redeem&id='+encodeURIComponent(currentId)+'&t='+Date.now(), {redirect:'follow'});
+    const data = await res.json();
     if(data.status==='redeemed'){
-      document.getElementById('succName').textContent=(pendingData&&pendingData.name)||data.name||'—';
-      document.getElementById('succTime').textContent='Redeemed at '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('succName').textContent = (pendingData&&pendingData.name)||data.name||'—';
+      document.getElementById('succTime').textContent = 'Redeemed at '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
       showState('stSuccess'); setStatus('Redeemed ✓');
     }else if(data.status==='already_redeemed'){
-      document.getElementById('redeemedMsg').textContent='This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
+      document.getElementById('redeemedMsg').textContent = 'This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
       showState('stRedeemed'); setStatus('Already redeemed');
     }else{
       showError(data.message||'Redemption failed');
-      btn.disabled=false; btn.textContent='Confirm Redemption';
+      btn.disabled = false; btn.textContent = 'Confirm Redemption';
     }
   }catch(err){
-    showError('Connection error during redemption. Please try again.');
-    btn.disabled=false; btn.textContent='Confirm Redemption';
+    showError('Connection error. Please try again.');
+    btn.disabled = false; btn.textContent = 'Confirm Redemption';
   }
 }
 
@@ -313,21 +362,24 @@ function showError(msg){ document.getElementById('errMsg').textContent=msg; show
 
 // ── RESET ─────────────────────────────────────────────────────────────────
 function resetScanner(){
-  currentId=''; pendingData=null;
-  document.getElementById('manualId').value='';
-  showState('stScan'); setStatus('Ready');
-  if(stream){ scanning=true; requestAnimationFrame(tick); }
+  currentId = ''; pendingData = null;
+  document.getElementById('manualId').value = '';
+  showState('stScan'); setStatus('Scanning...');
+  if(stream){ scanning=true; rafId=requestAnimationFrame(tick); }
+  else{ startCamera(); }
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 (function(){
-  const p=new URLSearchParams(window.location.search);
-  const id=(p.get('id')||'').trim();
+  const p = new URLSearchParams(window.location.search);
+  const id = (p.get('id')||'').trim();
   if(id){ currentId=id; lookup(id); return; }
   startCamera();
 })();
 
-document.getElementById('manualId').addEventListener('keydown',function(e){ if(e.key==='Enter') lookupManual(); });
+document.getElementById('manualId').addEventListener('keydown', function(e){
+  if(e.key==='Enter') lookupManual();
+});
 </script>
 </body>
 </html>
