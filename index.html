@@ -422,7 +422,7 @@
           <span style="font-size:12px;font-weight:600;color:var(--text-3)">Tap to upload</span>
           <span style="font-size:10px;color:var(--text-3)">· JPG, PNG</span>
         </div>
-        <input type="file" id="dtlFileInput" accept="image/*" capture="environment" style="display:none" onchange="dtlHandleUpload(this)">
+        <input type="file" id="dtlFileInput" accept="image/*" style="display:none" onchange="dtlHandleUpload(this)">
         <div id="dtlUploadStatus" style="display:none;margin-top:6px;font-size:10px;font-weight:600;color:var(--text-3)"></div>
         <img id="dtlUploadPreview" style="display:none;margin-top:8px;width:100%;border-radius:8px;object-fit:cover;max-height:120px" alt="">
       </div>
@@ -540,7 +540,9 @@ function computeSummary(month){
   valid.forEach(e=>{
     total++;
     if(String(e.type).trim()==='Delivery') del++; else vis++;
-    if(DONE_STATES.includes(e.acknowledged)) completed++;
+    const VALID_ACK_S=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+    const ackS=VALID_ACK_S.includes(e.acknowledged||'')?e.acknowledged:'Pending';
+    if(DONE_STATES.includes(ackS)) completed++;
     const b=(e.brand&&e.brand.trim())?e.brand.trim():'(No brand)';
     brandMap[b]=(brandMap[b]||0)+1;
   });
@@ -596,6 +598,9 @@ function doSumCopy(btnEl){
 // ── MARK DONE (ledger row button) ─────────────────────────────────────────
 async function markDone(id,btnEl){
   const entry=entries.find(e=>e.id===id); if(!entry) return;
+  const VALID_ACK_V=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+  const ackVal=VALID_ACK_V.includes(entry.acknowledged||'')?entry.acknowledged:'Pending';
+  if(DONE_STATES.includes(ackVal)) return; // already done
   const orig=btnEl?btnEl.textContent:'Done';
   if(btnEl){btnEl.disabled=true;btnEl.textContent='...';}
   const isDel=String(entry.type||'').trim()==='Delivery';
@@ -653,7 +658,10 @@ function openDetailModal(id){
   const typeTag=document.getElementById('dtlTypeTag');
   const ackTag=document.getElementById('dtlAckTag');
   const isD=String(e.type||'').trim()==='Delivery';
-  const isDone=DONE_STATES.includes(e.acknowledged);
+  const VALID_ACK_VALS=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+  const ackRaw=(e.acknowledged||'');
+  const ackVal=VALID_ACK_VALS.includes(ackRaw)?ackRaw:'Pending';
+  const isDone=DONE_STATES.includes(ackVal);
 
   brandTag.style.display=(e.brand&&e.brand.trim())?'inline-flex':'none';
   if(e.brand) brandTag.textContent=e.brand;
@@ -662,7 +670,7 @@ function openDetailModal(id){
   typeTag.style.background=isD?'var(--green-bg)':'var(--amber-bg)';
   typeTag.style.color=isD?'var(--green)':'var(--amber)';
 
-  ackTag.textContent=e.acknowledged||'Pending';
+  ackTag.textContent=ackVal||'Pending';
   ackTag.style.background=isDone?'var(--green-bg)':'var(--amber-bg)';
   ackTag.style.color=isDone?'var(--green)':'var(--amber)';
   ackTag.style.cursor=isDone?'default':'pointer';
@@ -819,7 +827,9 @@ async function saveQRPng(){
 // ── MARK COMPLETE FROM POPUP ──────────────────────────────────────────────
 async function dtlMarkComplete(tagEl){
   if(!detailEntry) return;
-  if(DONE_STATES.includes(detailEntry.acknowledged)) return;
+  const VALID_ACK_C=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+  const ackVal=VALID_ACK_C.includes(detailEntry.acknowledged||'')?detailEntry.acknowledged:'Pending';
+  if(DONE_STATES.includes(ackVal)) return;
   tagEl.textContent='Marking...';tagEl.style.opacity='.5';
   const isDel=String(detailEntry.type||'').trim()==='Delivery';
   const kolSafe=(detailEntry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
@@ -1035,15 +1045,20 @@ function buildLedger(data){
   let aHtml='',dHtml='',dCount=0;
   data.forEach(e=>{
     if(!e.kol||!e.kol.trim()) return;
-    const done=DONE_STATES.includes(e.acknowledged);
+    // Validate acknowledged is a real status — old rows may have stale data in this col
+    const VALID_ACK = ['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+    const ackRaw = e.acknowledged||'';
+    const ack = VALID_ACK.includes(ackRaw) ? ackRaw : 'Pending';
+
+    const done=DONE_STATES.includes(ack);
     const past=!done&&isPast(e.date);
     const isD=String(e.type).trim()==='Delivery';
     const vs=(e.voucherStatus||'').trim();
     const handle=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
 
-    let bc='badge-pending',bText=e.acknowledged||'Pending';
+    let bc='badge-pending',bText=ack||'Pending';
     if(done){bc='badge-done';}
-    else if(e.acknowledged==='Acknowledged'){bc='badge-acked';}
+    else if(ack==='Acknowledged'){bc='badge-acked';}
 
     const vPill=(!isD&&vs&&vs!=='Active')?'<span class="v-micro '+vs.toLowerCase()+'">'+vs+'</span>':'';
 
