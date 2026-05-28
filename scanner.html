@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GDG Scanner</title>
+  <!-- jsQR loaded in head — same as Lova, ensures it's ready before scanning starts -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -19,59 +21,70 @@
     html,body{height:100%;-webkit-font-smoothing:antialiased}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--canvas);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
 
+    /* NAV */
     .nav{background:var(--navy);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25);flex-shrink:0}
     .nav-l{display:flex;align-items:center;gap:10px}
     .nav-mark{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px}
     .nav-tag{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
-    .nav-status{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.3px}
+    .nav-status{font-size:10px;font-weight:700;color:rgba(255,255,255,.5)}
 
-    .state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px;text-align:center;overflow-y:auto}
+    /* STATES */
+    .state{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto}
     .state.hidden{display:none}
+    .state-centered{justify-content:center;text-align:center}
 
-    /* Camera */
-    .scanner-wrap{position:relative;width:100%;max-width:320px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12);background:var(--navy);margin:0 auto}
-    #videoEl{width:100%;display:block;aspect-ratio:1;object-fit:cover}
-    .scan-frame{position:absolute;inset:0;pointer-events:none}
-    .scan-corner{position:absolute;width:28px;height:28px;border-color:var(--navy);border-style:solid}
-    .scan-corner.tl{top:10px;left:10px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
-    .scan-corner.tr{top:10px;right:10px;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
-    .scan-corner.bl{bottom:10px;left:10px;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
-    .scan-corner.br{bottom:10px;right:10px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
-    .scan-line{position:absolute;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,rgba(26,31,46,.7),transparent);animation:scanline 2s ease-in-out infinite}
-    @keyframes scanline{0%,100%{top:14px;opacity:0}10%{opacity:1}90%{opacity:1}50%{top:calc(100% - 14px)}}
+    /* VIDEO — Lova pattern: video in DOM, canvas in DOM but hidden */
+    .scanner-wrap{position:relative;width:100%;max-width:320px;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 4px 24px rgba(0,0,0,.15)}
+    #videoEl{width:100%;display:block}
+    #qrCanvas{display:none}
+    /* dim overlay with transparent center — same as Lova */
+    .dim-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);pointer-events:none;
+      mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 99%,black 100%);
+      -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 99%,black 100%)}
+    /* corners — same absolute positioning as Lova */
+    .corner{position:absolute;width:32px;height:32px;border-color:#fff;border-style:solid}
+    .corner.tl{top:12%;left:10%;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+    .corner.tr{top:12%;right:10%;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+    .corner.bl{bottom:12%;left:10%;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+    .corner.br{bottom:12%;right:10%;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
     .scan-hint-text{margin-top:10px;font-size:11px;color:var(--text-3);font-weight:600}
+    #scanStatus{text-align:center;margin-top:8px;color:var(--text-3);font-size:12px;font-weight:600;min-height:20px}
 
+    /* DIVIDER */
     .or-divider{display:flex;align-items:center;gap:10px;margin:16px 0;width:100%;max-width:300px}
     .or-divider span{color:var(--text-3);font-size:10px;font-weight:600;white-space:nowrap}
     .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
+    /* MANUAL INPUT */
     .manual-wrap{width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px}
-    .manual-input{width:100%;height:44px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:0 14px;outline:none;transition:.2s}
+    .manual-input{width:100%;height:44px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:0 14px;outline:none;transition:.2s;text-transform:uppercase}
     .manual-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,31,46,.08)}
-    .manual-input::placeholder{color:var(--text-3);font-weight:400;letter-spacing:0}
-    .btn-lookup{height:44px;width:100%;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+    .manual-input::placeholder{color:var(--text-3);font-weight:400;text-transform:none}
+    .btn-primary{height:44px;width:100%;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:.15s}
+    .btn-primary:active{transform:scale(.98)}
 
-    /* Result card */
+    /* RESULT CARD */
     .result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:360px;overflow:hidden;box-shadow:var(--sh)}
     .result-header{padding:18px 20px 14px;border-bottom:1px solid var(--border-soft)}
     .result-sys{font-size:8px;font-weight:700;letter-spacing:3px;color:var(--text-3);text-transform:uppercase;margin-bottom:6px}
     .result-name{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.3px;line-height:1.2}
     .result-brand{font-size:9px;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
     .result-body{padding:12px 20px;display:flex;flex-direction:column}
-    .result-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border-soft)}
+    .result-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border-soft)}
     .result-row:last-child{border-bottom:none}
     .result-lbl{color:var(--text-3);font-weight:600;font-size:11px;flex-shrink:0;padding-top:1px}
-    .result-val{color:var(--navy);font-weight:700;text-align:right;max-width:65%;line-height:1.4}
+    .result-val{color:var(--navy);font-weight:700;font-size:12px;text-align:right;max-width:65%;line-height:1.4}
     .status-badge{padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
     .status-badge.active{background:var(--green-bg);color:var(--green)}
     .status-badge.redeemed{background:var(--red-bg);color:var(--red)}
     .status-badge.inactive{background:var(--border-soft);color:var(--text-3)}
     .result-footer{padding:14px 20px 18px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border-soft)}
-    .btn-confirm{height:48px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:.15s}
+    .btn-confirm{height:48px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
     .btn-confirm:active{transform:scale(.98)}
     .btn-confirm:disabled{opacity:.35;cursor:not-allowed}
     .btn-cancel{height:40px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-2);cursor:pointer}
 
+    /* STATE ICONS */
     .state-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
     .icon-success{background:var(--green-bg);border:2px solid rgba(22,101,52,.2)}
     .icon-warn{background:var(--red-bg);border:2px solid rgba(185,28,28,.2)}
@@ -85,6 +98,8 @@
 
     .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    .hidden{display:none!important}
   </style>
 </head>
 <body>
@@ -99,35 +114,36 @@
 
 <!-- SCAN STATE -->
 <div class="state" id="stScan">
-  <div style="height:16px"></div>
+  <div style="height:12px"></div>
   <div class="scanner-wrap">
-    <video id="videoEl" playsinline autoplay muted></video>
-    <div class="scan-frame">
-      <div class="scan-line"></div>
-      <div class="scan-corner tl"></div>
-      <div class="scan-corner tr"></div>
-      <div class="scan-corner bl"></div>
-      <div class="scan-corner br"></div>
-    </div>
+    <!-- video + canvas in DOM — Lova pattern for reliable iOS -->
+    <video id="videoEl" autoplay playsinline muted></video>
+    <canvas id="qrCanvas"></canvas>
+    <div class="dim-overlay"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
   </div>
-  <div class="scan-hint-text">Point camera at customer QR code</div>
+  <div id="scanStatus">Starting camera...</div>
 
   <div class="or-divider"><span>or enter ID manually</span></div>
   <div class="manual-wrap">
-    <input type="text" id="manualId" class="manual-input" placeholder="KOL-XXXXXXXX" autocomplete="off" spellcheck="false">
-    <button class="btn-lookup" onclick="lookupManual()">Look Up Voucher</button>
+    <input type="text" id="manualId" class="manual-input" placeholder="KOL-XXXXXXXX" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="btn-primary" onclick="lookupManual()">Look Up Voucher</button>
   </div>
 </div>
 
 <!-- LOADING STATE -->
-<div class="state hidden" id="stLoading">
-  <div style="height:80px"></div>
+<div class="state state-centered hidden" id="stLoading">
+  <div style="height:60px"></div>
   <div class="spinner"></div>
   <div style="font-size:12px;font-weight:600;color:var(--text-3)">Verifying voucher...</div>
 </div>
 
 <!-- CONFIRM STATE -->
-<div class="state hidden" id="stConfirm" style="justify-content:center">
+<div class="state state-centered hidden" id="stConfirm">
+  <div style="height:16px"></div>
   <div class="result-card">
     <div class="result-header">
       <div class="result-sys">GDG Seeding System</div>
@@ -147,7 +163,7 @@
         <span class="result-lbl">Type</span>
         <span class="result-val" id="confType">—</span>
       </div>
-      <div class="result-row" id="confAddrRow" style="display:none">
+      <div class="result-row" id="confAddrRow">
         <span class="result-lbl">Details</span>
         <span class="result-val" id="confAddr">—</span>
       </div>
@@ -164,7 +180,7 @@
 </div>
 
 <!-- SUCCESS STATE -->
-<div class="state hidden" id="stSuccess" style="justify-content:center">
+<div class="state state-centered hidden" id="stSuccess">
   <div class="state-icon icon-success">&#10003;</div>
   <div class="state-title green">Redeemed</div>
   <div class="state-sub" id="succName">—</div>
@@ -173,7 +189,7 @@
 </div>
 
 <!-- ALREADY REDEEMED STATE -->
-<div class="state hidden" id="stRedeemed" style="justify-content:center">
+<div class="state state-centered hidden" id="stRedeemed">
   <div class="state-icon icon-warn">&#x26D4;</div>
   <div class="state-title red">Already Redeemed</div>
   <div class="state-sub" id="redeemedMsg">This voucher has already been used.</div>
@@ -181,129 +197,133 @@
 </div>
 
 <!-- ERROR STATE -->
-<div class="state hidden" id="stError" style="justify-content:center">
+<div class="state state-centered hidden" id="stError">
   <div class="state-icon icon-info">&#x26A0;</div>
   <div class="state-title amber">Error</div>
   <div class="state-sub" id="errMsg">Something went wrong.</div>
   <button class="btn-secondary" onclick="resetScanner()">Try Again</button>
 </div>
 
-<!-- Hidden canvas for QR processing -->
-<canvas id="qrCanvas" style="display:none"></canvas>
-
 <script>
 const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
 
-let stream      = null;
-let scanning    = false;
-let currentId   = '';
-let pendingData = null;
-let jsQRLoaded  = false;
-let rafId       = null;
+let videoStream  = null;
+let scanInterval = null;
+let scanPaused   = false;
+let currentId    = '';
+let pendingData  = null;
 
 const STATES = ['stScan','stLoading','stConfirm','stSuccess','stRedeemed','stError'];
-function showState(id){ STATES.forEach(s=>{ document.getElementById(s).classList.toggle('hidden', s!==id); }); }
-function setStatus(msg){ document.getElementById('navStatus').textContent = msg; }
+function showState(id){ STATES.forEach(s=>{ document.getElementById(s).classList.toggle('hidden',s!==id); }); }
+function setStatus(msg){ document.getElementById('navStatus').textContent=msg; }
+function setScanStatus(msg){ document.getElementById('scanStatus').textContent=msg; }
 
-// ── LOAD jsQR (works on iOS Safari) ──────────────────────────────────────
-function loadJsQR(){
-  return new Promise((resolve)=>{
-    if(window.jsQR){ resolve(); return; }
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
-    s.onload=()=>{ jsQRLoaded=true; resolve(); };
-    s.onerror=()=>resolve(); // fail silently — manual entry still works
-    document.head.appendChild(s);
+// ── CAMERA — exact Lova pattern ───────────────────────────────────────────
+function startCamera(){
+  stopCamera();
+  setScanStatus('Starting camera...');
+  navigator.mediaDevices.getUserMedia({
+    video:{ facingMode:{ideal:'environment'}, width:{ideal:1280}, height:{ideal:720} }
+  })
+  .then(function(stream){
+    videoStream = stream;
+    const video = document.getElementById('videoEl');
+    video.srcObject = stream;
+    video.play();
+    // Wait for metadata — same as Lova
+    video.onloadedmetadata = function(){
+      setScanStatus('Scanning live...');
+      setStatus('Scanning...');
+      startScanning();
+    };
+  })
+  .catch(function(err){
+    setScanStatus('Camera unavailable — use manual entry below');
+    setStatus('No camera');
   });
 }
 
-// ── CAMERA ────────────────────────────────────────────────────────────────
-async function startCamera(){
-  await loadJsQR();
-  try{
-    // Prefer rear camera, fall back to any camera
-    const constraints = {
-      video:{ facingMode:{ideal:'environment'}, width:{ideal:640}, height:{ideal:640} }
-    };
-    stream = await navigator.mediaDevices.getUserMedia(constraints);
-    const vid = document.getElementById('videoEl');
-    vid.srcObject = stream;
-    vid.setAttribute('playsinline','true'); // critical for iOS
-    await vid.play();
-    scanning = true;
-    rafId = requestAnimationFrame(tick);
-    setStatus('Scanning...');
-  }catch(err){
-    setStatus('No camera — use manual entry');
-    sysLog && sysLog('Camera error: '+err.message,'warn');
-  }
+// ── SCANNING — setInterval at 150ms, same as Lova ─────────────────────────
+function startScanning(){
+  const video  = document.getElementById('videoEl');
+  const canvas = document.getElementById('qrCanvas');
+  const ctx    = canvas.getContext('2d');
+
+  scanInterval = setInterval(function(){
+    if(scanPaused) return;
+    if(video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+    canvas.width  = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Try full frame first
+    var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var code = jsQR(imgData.data, imgData.width, imgData.height, {inversionAttempts:'attemptBoth'});
+
+    // Fallback: scan center crop — same Lova trick
+    if(!code){
+      var cw = Math.floor(canvas.width * .7);
+      var ch = Math.floor(canvas.height * .6);
+      var cx = Math.floor((canvas.width  - cw) / 2);
+      var cy = Math.floor((canvas.height - ch) / 2);
+      imgData = ctx.getImageData(cx, cy, cw, ch);
+      code = jsQR(imgData.data, imgData.width, imgData.height, {inversionAttempts:'attemptBoth'});
+    }
+
+    if(code && code.data){
+      var id = extractId(code.data);
+      if(id && id !== currentId){
+        scanPaused = true;
+        currentId  = id;
+        setScanStatus('Code found — checking...');
+        lookup(id);
+      }
+    }
+  }, 150);
 }
 
 function stopCamera(){
-  scanning = false;
-  if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-}
-
-// ── QR TICK — uses jsQR for broad compatibility ───────────────────────────
-function tick(){
-  if(!scanning) return;
-  const vid = document.getElementById('videoEl');
-  const canvas = document.getElementById('qrCanvas');
-
-  if(vid.readyState >= 2 && vid.videoWidth > 0 && window.jsQR){
-    const w = vid.videoWidth, h = vid.videoHeight;
-    canvas.width = w; canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(vid, 0, 0, w, h);
-    const imageData = ctx.getImageData(0, 0, w, h);
-    const code = jsQR(imageData.data, imageData.width, imageData.height, {inversionAttempts:'dontInvert'});
-    if(code && code.data){
-      const id = extractId(code.data);
-      if(id && id !== currentId){
-        currentId = id;
-        scanning = false;
-        lookup(id);
-        return;
-      }
-    }
-  }
-
-  rafId = requestAnimationFrame(tick);
+  if(scanInterval){ clearInterval(scanInterval); scanInterval=null; }
+  if(videoStream){ videoStream.getTracks().forEach(function(t){t.stop();}); videoStream=null; }
+  const video = document.getElementById('videoEl');
+  if(video) video.srcObject = null;
 }
 
 function extractId(raw){
-  try{ const u=new URL(raw); const id=u.searchParams.get('id'); if(id&&id.startsWith('KOL-')) return id.trim(); }catch(e){}
-  const m = raw.match(/KOL-[A-Z0-9]+/); return m ? m[0] : null;
+  try{ var u=new URL(raw); var id=u.searchParams.get('id'); if(id&&id.startsWith('KOL-')) return id.trim(); }catch(e){}
+  var m = raw.match(/KOL-[A-Z0-9]+/); return m ? m[0] : null;
 }
 
 // ── MANUAL LOOKUP ─────────────────────────────────────────────────────────
 function lookupManual(){
-  const val = document.getElementById('manualId').value.trim().toUpperCase();
+  var val = document.getElementById('manualId').value.trim().toUpperCase();
   if(!val){ document.getElementById('manualId').focus(); return; }
-  currentId = val; scanning = false; lookup(val);
+  scanPaused = true;
+  currentId  = val;
+  lookup(val);
 }
 
 // ── LOOKUP ────────────────────────────────────────────────────────────────
 async function lookup(id){
   showState('stLoading'); setStatus('Checking...');
   try{
-    const res = await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(), {redirect:'follow'});
-    const data = await res.json();
+    var res = await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(), {redirect:'follow'});
+    var data = await res.json();
     if(data.status==='ok'){
       pendingData = data;
       if(data.voucher_status==='Redeemed'){
-        document.getElementById('redeemedMsg').textContent = 'This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
+        document.getElementById('redeemedMsg').textContent='This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
         showState('stRedeemed'); setStatus('Already redeemed');
       }else if(data.voucher_status==='Active'){
         populateConfirm(data); showState('stConfirm'); setStatus('Voucher found');
       }else{
-        showError('Voucher is '+data.voucher_status+'. Only active vouchers can be redeemed.');
+        showError('Voucher status: '+data.voucher_status+'. Only Active vouchers can be redeemed.');
       }
     }else if(data.status==='not_found'){
       showError('Voucher not found for ID: '+id);
     }else{
-      showError(data.message||'Lookup failed');
+      showError(data.message||'Lookup failed.');
     }
   }catch(err){ showError('Connection error. Check network and try again.'); }
 }
@@ -315,32 +335,31 @@ function populateConfirm(data){
   document.getElementById('confType').textContent  = data.seedingType||'Store Invite';
   document.getElementById('confId').textContent    = data.id||'—';
 
-  // Address / product details (conditions field from col J)
-  const addrRow = document.getElementById('confAddrRow');
-  const addrVal = document.getElementById('confAddr');
-  if(data.conditions && data.conditions !== '-' && data.conditions !== 'N/A'){
+  var addrRow = document.getElementById('confAddrRow');
+  var addrVal = document.getElementById('confAddr');
+  if(data.conditions && data.conditions!=='-' && data.conditions!=='N/A'){
     addrVal.textContent = data.conditions;
-    addrRow.style.display = 'flex';
-  } else {
-    addrRow.style.display = 'none';
+    addrRow.classList.remove('hidden');
+  }else{
+    addrRow.classList.add('hidden');
   }
 
-  const badge = document.getElementById('confStatusBadge');
+  var badge = document.getElementById('confStatusBadge');
   badge.textContent = data.voucher_status||'Active';
   badge.className   = 'status-badge '+(data.voucher_status||'active').toLowerCase();
 
-  const btn = document.getElementById('btnConfirm');
+  var btn = document.getElementById('btnConfirm');
   btn.disabled = false; btn.textContent = 'Confirm Redemption';
 }
 
 // ── CONFIRM REDEEM ────────────────────────────────────────────────────────
 async function confirmRedeem(){
   if(!currentId) return;
-  const btn = document.getElementById('btnConfirm');
+  var btn = document.getElementById('btnConfirm');
   btn.disabled = true; btn.textContent = 'Redeeming...'; setStatus('Processing...');
   try{
-    const res = await fetch(GAS+'?action=redeem&id='+encodeURIComponent(currentId)+'&t='+Date.now(), {redirect:'follow'});
-    const data = await res.json();
+    var res  = await fetch(GAS+'?action=redeem&id='+encodeURIComponent(currentId)+'&t='+Date.now(), {redirect:'follow'});
+    var data = await res.json();
     if(data.status==='redeemed'){
       document.getElementById('succName').textContent = (pendingData&&pendingData.name)||data.name||'—';
       document.getElementById('succTime').textContent = 'Redeemed at '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -349,7 +368,7 @@ async function confirmRedeem(){
       document.getElementById('redeemedMsg').textContent = 'This voucher was already redeemed'+(data.redeemedAt?' on '+data.redeemedAt:'')+'.';
       showState('stRedeemed'); setStatus('Already redeemed');
     }else{
-      showError(data.message||'Redemption failed');
+      showError(data.message||'Redemption failed.');
       btn.disabled = false; btn.textContent = 'Confirm Redemption';
     }
   }catch(err){
@@ -358,21 +377,31 @@ async function confirmRedeem(){
   }
 }
 
-function showError(msg){ document.getElementById('errMsg').textContent=msg; showState('stError'); setStatus('Error'); }
+function showError(msg){
+  document.getElementById('errMsg').textContent = msg;
+  showState('stError'); setStatus('Error');
+}
 
 // ── RESET ─────────────────────────────────────────────────────────────────
 function resetScanner(){
   currentId = ''; pendingData = null;
   document.getElementById('manualId').value = '';
-  showState('stScan'); setStatus('Scanning...');
-  if(stream){ scanning=true; rafId=requestAnimationFrame(tick); }
-  else{ startCamera(); }
+  showState('stScan');
+  scanPaused = false;
+  if(videoStream){
+    // Resume existing stream — restart scanning loop
+    setScanStatus('Scanning live...');
+    startScanning();
+  }else{
+    startCamera();
+  }
+  setStatus('Scanning...');
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 (function(){
-  const p = new URLSearchParams(window.location.search);
-  const id = (p.get('id')||'').trim();
+  var p  = new URLSearchParams(window.location.search);
+  var id = (p.get('id')||'').trim();
   if(id){ currentId=id; lookup(id); return; }
   startCamera();
 })();
