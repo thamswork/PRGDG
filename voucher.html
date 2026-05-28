@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GDG Voucher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;-webkit-font-smoothing:antialiased}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f5f0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+
+    .wrap{width:100%;max-width:340px;text-align:center}
+
+    /* Loading state */
+    .loading{display:flex;flex-direction:column;align-items:center;gap:14px;color:#9a9690}
+    .spinner{width:32px;height:32px;border:3px solid #e4e1db;border-top-color:#1a1f2e;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Error state */
+    .err-card{background:#fff;border-radius:20px;padding:32px 24px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+    .err-icon{font-size:40px;margin-bottom:12px}
+    .err-title{font-size:17px;font-weight:800;color:#1a1f2e;margin-bottom:8px}
+    .err-msg{font-size:12px;color:#9a9690;line-height:1.6}
+
+    /* Voucher card */
+    .v-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+    .v-header{padding:24px 24px 20px;text-align:center;position:relative}
+    .v-sys{font-size:8px;font-weight:700;letter-spacing:3px;color:#c8c4bb;text-transform:uppercase;margin-bottom:12px}
+    .v-name{font-size:22px;font-weight:800;color:#1a1f2e;letter-spacing:-.4px;line-height:1.2;margin-bottom:4px}
+    .v-brand{font-size:9px;font-weight:700;letter-spacing:2px;color:#9a9690;text-transform:uppercase}
+    .v-divider{height:1px;background:#f0eee9;margin:0}
+    .v-qr-section{padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px}
+    .v-qr-box{background:#f7f5f0;border-radius:16px;padding:16px;display:inline-flex;align-items:center;justify-content:center}
+    .v-status-row{display:flex;align-items:center;gap:8px}
+    .v-status-pill{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px}
+    .v-status-pill.active{background:#dcfce7;color:#166534}
+    .v-status-pill.redeemed{background:#fee2e2;color:#b91c1c}
+    .v-status-pill.inactive{background:#f0eee9;color:#9a9690}
+    .v-id-label{font-size:8px;font-weight:700;letter-spacing:1.5px;color:#c8c4bb;text-transform:uppercase}
+    .v-id-val{font-family:monospace;font-size:11px;font-weight:700;color:#9a9690;letter-spacing:1px}
+    .v-footer{background:#f7f5f0;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+    .v-detail-row{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+    .v-detail-lbl{color:#9a9690;font-weight:600}
+    .v-detail-val{color:#1a1f2e;font-weight:700;text-align:right;max-width:60%}
+    .v-conditions{font-size:10px;color:#9a9690;line-height:1.6;text-align:center;padding:12px 20px 16px;border-top:1px solid #f0eee9}
+
+    /* Redeemed overlay */
+    .redeemed-overlay{position:absolute;inset:0;background:rgba(185,28,28,.06);display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .redeemed-stamp{border:3px solid rgba(185,28,28,.4);color:rgba(185,28,28,.6);font-size:18px;font-weight:800;letter-spacing:4px;text-transform:uppercase;padding:8px 16px;border-radius:8px;transform:rotate(-15deg)}
+
+    /* Scanner button — shown at bottom for cashier flow testing */
+    .scan-hint{margin-top:16px;font-size:10px;color:#c8c4bb;text-align:center}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="root">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div style="font-size:11px;font-weight:600">Verifying voucher...</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const GAS = 'https://script.google.com/macros/s/AKfycbwmoyRMwnnwhGEzfWnwUNvqcApxB2eg90FrTAoJaU4rj1PPOyC4aPF09EkfO4dJZqLp8A/exec';
+
+function getId(){
+  const p=new URLSearchParams(window.location.search);
+  return (p.get('id')||'').trim();
+}
+
+function showError(title,msg){
+  document.getElementById('root').innerHTML=
+    '<div class="err-card">'
+    +'<div class="err-icon">&#x26A0;</div>'
+    +'<div class="err-title">'+title+'</div>'
+    +'<div class="err-msg">'+msg+'</div>'
+    +'</div>';
+}
+
+function renderVoucher(data){
+  const isRedeemed = data.voucher_status==='Redeemed';
+  const isActive   = data.voucher_status==='Active';
+  const pillClass  = isRedeemed?'redeemed':isActive?'active':'inactive';
+  const pillText   = data.voucher_status||'Inactive';
+  const voucherUrl = window.location.href;
+
+  const root=document.getElementById('root');
+  root.innerHTML=
+    '<div class="v-card">'
+      +'<div class="v-header" style="background:'+(isRedeemed?'#fff5f5':'#fff')+'">'
+        +(isRedeemed?'<div class="redeemed-overlay"><div class="redeemed-stamp">Redeemed</div></div>':'')
+        +'<div class="v-sys">GDG Seeding System</div>'
+        +'<div class="v-name">'+escHtml(data.name)+'</div>'
+        +'<div class="v-brand">'+escHtml(data.brand||'GDG')+'</div>'
+      +'</div>'
+      +'<div class="v-divider"></div>'
+      +'<div class="v-qr-section">'
+        +'<div class="v-status-row">'
+          +'<span class="v-status-pill '+pillClass+'">'+pillText+'</span>'
+        +'</div>'
+        +'<div class="v-qr-box" id="qrTarget"></div>'
+        +'<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
+          +'<div class="v-id-label">Voucher ID</div>'
+          +'<div class="v-id-val">'+escHtml(data.id)+'</div>'
+        +'</div>'
+      +'</div>'
+      +(data.date||data.conditions?
+        '<div class="v-footer">'
+          +(data.date?'<div class="v-detail-row"><span class="v-detail-lbl">Visit Date</span><span class="v-detail-val">'+escHtml(data.date)+'</span></div>':'')
+          +(data.seedingType?'<div class="v-detail-row"><span class="v-detail-lbl">Type</span><span class="v-detail-val">'+escHtml(data.seedingType)+'</span></div>':'')
+        +'</div>':'')
+      +(data.conditions&&data.conditions!=='-'?'<div class="v-conditions">'+escHtml(data.conditions)+'</div>':'')
+    +'</div>'
+    +'<div class="scan-hint">Present this QR code to the cashier to redeem</div>';
+
+  // Render QR pointing to this same URL (cashier scans → scanner.html with same id)
+  const scanUrl='https://thamswork.github.io/PRGDG/scanner.html?id='+encodeURIComponent(data.id);
+  try{
+    new QRCode(document.getElementById('qrTarget'),{
+      text:scanUrl,width:200,height:200,
+      colorDark:isRedeemed?'#c8c4bb':'#1a1f2e',
+      colorLight:'#f7f5f0',
+      correctLevel:QRCode.CorrectLevel.H
+    });
+  }catch(e){document.getElementById('qrTarget').textContent='QR unavailable';}
+}
+
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function load(){
+  const id=getId();
+  if(!id){showError('No Voucher ID','This link is missing a voucher ID. Please use the link provided by your PR team.');return;}
+
+  try{
+    const res=await fetch(GAS+'?action=lookup&id='+encodeURIComponent(id)+'&t='+Date.now(),{redirect:'follow'});
+    const data=await res.json();
+    if(data.status==='ok'){
+      renderVoucher(data);
+    }else if(data.status==='not_found'){
+      showError('Voucher Not Found','No voucher found for ID: '+escHtml(id));
+    }else{
+      showError('Error',data.message||'Something went wrong. Please try again.');
+    }
+  }catch(err){
+    showError('Connection Error','Could not verify voucher. Please check your connection and try again.');
+  }
+}
+
+load();
+</script>
+</body>
+</html>
