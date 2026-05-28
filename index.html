@@ -74,7 +74,7 @@
     .date-val{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}
     .type-tag{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
     .badge{display:flex;align-items:center;justify-content:center;padding:3px 6px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;width:100%}
-    .badge-pending{background:#f0eee9;color:#9a9690}
+    .badge-pending{background:var(--amber-bg);color:var(--amber)}
     .badge-acked{background:var(--blue-bg);color:var(--blue)}
     .badge-done{background:var(--green-bg);color:var(--green)}
     .v-micro{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:4px;flex-shrink:0}
@@ -610,7 +610,7 @@ async function markDone(id,btnEl){
   try{
     await gasGet(url);
     entry.acknowledged='Completed';
-    if(btnEl){btnEl.textContent='Done';btnEl.classList.add('ok');btnEl.disabled=true;}
+    buildLedger(entries); // move row to archive immediately
     setTimeout(()=>fetchData(document.getElementById('monthFilter').value),1800);
   }catch(err){if(btnEl){btnEl.disabled=false;btnEl.textContent=orig;}}
 }
@@ -984,7 +984,15 @@ async function fetchData(month){
     const r=JSON.parse(await res.text());
     if(r.status!=='success') throw new Error(r.message||'GAS error');
     const d=r.data;
-    entries=d.entries;
+
+    // Preserve any entries locally marked Completed that GAS hasn't caught up to yet
+    const localDone = new Set(entries.filter(e=>e.acknowledged==='Completed').map(e=>e.id));
+    entries=d.entries.map(e=>{
+      if(localDone.has(e.id)&&!DONE_STATES.includes(e.acknowledged)){
+        return Object.assign({},e,{acknowledged:'Completed'});
+      }
+      return e;
+    });
     sysLog('Loaded '+d.entries.length+' entries, GAS month='+d.month,'ok');
 
     // Pick displayMonth: explicit request wins, otherwise sort availableMonths
