@@ -64,7 +64,6 @@
     .sync-btn{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--canvas);border:1px solid var(--border);padding:5px 10px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.15s;font-family:inherit}
     .sync-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-    /* LEDGER — 4 col */
     .ledger-row{display:grid;grid-template-columns:minmax(0,1fr) 96px 68px 52px;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border-soft)}
     .ledger-row:last-child{border-bottom:none}
     .kol-info{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -74,19 +73,16 @@
     .date-col{display:flex;flex-direction:column;gap:2px}
     .date-val{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}
     .type-tag{font-size:8px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
-    /* Status badge — only shows Pending / Acknowledged / Completed */
     .badge{display:flex;align-items:center;justify-content:center;padding:3px 6px;border-radius:7px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;width:100%}
     .badge-pending{background:#f0eee9;color:#9a9690}
     .badge-acked{background:var(--blue-bg);color:var(--blue)}
     .badge-done{background:var(--green-bg);color:var(--green)}
-    /* Voucher micro-pill */
     .v-micro{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 5px;border-radius:4px;flex-shrink:0}
     .v-micro.active{background:var(--green-bg);color:var(--green)}
     .v-micro.redeemed{background:var(--red-bg);color:var(--red)}
     .row-btn{width:100%}
     .archive-btn{width:100%;text-align:center;background:transparent;border:1px dashed var(--border);color:var(--text-3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-radius:8px;cursor:pointer;margin-top:10px;font-family:inherit}
 
-    /* FORM */
     .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft)}
     .f-stack{display:flex;flex-direction:column;gap:12px}
@@ -117,12 +113,10 @@
     .map-wrap .ibox{padding-right:42px}
     .map-pin{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--canvas);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
 
-    /* MODALS */
     .overlay{display:none;position:fixed;inset:0;background:rgba(26,31,46,.72);z-index:1100;padding:20px;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .mbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
     .empty{padding:24px 20px;text-align:center;color:var(--text-3);font-size:12px}
 
-    /* VOUCHER BLOCK inside detail */
     .v-block{background:var(--canvas);border:1px solid var(--border-soft);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
     .v-block-hdr{display:flex;align-items:center;justify-content:space-between}
     .v-block-lbl{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px}
@@ -132,16 +126,14 @@
     .v-pill.inactive{background:var(--border-soft);color:var(--text-3)}
     .v-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .btn-v{height:36px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);color:var(--text-2);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.15s;width:100%}
-    .btn-v:hover{border-color:var(--navy);color:var(--navy)}
     .btn-v.activate{border-color:var(--green);color:var(--green);background:var(--green-bg)}
     .btn-v.deactivate{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
     .btn-v:disabled{opacity:.4;cursor:not-allowed}
 
-    /* QR OVERLAY */
     .qr-overlay{display:none;position:fixed;inset:0;z-index:1300;background:rgba(26,31,46,.85);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
     .qr-overlay.open{display:flex}
     .qr-card{background:#faf8f3;border-radius:24px;width:100%;max-width:340px;margin:auto;padding:28px 24px 24px;position:relative;text-align:center}
-    .qr-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.06);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+    .qr-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.06);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center}
     .qr-sys{font-size:9px;font-weight:700;letter-spacing:3px;color:#c8c4bb;text-transform:uppercase;margin-bottom:18px}
     .qr-name{font-size:20px;font-weight:800;color:#1a1f2e;letter-spacing:-.3px;margin-bottom:4px}
     .qr-sub{font-size:10px;color:#9a9690;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
@@ -153,8 +145,7 @@
     .qr-url-text{font-family:monospace;font-size:9px;color:#9a9690;word-break:break-all;line-height:1.5;flex:1}
     .qr-copy-btn{flex-shrink:0;height:30px;padding:0 10px;border-radius:7px;border:1px solid #ddd8ce;background:#fff;color:#5a5750;font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap}
     .qr-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .qr-btn-save{height:42px;background:#1a1f2e;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;transition:.15s}
-    .qr-btn-save:active{transform:scale(.97)}
+    .qr-btn-save{height:42px;background:#1a1f2e;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.8px;text-transform:uppercase}
     .qr-btn-open{height:42px;background:transparent;border:1.5px solid #e4e1db;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;color:#5a5750;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;justify-content:center}
   </style>
 </head>
@@ -215,7 +206,7 @@
         <span class="sec-title">Master Ledger</span>
         <div style="display:flex;align-items:center;gap:8px">
           <span id="syncTime" style="font-size:9px;color:var(--text-3);font-weight:600">--</span>
-          <button class="sync-btn" onclick="fetchData()">
+          <button class="sync-btn" onclick="fetchData(document.getElementById('monthFilter').value)">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             Sync
           </button>
@@ -226,7 +217,8 @@
       <div id="archiveBody" style="display:none;margin-top:8px"></div>
     </div>
 
-    <div id="sysLog" style="border-radius:8px;padding:8px 10px;margin-bottom:12px;font-family:monospace;font-size:9px;color:rgba(150,150,150,0.5);line-height:1.6;max-height:120px;overflow-y:auto;background:transparent;border:1px solid rgba(0,0,0,0.06)"></div>
+    <!-- System log — faint, diagnostic only -->
+    <div id="sysLog" style="border-radius:8px;padding:8px 10px;margin-bottom:12px;font-family:monospace;font-size:9px;color:rgba(150,150,150,0.45);line-height:1.6;max-height:110px;overflow-y:auto;background:transparent;border:1px solid rgba(0,0,0,0.05)"></div>
   </div>
 
   <!-- ENTRY -->
@@ -339,7 +331,7 @@
         <div style="text-align:center;flex:1"><div style="font-size:9px;font-weight:700;color:#00b248;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Starting</div><div style="font-size:13px;font-weight:700;color:#00b248" id="cycleNext">—</div></div>
       </div>
     </div>
-    <div style="background:var(--canvas);border-radius:12px;padding:12px;margin-bottom:12px">
+    <div style="background:var(--canvas);border-radius:12px;padding:12px;margin-bottom:18px">
       <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Closing Month Stats</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
         <div><div style="font-size:20px;font-weight:800;color:var(--navy)" id="cTotal">—</div><div style="font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;margin-top:2px">Total</div></div>
@@ -354,10 +346,10 @@
   </div>
 </div>
 
-<!-- DETAIL MODAL -->
+<!-- DETAIL MODAL — compact centered popup -->
 <div id="detailModal" style="display:none;position:fixed;inset:0;z-index:1100;background:rgba(26,31,46,.65);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeDetailModal()">
   <div style="background:var(--surface);border-radius:18px;width:100%;max-width:420px;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 20px 60px rgba(0,0,0,.25)">
-    <!-- Header -->
+    <!-- Sticky header -->
     <div style="padding:16px 18px 12px;border-bottom:1px solid var(--border-soft);position:sticky;top:0;background:var(--surface);z-index:1;border-radius:18px 18px 0 0">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div style="min-width:0;flex:1;padding-right:10px">
@@ -369,12 +361,14 @@
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:8px">
         <span id="dtlBrandTag" style="display:none;font-size:9px;font-weight:700;background:var(--canvas);border:1px solid var(--border);padding:4px 9px;border-radius:20px;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px"></span>
         <span id="dtlTypeTag" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px"></span>
+        <!-- Ack tag — tap to mark complete when Pending -->
         <span id="dtlAckTag" onclick="dtlMarkComplete(this)" style="font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;display:inline-flex;align-items:center"></span>
+        <!-- Content filed tag -->
         <span id="dtlContentTag" style="display:none;font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;background:var(--green-bg);color:var(--green);text-transform:uppercase;letter-spacing:.5px"></span>
       </div>
     </div>
     <!-- Body -->
-    <div style="padding:14px 18px;display:flex;flex-direction:column;gap:14px">
+    <div style="padding:14px 18px;display:flex;flex-direction:column;gap:12px">
       <!-- Date + Package -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
@@ -387,7 +381,7 @@
         </div>
       </div>
 
-      <!-- VOUCHER BLOCK — Store Visit only -->
+      <!-- Voucher block — Store Visit only -->
       <div id="dtlVBlock" class="v-block" style="display:none">
         <div class="v-block-hdr">
           <span class="v-block-lbl">Store Visit Voucher</span>
@@ -396,7 +390,7 @@
         <div id="dtlVRedeemed" style="font-size:10px;color:var(--text-3);font-weight:600;display:none"></div>
         <div class="v-actions">
           <button id="btnActivate" class="btn-v activate" onclick="dtlToggleVoucher(this)">Activate Voucher</button>
-          <button id="btnShowQR"   class="btn-v" onclick="dtlShowQR()" style="display:none">Show QR</button>
+          <button id="btnShowQR" class="btn-v" onclick="dtlShowQR()" style="display:none">Show QR</button>
         </div>
       </div>
 
@@ -445,7 +439,7 @@
         <button id="btnDtlSave" onclick="dtlSave(this)" style="height:44px;background:var(--navy);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.5px;text-transform:uppercase">Save</button>
       </div>
 
-      <!-- History -->
+      <!-- Update History -->
       <div id="dtlHistory" style="display:none;border-top:1px solid var(--border-soft);padding-top:10px">
         <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Update History</div>
       </div>
@@ -468,7 +462,7 @@
     <div class="qr-url-row">
       <div class="qr-url-text" id="qrUrlText">—</div>
       <button class="qr-copy-btn" onclick="copyQRUrl()">Copy</button>
-    div>
+    </div>
     <div class="qr-actions">
       <button class="qr-btn-save" onclick="saveQRPng()">Save PNG</button>
       <a class="qr-btn-open" id="qrOpenLink" href="#" target="_blank">Open ↗</a>
@@ -483,12 +477,12 @@ const CLOUDINARY_PRESET = 'gdg_seed';
 const CLOUDINARY_FOLDER = 'GUSS/seed';
 const GITHUB_BASE     = 'https://thamswork.github.io/PRGDG';
 
-let entries    = [];
-let sumCache   = {};
+let entries     = [];
+let sumCache    = {};
 let detailEntry = null;
-let _qrUrl     = '';
+let _qrUrl      = '';
 
-// acknowledged = "Completed" moves to archive
+// "Completed" = archived row (col M Acknowledged)
 const DONE_STATES = ['Completed','No-Show / Cancelled'];
 
 // ── SYSLOG ────────────────────────────────────────────────────────────────
@@ -501,14 +495,14 @@ function sysLog(msg,color){
   while(el.children.length>30) el.removeChild(el.firstChild);
 }
 
-// ── GAS GET with no-cors fallback ─────────────────────────────────────────
+// ── GAS GET ───────────────────────────────────────────────────────────────
 function gasGet(url){
-  sysLog('GET → '+url.split('?')[1]?.substring(0,50),'warn');
+  sysLog('GET '+url.split('?')[1]?.substring(0,60),'warn');
   return fetch(url,{redirect:'follow'})
     .then(r=>{sysLog('HTTP '+r.status,'info');return r.text();})
     .then(t=>{const d=JSON.parse(t);sysLog('status='+d.status,d.status==='success'?'ok':'err');return d;})
     .catch(err=>{
-      sysLog('Fetch failed: '+err.message+' — no-cors fallback','err');
+      sysLog('Fetch failed: '+err.message+' — no-cors','err');
       fetch(url,{mode:'no-cors'}).catch(()=>{});
       return {status:'success',_noCors:true};
     });
@@ -544,7 +538,8 @@ function computeSummary(month){
   let total=0,del=0,vis=0,completed=0;
   const brandMap={},BRAND_ORDER=['Guss Damn Good','Adam and Eve','Charuss'];
   valid.forEach(e=>{
-    total++; if(String(e.type).trim()==='Delivery') del++; else vis++;
+    total++;
+    if(String(e.type).trim()==='Delivery') del++; else vis++;
     if(DONE_STATES.includes(e.acknowledged)) completed++;
     const b=(e.brand&&e.brand.trim())?e.brand.trim():'(No brand)';
     brandMap[b]=(brandMap[b]||0)+1;
@@ -579,10 +574,10 @@ function openSumPreview(){
   const text=buildSummaryText(),lines=text.split('\n'); let html='';
   lines.forEach((l,i)=>{
     if(!l){html+='<div style="height:6px"></div>';return;}
-    if(i===0){html+=`<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">${l}</div>`;return;}
+    if(i===0){html+='<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">'+l+'</div>';return;}
     const lbl=l.substring(0,14).trimEnd(),val=l.substring(14).trim();
-    if(val) html+=`<div style="display:flex;justify-content:space-between;align-items:baseline;padding:1px 0"><span style="color:var(--text-3);font-size:11px;font-weight:600">${lbl}</span><span style="color:var(--navy);font-size:12px;font-weight:700">${val}</span></div>`;
-    else html+=`<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">${l}</div>`;
+    if(val) html+='<div style="display:flex;justify-content:space-between;align-items:baseline;padding:1px 0"><span style="color:var(--text-3);font-size:11px;font-weight:600">'+lbl+'</span><span style="color:var(--navy);font-size:12px;font-weight:700">'+val+'</span></div>';
+    else html+='<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">'+l+'</div>';
   });
   document.getElementById('sumPreviewMonth').textContent=sumCache.month||'';
   document.getElementById('sumPreviewBody').innerHTML=html;
@@ -598,7 +593,7 @@ function doSumCopy(btnEl){
   });
 }
 
-// ── MARK DONE (ledger) ────────────────────────────────────────────────────
+// ── MARK DONE (ledger row button) ─────────────────────────────────────────
 async function markDone(id,btnEl){
   const entry=entries.find(e=>e.id===id); if(!entry) return;
   const orig=btnEl?btnEl.textContent:'Done';
@@ -634,18 +629,23 @@ function syncContentLabels(){
   document.getElementById('lblReels').style.borderColor=reels?'var(--navy)':'var(--border)';
   document.getElementById('lblReels').style.background=reels?'var(--surface)':'var(--canvas)';
 }
+
+// ── DISPATCH TEXT BUILDER ─────────────────────────────────────────────────
 function buildDispatchText(e,dateOverride,notesOverride){
   const isDel=String(e.type||'').trim()==='Delivery';
+  const header=isDel?'DELIVERY\n\n':'STORE VISIT\n\n';
   const bl=e.brand?'Brand: '+e.brand+'\n':'';
-  const date=dateOverride||e.date||'',notes=notesOverride!==undefined?notesOverride:(e.notes||'');
-  if(!isDel) return bl+'Name: '+e.kol+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nVenue: '+(e.address||'')+(notes?'\nNotes: '+notes:'');
-  return bl+'Name: '+e.kol+'\nPhone: '+(e.phone||'')+'\nPackage: '+(e.pkg||'')+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nAddress: '+(e.address||'')+'\nMap: '+(e.googleMap||'')+(notes?'\nNotes: '+notes:'');
+  const date=dateOverride||e.date||'';
+  const notes=notesOverride!==undefined?notesOverride:(e.notes||'');
+  if(!isDel) return header+bl+'Name: '+e.kol+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nVenue: '+(e.address||'')+(notes?'\nNotes: '+notes:'');
+  return header+bl+'Name: '+e.kol+'\nPhone: '+(e.phone||'')+'\nPackage: '+(e.pkg||'')+'\nDate: '+date+'\nTime: '+(e.time||'')+'\nAddress: '+(e.address||'')+'\nMap: '+(e.googleMap||'')+(notes?'\nNotes: '+notes:'');
 }
 
-// ── DETAIL MODAL ──────────────────────────────────────────────────────────
+// ── DETAIL MODAL OPEN ─────────────────────────────────────────────────────
 function openDetailModal(id){
   const e=entries.find(x=>x.id===id); if(!e) return;
   detailEntry=e;
+
   document.getElementById('dtlName').textContent=e.kol||'—';
   document.getElementById('dtlHandle').textContent=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
 
@@ -662,7 +662,6 @@ function openDetailModal(id){
   typeTag.style.background=isD?'var(--green-bg)':'var(--amber-bg)';
   typeTag.style.color=isD?'var(--green)':'var(--amber)';
 
-  // Ack tag shows only the acknowledged state, never brand
   ackTag.textContent=e.acknowledged||'Pending';
   ackTag.style.background=isDone?'var(--green-bg)':'var(--amber-bg)';
   ackTag.style.color=isDone?'var(--green)':'var(--amber)';
@@ -670,7 +669,8 @@ function openDetailModal(id){
   ackTag.title=isDone?'':'Tap to mark complete';
 
   const contentTag=document.getElementById('dtlContentTag');
-  const cv=(e.content||'').trim(),hasContent=cv.includes('IG Story')||cv.includes('Reels');
+  const cv=(e.content||'').trim();
+  const hasContent=cv.includes('IG Story')||cv.includes('Reels');
   contentTag.style.display=hasContent?'inline-flex':'none';
   if(hasContent) contentTag.textContent=cv;
 
@@ -680,7 +680,7 @@ function openDetailModal(id){
   if(isD&&e.pkg&&e.pkg!=='N/A'){pkgWrap.style.display='block';document.getElementById('dtlPkg').textContent=e.pkg;}
   else{pkgWrap.style.display='none';}
 
-  // Voucher block — Store Visit only
+  // Voucher block — Store Visits only
   const vBlock=document.getElementById('dtlVBlock');
   vBlock.style.display=!isD?'flex':'none';
   if(!isD) renderVoucherBlock(e);
@@ -693,6 +693,7 @@ function openDetailModal(id){
   document.getElementById('dtlLink').value=e.link||'';
   document.getElementById('dtlNotes').value=e.notes||'';
 
+  // Reset upload area
   document.getElementById('dtlUploadArea').style.borderColor='';
   document.getElementById('dtlUploadStatus').style.display='none';
   document.getElementById('dtlUploadStatus').textContent='';
@@ -700,6 +701,7 @@ function openDetailModal(id){
   document.getElementById('dtlFileInput').value='';
   detailEntry._uploadedUrl='';
 
+  // Clear history
   const hist=document.getElementById('dtlHistory');
   if(hist){hist.style.display='none';while(hist.children.length>1)hist.removeChild(hist.lastChild);}
 
@@ -720,7 +722,8 @@ function renderVoucherBlock(e){
   btnA.disabled=false;
   if(vs==='Redeemed'){
     pill.textContent='Redeemed';pill.className='v-pill redeemed';
-    redEl.textContent=e.voucherRedeemed?'Redeemed on '+e.voucherRedeemed:'';redEl.style.display=e.voucherRedeemed?'block':'none';
+    redEl.textContent=e.voucherRedeemed?'Redeemed: '+e.voucherRedeemed:'';
+    redEl.style.display=e.voucherRedeemed?'block':'none';
     btnA.textContent='Redeemed';btnA.className='btn-v';btnA.disabled=true;
     btnQ.style.display='none';
   }else if(vs==='Active'){
@@ -744,7 +747,9 @@ async function dtlToggleVoucher(btnEl){
   const newStatus=vs==='Active'?'':'Active';
   const orig=btnEl.textContent;
   btnEl.disabled=true;btnEl.textContent='Saving...';
-  const url=GAS+'?action=update_entry&id='+encodeURIComponent(detailEntry.id)+'&kolName='+encodeURIComponent(detailEntry.kol)+'&voucherStatus='+encodeURIComponent(newStatus)+'&t='+Date.now();
+  const url=GAS+'?action=update_entry&id='+encodeURIComponent(detailEntry.id)
+    +'&kolName='+encodeURIComponent(detailEntry.kol)
+    +'&voucherStatus='+encodeURIComponent(newStatus)+'&t='+Date.now();
   try{
     await gasGet(url);
     detailEntry.voucherStatus=newStatus;
@@ -754,47 +759,31 @@ async function dtlToggleVoucher(btnEl){
   }catch(err){btnEl.disabled=false;btnEl.textContent=orig;sysLog('Voucher toggle failed','err');}
 }
 
-// ── SHOW QR OVERLAY ───────────────────────────────────────────────────────
+// ── SHOW QR ───────────────────────────────────────────────────────────────
 function dtlShowQR(){
   if(!detailEntry) return;
   const id=detailEntry.id;
   _qrUrl=GITHUB_BASE+'/voucher.html?id='+id;
-
   document.getElementById('qrName').textContent=detailEntry.kol||'—';
   document.getElementById('qrSub').textContent=(detailEntry.brand||'GDG')+' · Store Visit';
   document.getElementById('qrIdVal').textContent=id;
   document.getElementById('qrUrlText').textContent=_qrUrl;
   document.getElementById('qrOpenLink').href=_qrUrl;
-
-  // Clear previous QR
   const target=document.getElementById('qrTarget');
   target.innerHTML='';
-
   document.getElementById('qrOverlay').classList.add('open');
-
-  // Load QR lib then render — guaranteed sequential
   function doRender(){
     target.innerHTML='';
-    new QRCode(target,{
-      text:_qrUrl,
-      width:260,height:260,
-      colorDark:'#1a1f2e',colorLight:'#ffffff',
-      correctLevel:QRCode.CorrectLevel.H
-    });
+    new QRCode(target,{text:_qrUrl,width:260,height:260,colorDark:'#1a1f2e',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
   }
-
-  if(window.QRCode){
-    doRender();
-  }else{
+  if(window.QRCode){doRender();}
+  else{
     const s=document.createElement('script');
     s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-    s.onload=doRender;
-    document.head.appendChild(s);
+    s.onload=doRender;document.head.appendChild(s);
   }
 }
-
 function closeQR(){document.getElementById('qrOverlay').classList.remove('open');}
-
 function copyQRUrl(){
   navigator.clipboard.writeText(_qrUrl).then(()=>{
     const btn=document.querySelector('.qr-copy-btn');
@@ -802,46 +791,29 @@ function copyQRUrl(){
   });
 }
 
-// ── SAVE QR PNG — 4x scale ────────────────────────────────────────────────
+// ── SAVE QR AS PNG ────────────────────────────────────────────────────────
 async function saveQRPng(){
   const card=document.getElementById('qrCard'); if(!card) return;
-  // Wait for QR canvas to paint
   await new Promise(r=>setTimeout(r,300));
-
-  async function loadLib(src){
-    return new Promise((res,rej)=>{
-      const s=document.createElement('script');s.src=src;
-      s.onload=res;s.onerror=rej;document.head.appendChild(s);
-    });
-  }
+  async function loadLib(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
   if(!window.html2canvas) await loadLib('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-
-  // Temporarily hide the close button and action buttons for a cleaner card snapshot
   const closeBtn=card.querySelector('.qr-close');
   const actDiv=card.querySelector('.qr-actions');
   const urlRow=card.querySelector('.qr-url-row');
-  if(closeBtn) closeBtn.style.display='none';
-  if(actDiv)   actDiv.style.display='none';
-  if(urlRow)   urlRow.style.display='none';
-
+  if(closeBtn)closeBtn.style.display='none';
+  if(actDiv)actDiv.style.display='none';
+  if(urlRow)urlRow.style.display='none';
   try{
-    const canvas=await html2canvas(card,{
-      scale:4,
-      backgroundColor:'#faf8f3',
-      useCORS:true,
-      allowTaint:false,
-      logging:false
-    });
+    const canvas=await html2canvas(card,{scale:4,backgroundColor:'#faf8f3',useCORS:true,allowTaint:false,logging:false});
     const a=document.createElement('a');
     a.href=canvas.toDataURL('image/png');
     a.download='voucher-'+(detailEntry?detailEntry.id:'GDG')+'.png';
     a.click();
-    sysLog('PNG saved for '+(detailEntry?detailEntry.kol:''),'ok');
+    sysLog('PNG saved','ok');
   }catch(err){sysLog('PNG failed: '+err.message,'err');}
-
-  if(closeBtn) closeBtn.style.display='';
-  if(actDiv)   actDiv.style.display='';
-  if(urlRow)   urlRow.style.display='';
+  if(closeBtn)closeBtn.style.display='';
+  if(actDiv)actDiv.style.display='';
+  if(urlRow)urlRow.style.display='';
 }
 
 // ── MARK COMPLETE FROM POPUP ──────────────────────────────────────────────
@@ -860,7 +832,7 @@ async function dtlMarkComplete(tagEl){
     tagEl.style.opacity='1';tagEl.style.cursor='default';tagEl.title='';
     buildLedger(entries);
     sysLog('Marked complete: '+detailEntry.kol,'ok');
-  }catch(err){tagEl.textContent=detailEntry.acknowledged;tagEl.style.opacity='1';}
+  }catch(err){tagEl.textContent=detailEntry.acknowledged||'Pending';tagEl.style.opacity='1';}
 }
 
 // ── CLOUDINARY UPLOAD ─────────────────────────────────────────────────────
@@ -877,13 +849,14 @@ async function dtlHandleUpload(input){
     const data=await res.json();
     if(data.secure_url){
       detailEntry._uploadedUrl=data.secure_url;
-      statusEl.textContent='Uploaded';statusEl.style.color='var(--green)';
+      statusEl.textContent='Uploaded ✓';statusEl.style.color='var(--green)';
       previewEl.src=data.secure_url;previewEl.style.display='block';
       areaEl.style.borderColor='var(--green)';sysLog('Upload OK','ok');
     }else{throw new Error(data.error?.message||'Upload failed');}
-  }catch(err){statusEl.textContent='Failed: '+err.message;statusEl.style.color='var(--red)';areaEl.style.borderColor='var(--red)';}
+  }catch(err){statusEl.textContent='Failed: '+err.message;statusEl.style.color='var(--red)';areaEl.style.borderColor='var(--red)';sysLog('Upload ERROR: '+err.message,'err');}
 }
 
+// ── DETAIL COPY ───────────────────────────────────────────────────────────
 function dtlCopy(){
   if(!detailEntry) return;
   const text=buildDispatchText(detailEntry,document.getElementById('dtlDate').value,document.getElementById('dtlNotes').value);
@@ -893,6 +866,7 @@ function dtlCopy(){
   });
 }
 
+// ── DETAIL SAVE (GET to avoid CORS) ──────────────────────────────────────
 async function dtlSave(btnEl){
   if(!detailEntry) return;
   const orig=btnEl.textContent;btnEl.disabled=true;btnEl.textContent='Saving...';
@@ -921,7 +895,8 @@ async function dtlSave(btnEl){
     if(data.status==='success'){
       detailEntry.content=content;detailEntry.notes=newNotes;detailEntry.link=finalLink;detailEntry._uploadedUrl='';
       if(dateChanged){detailEntry.date=newDate;detailEntry.dispatchText=buildDispatchText(detailEntry,newDate,newNotes);}
-      addHistoryLine(data.updated||new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}),content,newNotes,dateChanged?newDate:null,finalLink);
+      const ts=data.updated||new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      addHistoryLine(ts,content,newNotes,dateChanged?newDate:null,finalLink);
       btnEl.textContent='Saved!';btnEl.style.background='var(--green)';btnEl.style.color='#fff';
       buildLedger(entries);
       setTimeout(()=>closeDetailModal(),1200);
@@ -932,11 +907,11 @@ async function dtlSave(btnEl){
 function addHistoryLine(ts,content,notes,newDate,link){
   const hist=document.getElementById('dtlHistory'); if(!hist) return;
   const parts=[];
-  if(content) parts.push(content);
-  if(notes)   parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
-  if(newDate) parts.push('Date → '+fmtDate(newDate));
-  if(link)    parts.push('Link saved');
-  if(!parts.length) parts.push('Saved');
+  if(content)parts.push(content);
+  if(notes)parts.push('Notes: "'+notes.substring(0,30)+(notes.length>30?'…':'')+'"');
+  if(newDate)parts.push('Date → '+fmtDate(newDate));
+  if(link)parts.push('Link saved');
+  if(!parts.length)parts.push('Saved');
   const ln=document.createElement('div');
   ln.style.cssText='font-size:10px;color:var(--text-3);padding:4px 0;border-bottom:1px solid var(--border-soft);line-height:1.5';
   ln.textContent=ts+' · '+parts.join(' · ');
@@ -961,14 +936,18 @@ function copyText(){
 async function submitEntry(){
   const btn=document.getElementById('btnSubmit'),type=getType();
   const payload={
-    action:'add',entryMonth:document.getElementById('entryMonth').value||'',
-    kolName:document.getElementById('kolName').value,handleUrl:document.getElementById('handleUrl').value,
+    action:'add',
+    entryMonth:document.getElementById('entryMonth').value||'',
+    kolName:document.getElementById('kolName').value,
+    handleUrl:document.getElementById('handleUrl').value,
     brand:getBrand(),seedingType:type,deliverable:'',
-    date:document.getElementById('logDate').value,time:document.getElementById('logTime').value,
+    date:document.getElementById('logDate').value,
+    time:document.getElementById('logTime').value,
     packageStr:type==='Store Invite'?'N/A':getPkg(),
     phone:type==='Store Invite'?'N/A':document.getElementById('logPhone').value,
     address:type==='Store Invite'?document.getElementById('storeVenue').value:document.getElementById('logAddr').value,
-    googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value,notes:''
+    googleMap:type==='Store Invite'?'':document.getElementById('googleMap').value,
+    notes:''
   };
   btn.textContent='Saving...';btn.disabled=true;
   try{
@@ -978,10 +957,7 @@ async function submitEntry(){
       btn.textContent='Saved!';btn.classList.add('ok');
       document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.id!=='brandSel'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'))el.value='';});
       document.getElementById('typeDel').checked=true;onTypeChange();
-      const rm=new Date().toLocaleString('en-US',{month:'long'})+' '+new Date().getFullYear();
-      const s=document.getElementById('monthFilter');
-      if(s){let f=false;for(let i=0;i<s.options.length;i++){if(s.options[i].value===rm){s.options[i].selected=true;f=true;break;}}if(!f){const o=document.createElement('option');o.value=rm;o.textContent=rm;o.selected=true;s.insertBefore(o,s.firstChild);}}
-      fetchData(rm);
+      fetchData(document.getElementById('entryMonth').value||null);
       setTimeout(()=>{btn.textContent='Log Entry';btn.classList.remove('ok');btn.disabled=false;},3000);
     }else{throw new Error(r.message||'GAS error');}
   }catch(err){btn.textContent='Error — retry';btn.disabled=false;setTimeout(()=>btn.textContent='Log Entry',3000);}
@@ -997,16 +973,31 @@ async function fetchData(month){
     sysLog('HTTP '+res.status,'info');
     const r=JSON.parse(await res.text());
     if(r.status!=='success') throw new Error(r.message||'GAS error');
-    const d=r.data; entries=d.entries;
-    sysLog('Loaded '+d.entries.length+' entries, month='+d.month,'ok');
+    const d=r.data;
+    entries=d.entries;
+    sysLog('Loaded '+d.entries.length+' entries, GAS month='+d.month,'ok');
 
-    const displayMonth=month||d.month||(d.availableMonths&&d.availableMonths[0])||'';
+    // Pick displayMonth: explicit request wins, otherwise sort availableMonths
+    // and pick the latest (most recent by calendar) — works even if GAS returns wrong default
+    const MONTH_ORDER=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    function monthKey(m){const p=m.match(/^(\w+)\s+(\d{4})$/);if(!p)return 0;return parseInt(p[2])*100+MONTH_ORDER.indexOf(p[1]);}
+    const sortedMonths=(d.availableMonths||[]).slice().sort((a,b)=>monthKey(b)-monthKey(a));
+    const displayMonth=month||sortedMonths[0]||d.month||'';
+
+    // If GAS returned data for a different month, re-fetch with correct month
+    if(displayMonth&&displayMonth!==d.month&&!month){
+      sysLog('Re-fetching for latest month: '+displayMonth,'warn');
+      return fetchData(displayMonth);
+    }
+
+    // Build month selector
     const sel=document.getElementById('monthFilter');
     if(sel){
       sel.innerHTML='';
       (d.availableMonths||[]).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===displayMonth)o.selected=true;sel.appendChild(o);});
       if(![...sel.options].some(o=>o.value===displayMonth)){const o=document.createElement('option');o.value=displayMonth;o.textContent=displayMonth;o.selected=true;sel.insertBefore(o,sel.firstChild);}
     }
+
     document.getElementById('vTotal').textContent=d.totalSeeded;
     document.getElementById('vPending').textContent=d.pendingDeliveries;
     document.getElementById('vToMin').textContent=d.remainingToMin;
@@ -1015,18 +1006,19 @@ async function fetchData(month){
     document.getElementById('syncTime').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     computeSummary(displayMonth);
 
+    // Entry month selector
     const eSel=document.getElementById('entryMonth');
     if(eSel){
       const prev=eSel.value;eSel.innerHTML='';
-      const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
       const now2=new Date(),curMo=now2.toLocaleString('en-US',{month:'long'})+' '+now2.getFullYear();
-      const curIdx=MONTHS.indexOf(now2.toLocaleString('en-US',{month:'long'}));
-      const nextMo=MONTHS[(curIdx+1)%12]+' '+(curIdx===11?now2.getFullYear()+1:now2.getFullYear());
+      const curIdx=MONTH_ORDER.indexOf(now2.toLocaleString('en-US',{month:'long'}));
+      const nextMo=MONTH_ORDER[(curIdx+1)%12]+' '+(curIdx===11?now2.getFullYear()+1:now2.getFullYear());
       [...new Set([displayMonth,nextMo,curMo,...(d.availableMonths||[])])].forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;if(m===(prev||displayMonth))o.selected=true;eSel.appendChild(o);});
     }
+
     if(d.packages&&d.packages.length){
       const ps=document.getElementById('pkgSel');
-      if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+=`<option value="${p}">${p}</option>`);ps.innerHTML+='<option value="Others">Others (specify)</option>';}
+      if(ps){ps.innerHTML='<option value="">Select package...</option>';d.packages.forEach(p=>ps.innerHTML+='<option value="'+p+'">'+p+'</option>');ps.innerHTML+='<option value="Others">Others (specify)</option>';}
     }
     buildLedger(d.entries);
   }catch(err){sysLog('fetchData ERROR: '+err.message,'err');}
@@ -1049,35 +1041,31 @@ function buildLedger(data){
     const vs=(e.voucherStatus||'').trim();
     const handle=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
 
-    // Badge class based purely on acknowledged state
-    let bc='badge-pending', bText=e.acknowledged||'Pending';
+    let bc='badge-pending',bText=e.acknowledged||'Pending';
     if(done){bc='badge-done';}
     else if(e.acknowledged==='Acknowledged'){bc='badge-acked';}
 
-    // Voucher micro-pill — Store Visit only, only if has a status
-    const vPill=(!isD&&vs)?`<span class="v-micro ${vs.toLowerCase()}">${vs}</span>`:'';
+    const vPill=(!isD&&vs&&vs!=='Active')?'<span class="v-micro '+vs.toLowerCase()+'">'+vs+'</span>':'';
 
     const col4=!done
-      ?`<button class="btn row-btn${past?' due':''}" id="dn_${e.id}" onclick="markDone('${e.id}',this)">Done</button>`
-      :`<span></span>`;
+      ?'<button class="btn row-btn'+(past?' due':'')+'" id="dn_'+e.id+'" onclick="markDone(\''+e.id+'\',this)">Done</button>'
+      :'<span></span>';
 
-    const row=`<div class="ledger-row">
-      <div class="kol-info">
-        <span class="kol-name${past?' due':''}" onclick="openDetailModal('${e.id}')">${e.kol}</span>
-        <span class="kol-sub">${handle}${vPill}</span>
-      </div>
-      <div class="date-col">
-        <span class="date-val">${fmtDate(e.date)}</span>
-        <span class="type-tag">${isD?'Delivery':'Visit'}</span>
-      </div>
-      <span class="badge ${bc}">${bText}</span>
-      ${col4}
-    </div>`;
+    const row='<div class="ledger-row">'
+      +'<div class="kol-info">'
+      +'<span class="kol-name'+(past?' due':'')+'" onclick="openDetailModal(\''+e.id+'\')">'+e.kol+'</span>'
+      +'<span class="kol-sub">'+handle+vPill+'</span>'
+      +'</div>'
+      +'<div class="date-col"><span class="date-val">'+fmtDate(e.date)+'</span><span class="type-tag">'+(isD?'Delivery':'Visit')+'</span></div>'
+      +'<span class="badge '+bc+'">'+bText+'</span>'
+      +col4
+      +'</div>';
+
     if(done){dHtml+=row;dCount++;}else{aHtml+=row;}
   });
 
   body.innerHTML=aHtml||'<div class="empty">All entries completed</div>';
-  if(arch) arch.innerHTML=dHtml;
+  if(arch)arch.innerHTML=dHtml;
   if(arcBtn){arcBtn.style.display=dCount>0?'block':'none';if(dCount>0)arcBtn.textContent='Show Completed History ('+dCount+')';}
 }
 
@@ -1119,9 +1107,9 @@ async function confirmCycle(btnEl){
   const orig=btnEl.textContent;btnEl.disabled=true;btnEl.textContent='Starting...';
   const sel=document.getElementById('monthFilter'),currentMonth=sel&&sel.value?sel.value:null;
   closeCycleModal();
-  const t=setTimeout(()=>{btnEl.disabled=false;btnEl.textContent=orig;},8000);
-  try{await fetchData(currentMonth);switchView('report');}catch(e){}
-  clearTimeout(t);btnEl.disabled=false;btnEl.textContent=orig;
+  const timer=setTimeout(()=>{btnEl.disabled=false;btnEl.textContent=orig;},8000);
+  try{await fetchData(currentMonth);switchView('report');}catch(e){sysLog('Cycle error: '+e.message,'err');}
+  clearTimeout(timer);btnEl.disabled=false;btnEl.textContent=orig;
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
