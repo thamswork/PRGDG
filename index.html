@@ -189,8 +189,8 @@
         <div class="alert-val" id="vPending">--</div>
       </div>
       <div class="metrics">
-        <div class="metric"><div class="metric-lbl">To Reach Min (15)</div><div class="metric-val" id="vToMin" style="color:var(--amber)">--</div></div>
-        <div class="metric"><div class="metric-lbl">Remaining Slots</div><div class="metric-val" id="vToMax" style="color:var(--green)">--</div></div>
+        <div class="metric"><div class="metric-lbl">Content Credits</div><div class="metric-val" id="vToMin" style="color:var(--navy)">--</div></div>
+        <div class="metric"><div class="metric-lbl">To Min / Max</div><div class="metric-val" id="vToMax" style="color:var(--amber);font-size:14px">--</div></div>
       </div>
       <div class="sum-strip">
         <div class="sum-strip-hdr">
@@ -381,30 +381,27 @@
         </div>
       </div>
 
-      <!-- Voucher block — Store Visit only -->
-      <div id="dtlVBlock" class="v-block" style="display:none">
-        <div class="v-block-hdr">
-          <span class="v-block-lbl">Store Visit Voucher</span>
-          <span id="dtlVPill" class="v-pill inactive">Inactive</span>
-        </div>
-        <div id="dtlVRedeemed" style="font-size:10px;color:var(--text-3);font-weight:600;display:none"></div>
-        <div class="v-actions">
-          <button id="btnActivate" class="btn-v activate" onclick="dtlToggleVoucher(this)">Activate Voucher</button>
-          <button id="btnShowQR" class="btn-v" onclick="dtlShowQR()" style="display:none">Show QR</button>
-        </div>
-      </div>
-
-      <!-- Content Posted -->
+      <!-- Content Posted — IG Story (1cr) / IG Post (2cr) / Reels (2cr) -->
       <div>
-        <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Content Posted</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblStory">
-            <input type="checkbox" id="cbStory" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
-            <span style="font-size:12px;font-weight:700;color:var(--text-2)">IG Story</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px">Content Posted</div>
+          <div id="creditBadge" style="font-size:9px;font-weight:700;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:20px;display:none">0 credits</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+          <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;text-align:center" id="lblStory">
+            <input type="checkbox" id="cbStory" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy)">
+            <span style="font-size:11px;font-weight:700;color:var(--text-2)">IG Story</span>
+            <span style="font-size:8px;color:var(--text-3);font-weight:600">1 credit</span>
           </label>
-          <label style="display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s" id="lblReels">
-            <input type="checkbox" id="cbReels" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy);flex-shrink:0">
-            <span style="font-size:12px;font-weight:700;color:var(--text-2)">Reels</span>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;text-align:center" id="lblPost">
+            <input type="checkbox" id="cbPost" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy)">
+            <span style="font-size:11px;font-weight:700;color:var(--text-2)">IG Post</span>
+            <span style="font-size:8px;color:var(--text-3);font-weight:600">2 credits</span>
+          </label>
+          <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:9px;border:1.5px solid var(--border);background:var(--canvas);cursor:pointer;transition:.15s;text-align:center" id="lblReels">
+            <input type="checkbox" id="cbReels" onchange="syncContentLabels()" style="width:16px;height:16px;accent-color:var(--navy)">
+            <span style="font-size:11px;font-weight:700;color:var(--text-2)">Reels</span>
+            <span style="font-size:8px;color:var(--text-3);font-weight:600">2 credits</span>
           </label>
         </div>
       </div>
@@ -532,25 +529,36 @@ function isPast(ds){
   const d=new Date(+m[1],+m[2]-1,+m[3]),t=new Date(); t.setHours(0,0,0,0); return d<t;
 }
 
-// ── SUMMARY ───────────────────────────────────────────────────────────────
+// ── SUMMARY — credit system ────────────────────────────────────────────────
+// IG Story = 1 credit, IG Post = 2 credits, Reels = 2 credits, goal = 20 credits
 function computeSummary(month){
+  const CREDIT_GOAL=20;
+  const CREDIT_MAX=25;
   const valid=entries.filter(e=>e.kol&&e.kol.trim());
   const sorted=valid.slice().sort((a,b)=>(a.date?new Date(a.date):new Date(9999,0,1))-(b.date?new Date(b.date):new Date(9999,0,1)));
-  let total=0,del=0,vis=0,completed=0;
+  let total=0,del=0,vis=0,completed=0,totalCredits=0;
   const brandMap={},BRAND_ORDER=['Guss Damn Good','Adam and Eve','Charuss'];
+
   valid.forEach(e=>{
     total++;
     if(String(e.type).trim()==='Delivery') del++; else vis++;
-    const VALID_ACK_S=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
-    const ackS=VALID_ACK_S.includes(e.acknowledged||'')?e.acknowledged:'Pending';
+    const VALID=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
+    const ackS=VALID.includes(e.acknowledged||'')?e.acknowledged:'Pending';
     if(DONE_STATES.includes(ackS)) completed++;
+    // Count content credits
+    totalCredits+=getContentCredits(e.content||'');
     const b=(e.brand&&e.brand.trim())?e.brand.trim():'(No brand)';
     brandMap[b]=(brandMap[b]||0)+1;
   });
+
   const brandRows=[];
   BRAND_ORDER.forEach(b=>{if(brandMap[b]) brandRows.push({brand:b,count:brandMap[b]});});
   if(brandMap['(No brand)']) brandRows.push({brand:'(No brand)',count:brandMap['(No brand)']});
-  sumCache={month,total,del,vis,completed,toMin:Math.max(0,15-total),
+
+  sumCache={month,total,del,vis,completed,
+    totalCredits,creditGoal:CREDIT_GOAL,creditMax:CREDIT_MAX,
+    toCredits:Math.max(0,CREDIT_GOAL-totalCredits),
+    remainingToMax:Math.max(0,CREDIT_MAX-totalCredits),
     cycleStart:sorted.length>0?sorted[0].date:null,
     hit15Date:sorted.length>=15?sorted[14].date:null,brandRows};
   document.getElementById('sumMonth').textContent=month||'';
@@ -563,11 +571,13 @@ function buildSummaryText(){
     'GDG SEEDING \u00B7 '+(s.month||'—'),'',
     pad('Cycle Start',col)+(s.cycleStart?fmtDate(s.cycleStart):'—'),
     pad('Hit 15 on',col)+(s.hit15Date?fmtDate(s.hit15Date):'Not yet reached'),'',
-    pad('Total',col)+(s.total||0)+' / 15',
+    pad('Total',col)+(s.total||0)+' KOLs',
     pad('Deliveries',col)+(s.del||0),
     pad('Store Visits',col)+(s.vis||0),
-    pad('Completed',col)+(s.completed||0),
-    pad('To Min (15)',col)+(s.toMin>0?s.toMin+' more needed':'Target reached'),
+    pad('Completed',col)+(s.completed||0),'',
+    pad('Content Credits',col)+(s.totalCredits||0)+' / 20 min · 25 max',
+    pad('To Min (20)',col)+((s.toCredits||0)>0?s.toCredits+' credits needed':'Min reached ✓'),
+    pad('To Max (25)',col)+((s.remainingToMax||0)>0?s.remainingToMax+' credits left':'Max reached ✓'),
   ];
   if(s.brandRows&&s.brandRows.length){rows.push('','By Brand');s.brandRows.forEach(r=>rows.push(pad(r.brand,col)+r.count));}
   return rows.join('\n');
@@ -601,22 +611,35 @@ async function markDone(id,btnEl){
   const entry=entries.find(e=>e.id===id); if(!entry) return;
   const VALID_ACK_V=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
   const ackVal=VALID_ACK_V.includes(entry.acknowledged||'')?entry.acknowledged:'Pending';
-  if(DONE_STATES.includes(ackVal)) return; // already done
+  if(DONE_STATES.includes(ackVal)) return;
   const orig=btnEl?btnEl.textContent:'Done';
   if(btnEl){btnEl.disabled=true;btnEl.textContent='...';}
   const isDel=String(entry.type||'').trim()==='Delivery';
-  const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const idSafe=(id||'').replace(/[^A-Za-z0-9-]/g,'');
+  const kolSafe=(entry.kol||'').replace(/\s/g,'+').replace(/[^A-Za-z0-9+._-]/g,'');
   const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
+  sysLog('markDone: '+id,'warn');
   try{
-    await gasGet(url);
-    entry.acknowledged='Completed';
-    sessionDone.add(id);
-    sysLog('Added to sessionDone: "'+id+'" (size='+sessionDone.size+')','ok');
-    buildLedger(entries);
-    // No auto re-fetch — GAS may not have deployed yet, sessionDone preserves state
-    // User can manually Sync to get fresh server data
-  }catch(err){if(btnEl){btnEl.disabled=false;btnEl.textContent=orig;}}
+    // Direct fetch — no no-cors fallback (need real confirmation)
+    const res=await fetch(url,{redirect:'follow'});
+    sysLog('Done HTTP '+res.status,'info');
+    const txt=await res.text();
+    const data=JSON.parse(txt);
+    sysLog('Done status='+data.status,data.status==='success'?'ok':'err');
+    if(data.status==='success'){
+      entry.acknowledged='Completed';
+      sessionDone.add(id);
+      sysLog('Marked done: '+id,'ok');
+      buildLedger(entries);
+    }else{
+      throw new Error(data.message||'GAS returned error');
+    }
+  }catch(err){
+    sysLog('markDone ERROR: '+err.message,'err');
+    if(btnEl){btnEl.disabled=false;btnEl.textContent=orig;}
+    // Show error briefly on button
+    if(btnEl){btnEl.textContent='Failed';setTimeout(()=>{btnEl.textContent=orig;btnEl.disabled=false;},2000);}
+  }
 }
 
 // ── FORM HELPERS ──────────────────────────────────────────────────────────
@@ -630,13 +653,39 @@ function getBrand(){return document.getElementById('brandSel').value||'';}
 function openMap(){const u=document.getElementById('googleMap').value;if(u)window.open(u,'_blank');}
 function toggleOtherPkg(){document.getElementById('pkgOther').style.display=document.getElementById('pkgSel').value==='Others'?'block':'none';}
 function getPkg(){const s=document.getElementById('pkgSel');return s.value==='Others'?(document.getElementById('pkgOther').value||'Others'):s.value;}
-function getContentValue(){const p=[];if(document.getElementById('cbStory').checked)p.push('IG Story');if(document.getElementById('cbReels').checked)p.push('Reels');return p.join(', ');}
+function getContentValue(){
+  const p=[];
+  if(document.getElementById('cbStory').checked) p.push('IG Story');
+  if(document.getElementById('cbPost').checked)  p.push('IG Post');
+  if(document.getElementById('cbReels').checked) p.push('Reels');
+  return p.join(', ');
+}
+function getContentCredits(contentStr){
+  if(!contentStr) return 0;
+  // Take the highest single credit value — not additive
+  let max=0;
+  if(contentStr.includes('IG Story')) max=Math.max(max,1);
+  if(contentStr.includes('IG Post'))  max=Math.max(max,2);
+  if(contentStr.includes('Reels'))    max=Math.max(max,2);
+  return max;
+}
 function syncContentLabels(){
-  const story=document.getElementById('cbStory').checked,reels=document.getElementById('cbReels').checked;
+  const story=document.getElementById('cbStory').checked;
+  const post =document.getElementById('cbPost').checked;
+  const reels=document.getElementById('cbReels').checked;
   document.getElementById('lblStory').style.borderColor=story?'var(--navy)':'var(--border)';
   document.getElementById('lblStory').style.background=story?'var(--surface)':'var(--canvas)';
+  document.getElementById('lblPost').style.borderColor=post?'var(--navy)':'var(--border)';
+  document.getElementById('lblPost').style.background=post?'var(--surface)':'var(--canvas)';
   document.getElementById('lblReels').style.borderColor=reels?'var(--navy)':'var(--border)';
   document.getElementById('lblReels').style.background=reels?'var(--surface)':'var(--canvas)';
+  // Update credit badge
+  const credits=getContentCredits(getContentValue());
+  const badge=document.getElementById('creditBadge');
+  if(badge){
+    badge.style.display=credits>0?'block':'none';
+    badge.textContent=credits+' credit'+(credits!==1?'s':'');
+  }
 }
 
 // ── DISPATCH TEXT BUILDER ─────────────────────────────────────────────────
@@ -682,7 +731,7 @@ function openDetailModal(id){
 
   const contentTag=document.getElementById('dtlContentTag');
   const cv=(e.content||'').trim();
-  const hasContent=cv.includes('IG Story')||cv.includes('Reels');
+  const hasContent=cv.includes('IG Story')||cv.includes('IG Post')||cv.includes('Reels');
   contentTag.style.display=hasContent?'inline-flex':'none';
   if(hasContent) contentTag.textContent=cv;
 
@@ -692,13 +741,9 @@ function openDetailModal(id){
   if(isD&&e.pkg&&e.pkg!=='N/A'){pkgWrap.style.display='block';document.getElementById('dtlPkg').textContent=e.pkg;}
   else{pkgWrap.style.display='none';}
 
-  // Voucher block — Store Visits only
-  const vBlock=document.getElementById('dtlVBlock');
-  vBlock.style.display=!isD?'flex':'none';
-  if(!isD) renderVoucherBlock(e);
-
   const content=(e.content||'').toLowerCase();
   document.getElementById('cbStory').checked=content.includes('ig story');
+  document.getElementById('cbPost').checked =content.includes('ig post');
   document.getElementById('cbReels').checked=content.includes('reels');
   syncContentLabels();
 
@@ -950,11 +995,12 @@ function copyText(){
 // ── SUBMIT ENTRY ──────────────────────────────────────────────────────────
 async function submitEntry(){
   const btn=document.getElementById('btnSubmit'),type=getType();
+  if(!document.getElementById('kolName').value.trim()){alert('Please enter KOL name.');return;}
   const payload={
     action:'add',
     entryMonth:document.getElementById('entryMonth').value||'',
-    kolName:document.getElementById('kolName').value,
-    handleUrl:document.getElementById('handleUrl').value,
+    kolName:document.getElementById('kolName').value.trim(),
+    handleUrl:document.getElementById('handleUrl').value.trim(),
     brand:getBrand(),seedingType:type,deliverable:'',
     date:document.getElementById('logDate').value,
     time:document.getElementById('logTime').value,
@@ -965,17 +1011,33 @@ async function submitEntry(){
     notes:''
   };
   btn.textContent='Saving...';btn.disabled=true;
+  sysLog('submitEntry POST: '+payload.kolName,'warn');
   try{
-    const res=await fetch(GAS,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow'});
-    const r=JSON.parse(await res.text());
+    const res=await fetch(GAS,{
+      method:'POST',
+      body:JSON.stringify(payload),
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      redirect:'follow'
+    });
+    sysLog('Entry HTTP '+res.status,'info');
+    const raw=await res.text();
+    sysLog('Entry raw: '+raw.substring(0,60),'info');
+    const r=JSON.parse(raw);
     if(r.status==='success'){
+      sysLog('Entry saved OK','ok');
       btn.textContent='Saved!';btn.classList.add('ok');
-      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{if(el.id!=='brandSel'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'))el.value='';});
+      document.querySelectorAll('#viewEntry .ibox').forEach(el=>{
+        if(el.id!=='brandSel'&&el.id!=='entryMonth'&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'))el.value='';
+      });
       document.getElementById('typeDel').checked=true;onTypeChange();
       fetchData(document.getElementById('entryMonth').value||null);
       setTimeout(()=>{btn.textContent='Log Entry';btn.classList.remove('ok');btn.disabled=false;},3000);
-    }else{throw new Error(r.message||'GAS error');}
-  }catch(err){btn.textContent='Error — retry';btn.disabled=false;setTimeout(()=>btn.textContent='Log Entry',3000);}
+    }else{throw new Error(r.message||'GAS error: '+raw.substring(0,100));}
+  }catch(err){
+    sysLog('Entry ERROR: '+err.message,'err');
+    btn.textContent='Error — retry';btn.disabled=false;
+    setTimeout(()=>btn.textContent='Log Entry',3000);
+  }
 }
 
 // ── FETCH DATA ────────────────────────────────────────────────────────────
@@ -1029,11 +1091,14 @@ async function fetchData(month){
 
     document.getElementById('vTotal').textContent=d.totalSeeded;
     document.getElementById('vPending').textContent=d.pendingDeliveries;
-    document.getElementById('vToMin').textContent=d.remainingToMin;
-    document.getElementById('vToMax').textContent=d.remainingToMax;
-    document.getElementById('progBar').style.width=Math.min(100,(d.totalSeeded/20)*100)+'%';
+    // Credits are computed client-side after entries are loaded
     document.getElementById('syncTime').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('progBar').style.width=Math.min(100,(d.totalSeeded/20)*100)+'%';
     computeSummary(displayMonth);
+    // Update credit metrics from sumCache
+    document.getElementById('vToMin').textContent=(sumCache.totalCredits||0)+' / 20';
+    const toMin=sumCache.toCredits||0, toMax=sumCache.remainingToMax||0;
+    document.getElementById('vToMax').textContent=toMin>0?toMin+' / '+toMax:'Min reached';
 
     // Entry month selector
     const eSel=document.getElementById('entryMonth');
