@@ -181,13 +181,13 @@
         <div class="hero" id="vTotal">--</div>
       </div>
       <div class="prog-track"><div class="prog-bar" id="progBar"></div></div>
-      <div class="alert-box">
-        <div>
-          <div class="alert-lbl">Pending Deliveries</div>
-          <div style="font-size:10px;color:var(--amber);margin-top:2px;font-weight:500">Awaiting acknowledgement</div>
-        </div>
-        <div class="alert-val" id="vPending">--</div>
-      </div>
+          <div class="alert-box" id="completedBar">
+            <div>
+              <div class="alert-lbl" id="completedBarLbl">Completed</div>
+              <div style="font-size:10px;color:var(--amber);margin-top:2px;font-weight:500" id="completedBarSub">KOLs marked done this cycle</div>
+            </div>
+            <div class="alert-val" id="vPending">--</div>
+          </div>
       <div class="metrics">
         <div class="metric"><div class="metric-lbl">Content Credits</div><div class="metric-val" id="vToMin" style="color:var(--navy)">--</div></div>
         <div class="metric"><div class="metric-lbl">To Min / Max</div><div class="metric-val" id="vToMax" style="color:var(--amber);font-size:14px">--</div></div>
@@ -564,39 +564,61 @@ function computeSummary(month){
   document.getElementById('sumMonth').textContent=month||'';
 }
 
+function buildSummaryRows(){
+  const s=sumCache;
+  const rows=[];
+  rows.push({type:'title',text:'GDG SEEDING · '+(s.month||'—')});
+  rows.push({type:'spacer'});
+  rows.push({type:'row',lbl:'Cycle Start',val:s.cycleStart?fmtDate(s.cycleStart):'—'});
+  rows.push({type:'row',lbl:'Hit 15 on',val:s.hit15Date?fmtDate(s.hit15Date):'Not yet reached'});
+  rows.push({type:'spacer'});
+  rows.push({type:'row',lbl:'Total',val:(s.total||0)+' KOLs'});
+  rows.push({type:'row',lbl:'Deliveries',val:s.del||0});
+  rows.push({type:'row',lbl:'Store Visits',val:s.vis||0});
+  rows.push({type:'row',lbl:'Completed',val:s.completed||0});
+  rows.push({type:'spacer'});
+  rows.push({type:'row',lbl:'Content Credits',val:(s.totalCredits||0)+' / 20 min · 25 max'});
+  rows.push({type:'row',lbl:'To Min (20)',val:(s.toCredits||0)>0?s.toCredits+' credits needed':'Min reached ✓'});
+  rows.push({type:'row',lbl:'To Max (25)',val:(s.remainingToMax||0)>0?s.remainingToMax+' credits left':'Max reached ✓'});
+  if(s.brandRows&&s.brandRows.length){
+    rows.push({type:'spacer'});
+    rows.push({type:'header',text:'By Brand'});
+    s.brandRows.forEach(r=>rows.push({type:'row',lbl:r.brand,val:r.count}));
+  }
+  return rows;
+}
+
 function buildSummaryText(){
-  const s=sumCache,col=14;
-  const pad=(str,w)=>{const t=String(str);return t+' '.repeat(Math.max(0,w-t.length));};
-  const rows=[
-    'GDG SEEDING \u00B7 '+(s.month||'—'),'',
-    pad('Cycle Start',col)+(s.cycleStart?fmtDate(s.cycleStart):'—'),
-    pad('Hit 15 on',col)+(s.hit15Date?fmtDate(s.hit15Date):'Not yet reached'),'',
-    pad('Total',col)+(s.total||0)+' KOLs',
-    pad('Deliveries',col)+(s.del||0),
-    pad('Store Visits',col)+(s.vis||0),
-    pad('Completed',col)+(s.completed||0),'',
-    pad('Content Credits',col)+(s.totalCredits||0)+' / 20 min · 25 max',
-    pad('To Min (20)',col)+((s.toCredits||0)>0?s.toCredits+' credits needed':'Min reached ✓'),
-    pad('To Max (25)',col)+((s.remainingToMax||0)>0?s.remainingToMax+' credits left':'Max reached ✓'),
-  ];
-  if(s.brandRows&&s.brandRows.length){rows.push('','By Brand');s.brandRows.forEach(r=>rows.push(pad(r.brand,col)+r.count));}
-  return rows.join('\n');
+  return buildSummaryRows().map(r=>{
+    if(r.type==='title') return r.text;
+    if(r.type==='spacer') return '';
+    if(r.type==='header') return r.text;
+    const pad=(str,w)=>{const t=String(str);return t+' '.repeat(Math.max(0,w-t.length));};
+    return pad(r.lbl,16)+r.val;
+  }).join('\n');
 }
 
 function openSumPreview(){
-  const text=buildSummaryText(),lines=text.split('\n'); let html='';
-  lines.forEach((l,i)=>{
-    if(!l){html+='<div style="height:6px"></div>';return;}
-    if(i===0){html+='<div style="font-weight:800;color:var(--navy);font-size:13px;margin-bottom:4px">'+l+'</div>';return;}
-    const lbl=l.substring(0,14).trimEnd(),val=l.substring(14).trim();
-    if(val) html+='<div style="display:flex;justify-content:space-between;align-items:baseline;padding:1px 0"><span style="color:var(--text-3);font-size:11px;font-weight:600">'+lbl+'</span><span style="color:var(--navy);font-size:12px;font-weight:700">'+val+'</span></div>';
-    else html+='<div style="font-weight:700;font-size:11px;color:var(--text-2);margin-top:4px">'+l+'</div>';
+  const rows=buildSummaryRows(); let html='';
+  rows.forEach(r=>{
+    if(r.type==='title'){
+      html+='<div style="font-weight:800;color:var(--navy);font-size:14px;margin-bottom:8px">'+r.text+'</div>';
+    }else if(r.type==='spacer'){
+      html+='<div style="height:8px"></div>';
+    }else if(r.type==='header'){
+      html+='<div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;margin-bottom:2px">'+r.text+'</div>';
+    }else{
+      html+='<div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border-soft)">'
+        +'<span style="color:var(--text-3);font-size:11px;font-weight:600">'+r.lbl+'</span>'
+        +'<span style="color:var(--navy);font-size:12px;font-weight:700;text-align:right;max-width:55%">'+r.val+'</span>'
+        +'</div>';
+    }
   });
   document.getElementById('sumPreviewMonth').textContent=sumCache.month||'';
   document.getElementById('sumPreviewBody').innerHTML=html;
   const cb=document.getElementById('btnDoSumCopy');
   if(cb){cb.textContent='Copy';cb.style.background='';}
-  document.getElementById('sumPreviewModal')._text=text;
+  document.getElementById('sumPreviewModal')._text=buildSummaryText();
   document.getElementById('sumPreviewModal').style.display='flex';
 }
 function closeSumPreview(){document.getElementById('sumPreviewModal').style.display='none';}
@@ -1055,16 +1077,21 @@ async function fetchData(month){
     // Apply session-level done overrides — survives re-fetches until page reload
     sysLog('sessionDone has '+sessionDone.size+' entries: '+[...sessionDone].join(','),'info');
     entries=d.entries.map(e=>{
-      if(sessionDone.has(e.id)&&!DONE_STATES.includes(e.acknowledged)){
-        sysLog('Overriding '+e.id+' to Completed (GAS returned: '+e.acknowledged+')','ok');
-        return Object.assign({},e,{acknowledged:'Completed'});
+      // Extract brand from dispatch text if brand field is empty (old entries before col fix)
+      let brand=e.brand||'';
+      if(!brand&&e.dispatchText){
+        const bm=e.dispatchText.match(/Brand:\s*(.+)/);
+        if(bm) brand=bm[1].trim();
       }
-      // Validate stale acknowledged values
+      // Validate acknowledged value
       const VALID=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
-      if(!VALID.includes(e.acknowledged||'')){
-        return Object.assign({},e,{acknowledged:'Pending'});
+      const ack=VALID.includes(e.acknowledged||'')?e.acknowledged:'Pending';
+      const base=Object.assign({},e,{brand,acknowledged:ack});
+      if(sessionDone.has(e.id)&&!DONE_STATES.includes(ack)){
+        sysLog('Overriding '+e.id+' to Completed','ok');
+        return Object.assign(base,{acknowledged:'Completed'});
       }
-      return e;
+      return base;
     });
     sysLog('Loaded '+d.entries.length+' entries, GAS month='+d.month,'ok');
 
@@ -1090,11 +1117,15 @@ async function fetchData(month){
     }
 
     document.getElementById('vTotal').textContent=d.totalSeeded;
-    document.getElementById('vPending').textContent=d.pendingDeliveries;
-    // Credits are computed client-side after entries are loaded
+    // Credits computed client-side after entries loaded
+    computeSummary(displayMonth);
+    const completedCount=sumCache.completed||0;
+    const pendingCount=(d.totalSeeded||0)-completedCount;
+    document.getElementById('vPending').textContent=completedCount;
+    document.getElementById('completedBarLbl').textContent='Completed This Cycle';
+    document.getElementById('completedBarSub').textContent=pendingCount+' KOL'+(pendingCount!==1?'s':'')+' still pending';
     document.getElementById('syncTime').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     document.getElementById('progBar').style.width=Math.min(100,(d.totalSeeded/20)*100)+'%';
-    computeSummary(displayMonth);
     // Update credit metrics from sumCache
     document.getElementById('vToMin').textContent=(sumCache.totalCredits||0)+' / 20';
     const toMin=sumCache.toCredits||0, toMax=sumCache.remainingToMax||0;
