@@ -421,7 +421,7 @@
         </div>
         <input type="file" id="dtlFileInput" accept="image/*" style="display:none" onchange="dtlHandleUpload(this)">
         <div id="dtlUploadStatus" style="display:none;margin-top:6px;font-size:10px;font-weight:600;color:var(--text-3)"></div>
-        <img id="dtlUploadPreview" style="display:none;margin-top:8px;width:100%;border-radius:8px;object-fit:cover;max-height:120px" alt="">
+        <img id="dtlUploadPreview" style="display:none;margin-top:8px;width:100%;border-radius:8px;object-fit:cover;max-height:160px;cursor:pointer;border:2px solid var(--green)" alt="" title="Tap to view full image">
       </div>
 
       <!-- Notes -->
@@ -642,12 +642,12 @@ async function markDone(id,btnEl){
   const url=GAS+'?action=complete&id='+idSafe+'&kol='+kolSafe+'&type='+(isDel?'D':'V')+'&t='+Date.now();
   sysLog('markDone: '+id,'warn');
   try{
-    // Direct fetch — no no-cors fallback (need real confirmation)
     const res=await fetch(url,{redirect:'follow'});
-    sysLog('Done HTTP '+res.status,'info');
-    const txt=await res.text();
-    const data=JSON.parse(txt);
-    sysLog('Done status='+data.status,data.status==='success'?'ok':'err');
+    const raw=await res.text();
+    sysLog('Done HTTP '+res.status+' → '+raw.substring(0,80),'info');
+    let data;
+    try{ data=JSON.parse(raw); }catch(pe){ throw new Error('Parse fail: '+raw.substring(0,60)); }
+    sysLog('Done parsed: status='+data.status+' kol='+(data.kol||'?'),data.status==='success'?'ok':'err');
     if(data.status==='success'){
       entry.acknowledged='Completed';
       sessionDone.add(id);
@@ -727,7 +727,14 @@ function openDetailModal(id){
   detailEntry=e;
 
   document.getElementById('dtlName').textContent=e.kol||'—';
-  document.getElementById('dtlHandle').textContent=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
+  const rawUrl=(e.url&&e.url!=='TBD')?String(e.url).trim().replace(/https?:\/\/(www\.)?instagram\.com\//,'@'):'';
+  let cleanHandle='—';
+  if(rawUrl){
+    const m=rawUrl.match(/@[\w.\-]+/);
+    if(m){cleanHandle=m[0];}
+    else{cleanHandle=rawUrl.split(/[\s,;]+/)[0]||'—';}
+  }
+  document.getElementById('dtlHandle').textContent=cleanHandle;
 
   const brandTag=document.getElementById('dtlBrandTag');
   const typeTag=document.getElementById('dtlTypeTag');
@@ -769,16 +776,42 @@ function openDetailModal(id){
   document.getElementById('cbReels').checked=content.includes('reels');
   syncContentLabels();
 
-  document.getElementById('dtlLink').value=e.link||'';
-  document.getElementById('dtlNotes').value=e.notes||'';
+  // Clean notes — filter out timestamp junk from old saves
+  const rawNotes=(e.notes||'');
+  const cleanNotes=rawNotes.split(',').map(s=>s.trim())
+    .filter(s=>!s.match(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+/i) // timestamps
+            &&!s.match(/^https?:\/\/res\.cloudinary\.com/i) // cloudinary URLs in notes
+            &&s.length>0)
+    .join(', ');
+  document.getElementById('dtlNotes').value=cleanNotes;
 
-  // Reset upload area
-  document.getElementById('dtlUploadArea').style.borderColor='';
-  document.getElementById('dtlUploadStatus').style.display='none';
-  document.getElementById('dtlUploadStatus').textContent='';
-  document.getElementById('dtlUploadPreview').style.display='none';
-  document.getElementById('dtlFileInput').value='';
-  detailEntry._uploadedUrl='';
+  // Parse existing links — separate cloudinary image URLs from content links
+  const allLinks=(e.link||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const imageUrls=allLinks.filter(s=>s.match(/cloudinary\.com/i)||s.match(/\.(jpg|jpeg|png|webp|gif)(\?|$)/i));
+  const contentUrls=allLinks.filter(s=>!imageUrls.includes(s));
+  document.getElementById('dtlLink').value=contentUrls.join(', ');
+
+  // Show existing uploaded screenshot as preview if available
+  const previewEl=document.getElementById('dtlUploadPreview');
+  const areaEl=document.getElementById('dtlUploadArea');
+  const statusEl=document.getElementById('dtlUploadStatus');
+  if(imageUrls.length>0){
+    previewEl.src=imageUrls[0];
+    previewEl.style.display='block';
+    previewEl.style.cursor='pointer';
+    previewEl.onclick=()=>window.open(imageUrls[0],'_blank');
+    areaEl.style.borderColor='var(--green)';
+    statusEl.style.display='block';
+    statusEl.style.color='var(--green)';
+    statusEl.textContent='Tap image to view · Upload new to replace';
+    // Store existing image URL so it stays in finalLink on save
+    detailEntry._existingImageUrls=imageUrls;
+  }else{
+    previewEl.style.display='none';
+    areaEl.style.borderColor='';
+    statusEl.style.display='none';
+    detailEntry._existingImageUrls=[];
+  }
 
   // Clear history
   const hist=document.getElementById('dtlHistory');
@@ -924,15 +957,21 @@ async function dtlHandleUpload(input){
   const previewEl=document.getElementById('dtlUploadPreview');
   const areaEl=document.getElementById('dtlUploadArea');
   statusEl.style.display='block';statusEl.style.color='var(--text-3)';statusEl.textContent='Uploading...';
-  areaEl.style.borderColor='var(--navy)';sysLog('Uploading: '+file.name,'warn');
+  areaEl.style.borderColor='var(--navy)';
+  // Clear existing preview while uploading
+  previewEl.style.display='none';
+  previewEl.onclick=null;
+  sysLog('Uploading: '+file.name,'warn');
   try{
     const fd=new FormData();fd.append('file',file);fd.append('upload_preset',CLOUDINARY_PRESET);fd.append('folder',CLOUDINARY_FOLDER);
     const res=await fetch('https://api.cloudinary.com/v1_1/'+CLOUDINARY_CLOUD+'/image/upload',{method:'POST',body:fd});
     const data=await res.json();
     if(data.secure_url){
       detailEntry._uploadedUrl=data.secure_url;
-      statusEl.textContent='Uploaded ✓';statusEl.style.color='var(--green)';
+      statusEl.textContent='Uploaded ✓ · Tap to view';statusEl.style.color='var(--green)';
       previewEl.src=data.secure_url;previewEl.style.display='block';
+      previewEl.style.cursor='pointer';
+      previewEl.onclick=()=>window.open(data.secure_url,'_blank');
       areaEl.style.borderColor='var(--green)';sysLog('Upload OK','ok');
     }else{throw new Error(data.error?.message||'Upload failed');}
   }catch(err){statusEl.textContent='Failed: '+err.message;statusEl.style.color='var(--red)';areaEl.style.borderColor='var(--red)';sysLog('Upload ERROR: '+err.message,'err');}
@@ -958,8 +997,14 @@ async function dtlSave(btnEl){
   const linkVal=document.getElementById('dtlLink').value.trim();
   const uploadedUrl=detailEntry._uploadedUrl||'';
   const dateChanged=newDate&&newDate!==detailEntry.date;
-  const existingParts=(detailEntry.link||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const finalLink=[...new Set([...existingParts,...[linkVal,uploadedUrl].filter(Boolean)])].join(', ');
+
+  // Combine: content link + existing image URLs + new upload URL
+  // Never mix cloudinary URLs into notes
+  const existingImages=detailEntry._existingImageUrls||[];
+  const newImageUrl=uploadedUrl?[uploadedUrl]:[];
+  const imageParts=uploadedUrl?newImageUrl:existingImages; // new upload replaces existing
+  const allLinks=[linkVal,...imageParts].filter(Boolean);
+  const finalLink=[...new Set(allLinks)].join(', ');
 
   let url=GAS+'?action=update_entry'
     +'&id='+encodeURIComponent(detailEntry.id)
@@ -975,7 +1020,9 @@ async function dtlSave(btnEl){
   try{
     const data=await gasGet(url);
     if(data.status==='success'){
-      detailEntry.content=content;detailEntry.notes=newNotes;detailEntry.link=finalLink;detailEntry._uploadedUrl='';
+      detailEntry.content=content;detailEntry.notes=newNotes;detailEntry.link=finalLink;
+      document.getElementById('dtlFileInput').value='';
+  detailEntry._uploadedUrl='';detailEntry._existingImageUrls=[];
       if(dateChanged){detailEntry.date=newDate;detailEntry.dispatchText=buildDispatchText(detailEntry,newDate,newNotes);}
       const ts=data.updated||new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
       addHistoryLine(ts,content,newNotes,dateChanged?newDate:null,finalLink);
@@ -1075,23 +1122,41 @@ async function fetchData(month){
     const d=r.data;
 
     // Apply session-level done overrides — survives re-fetches until page reload
-    sysLog('sessionDone has '+sessionDone.size+' entries: '+[...sessionDone].join(','),'info');
+    sysLog('sessionDone IDs: ['+[...sessionDone].join(',')+']','info');
     entries=d.entries.map(e=>{
-      // Extract brand from dispatch text if brand field is empty (old entries before col fix)
+      // Extract brand fallback from dispatch text
       let brand=e.brand||'';
       if(!brand&&e.dispatchText){
-        const bm=e.dispatchText.match(/Brand:\s*(.+)/);
+        const bm=e.dispatchText.match(/Brand:\s*([^\n]+)/);
         if(bm) brand=bm[1].trim();
       }
-      // Validate acknowledged value
-      const VALID=['Completed','No-Show / Cancelled','Acknowledged','Pending',''];
-      const ack=VALID.includes(e.acknowledged||'')?e.acknowledged:'Pending';
-      const base=Object.assign({},e,{brand,acknowledged:ack});
-      if(sessionDone.has(e.id)&&!DONE_STATES.includes(ack)){
-        sysLog('Overriding '+e.id+' to Completed','ok');
-        return Object.assign(base,{acknowledged:'Completed'});
+
+      // Smart ack resolution:
+      // 1. sessionDone always wins
+      // 2. Known valid values pass through
+      // 3. Anything containing "Complet" or "Done" → Completed
+      // 4. Empty / unknown / stale data (phone number etc) → Pending
+      let raw=String(e.acknowledged||'').trim();
+      sysLog('  '+e.id+' ack="'+raw+'"','info');
+      let ack;
+      if(sessionDone.has(e.id)){
+        ack='Completed';
+        sysLog('  → sessionDone override','ok');
+      }else if(raw==='Completed'||raw==='No-Show / Cancelled'){
+        ack=raw;
+      }else if(raw==='Acknowledged'){
+        ack='Acknowledged';
+      }else if(/complet|done/i.test(raw)){
+        // Handles "Completed", "Done", variations
+        ack='Completed';
+      }else if(raw===''||raw==='Pending'||raw==='FALSE'){
+        ack='Pending';
+      }else{
+        // Stale value (phone number, old backup phone, etc) → Pending
+        sysLog('  → stale value "'+raw+'" → Pending','warn');
+        ack='Pending';
       }
-      return base;
+      return Object.assign({},e,{brand,acknowledged:ack});
     });
     sysLog('Loaded '+d.entries.length+' entries, GAS month='+d.month,'ok');
 
@@ -1169,7 +1234,14 @@ function buildLedger(data){
     const past=!done&&isPast(e.date);
     const isD=String(e.type).trim()==='Delivery';
     const vs=(e.voucherStatus||'').trim();
-    const handle=(e.url&&e.url!=='TBD')?e.url.replace(/https?:\/\//,'').replace('instagram.com/','@'):'—';
+    // Bulletproof handle extraction — take ONLY the @handle or first token, nothing else
+    const rawUrl=(e.url&&e.url!=='TBD')?String(e.url).trim().replace(/https?:\/\/(www\.)?instagram\.com\//,'@'):'';
+    let handle='—';
+    if(rawUrl){
+      const m=rawUrl.match(/@[\w.\-]+/);
+      if(m){handle=m[0];}
+      else{handle=rawUrl.split(/[\s,;]+/)[0]||'—';}
+    }
 
     let bc='badge-pending',bText=ack||'Pending';
     if(done){bc='badge-done';}
@@ -1246,6 +1318,14 @@ async function confirmCycle(btnEl){
 window.onload=function(){
   sysLog('GDG Seeding Control loaded','ok');
   loadBrand();
+  // Ping GAS to confirm correct version is deployed
+  fetch(GAS+'?action=ping&t='+Date.now(),{redirect:'follow'})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.version){sysLog('GAS version: '+d.version+' schema='+d.schema,'ok');}
+      else{sysLog('GAS ping OK but no version — old deployment still live!','warn');}
+    })
+    .catch(()=>sysLog('GAS ping failed — check deployment','err'));
   fetchData(null);
 };
 </script>
